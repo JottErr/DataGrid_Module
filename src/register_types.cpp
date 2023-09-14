@@ -1,5 +1,6 @@
 #include "register_types.h"
 
+#include "math_curve.h"
 #include "data_grid.h"
 
 #include <gdextension_interface.h>
@@ -13,7 +14,7 @@ void initialize_data_grid_module(ModuleInitializationLevel p_level) {
     if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
         return;
     }
-
+    ClassDB::register_class<MathCurve>();
     ClassDB::register_class<DataGrid>();
 }
 
