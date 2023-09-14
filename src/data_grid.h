@@ -12,8 +12,7 @@ private:
 	int cell_size; // add size_in_world (exp) and size_in_cells
 	Size2i size;
 	Point2i center;
-	TypedArray<float> data; //PackedFloat32Array?
-	int cell_size;
+	TypedArray<float> data;
 
 protected:
 	static void _bind_methods();
@@ -33,7 +32,7 @@ public:
 
 	void fill(float p_value) { data.fill(p_value); };
 
-	void add_grid_at_pos(const DataGrid *other_map, Vector2i pos, float magnitude = 1.0f);
+	void add_grid_at_pos(const DataGrid *other_map, Point2i p_position, float magnitude = 1.0f);
 	void show_grid();
 
 };

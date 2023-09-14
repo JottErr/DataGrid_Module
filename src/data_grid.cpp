@@ -15,7 +15,7 @@ void DataGrid::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_data", "data"), &DataGrid::set_data);
 
 	ClassDB::bind_method(D_METHOD("fill", "value"), &DataGrid::fill);
-	ClassDB::bind_method(D_METHOD("add_grid_at_pos", "other_grid", "p_position", "magnitude"), &DataGrid::add_grid_at_pos);
+	ClassDB::bind_method(D_METHOD("add_grid_at_pos", "other_grid", "position", "magnitude"), &DataGrid::add_grid_at_pos, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("show_grid"), &DataGrid::show_grid);
 
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
@@ -35,12 +35,12 @@ DataGrid::~DataGrid() {
 
 void DataGrid::set_size(const Size2i &p_size) {
 	size = p_size;
-	center = Point2i((p_size.x / 2), (p_size.y / 2));
-	data.resize(p_size.x * p_size.y);
+	center = Point2i((size.x / 2), (size.y / 2));
+	data.resize(size.x * size.y);
 	data.fill(0.0);
 }
 
-void DataGrid::add_grid_at_pos(const DataGrid *other_grid, Vector2i p_position, float magnitude) {
+void DataGrid::add_grid_at_pos(const DataGrid *other_grid, Point2i p_position, float magnitude) {
 	Point2i other_topleft = p_position - other_grid->get_center();
 	Point2i other_botright = other_topleft + other_grid->get_size();
 
