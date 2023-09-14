@@ -5,6 +5,8 @@
 using namespace godot;
 
 void DataGrid::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_cell_size"), &DataGrid::get_cell_size);
+	ClassDB::bind_method(D_METHOD("set_cell_size", "cell_size"), &DataGrid::set_cell_size);
 	ClassDB::bind_method(D_METHOD("get_size"), &DataGrid::get_size);
 	ClassDB::bind_method(D_METHOD("set_size", "size"), &DataGrid::set_size);
 	ClassDB::bind_method(D_METHOD("get_center"), &DataGrid::get_center);
@@ -16,6 +18,7 @@ void DataGrid::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("add_grid_at_pos", "other_grid", "p_position", "magnitude"), &DataGrid::add_grid_at_pos);
 	ClassDB::bind_method(D_METHOD("show_grid"), &DataGrid::show_grid);
 
+	ClassDB::add_property("DataGrid", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::VECTOR2I, "size"), "set_size", "get_size");
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::VECTOR2I, "center"), "set_center", "get_center");
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::ARRAY, "data"), "set_data", "get_data");

@@ -9,6 +9,7 @@ class DataGrid : public Node {
 	GDCLASS(DataGrid, Node)
 
 private:
+	int cell_size; // add size_in_world (exp) and size_in_cells
 	Size2i size;
 	Point2i center;
 	TypedArray<float> data; //PackedFloat32Array?
@@ -21,6 +22,8 @@ public:
 	DataGrid();
 	~DataGrid();
 
+	int get_cell_size() const { return cell_size; }
+	void set_cell_size(int p_cell_size) { cell_size = p_cell_size; }
 	const Size2i &get_size() const { return size; }
 	void set_size(const Size2i &p_size);
 	const Point2i &get_center() const { return center; }
