@@ -2,6 +2,7 @@
 #define DATAGRID_H
 
 #include <godot_cpp/classes/node.hpp>
+#include "math_curve.h"
 
 namespace godot {
 
@@ -13,7 +14,7 @@ private:
 	Size2i size;
 	Point2i center;
 	TypedArray<float> data;
-
+	
 protected:
 	static void _bind_methods();
 
@@ -32,6 +33,7 @@ public:
 
 	void fill(float p_value) { data.fill(p_value); };
 
+	void radiate_value_at_position(const Point2i &p_position, int radius, const MathCurve *curve, float magnitude = 1.0f);
 	void add_grid_at_pos(const DataGrid *other_map, Point2i p_position, float magnitude = 1.0f);
 	void show_grid();
 

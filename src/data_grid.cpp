@@ -15,9 +15,10 @@ void DataGrid::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_data", "data"), &DataGrid::set_data);
 
 	ClassDB::bind_method(D_METHOD("fill", "value"), &DataGrid::fill);
+	ClassDB::bind_method(D_METHOD("radiate_value_at_position", "position", "radius", "curve", "magnitude"), &DataGrid::radiate_value_at_position, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("add_grid_at_pos", "other_grid", "position", "magnitude"), &DataGrid::add_grid_at_pos, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("show_grid"), &DataGrid::show_grid);
-
+	
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::VECTOR2I, "size"), "set_size", "get_size");
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::VECTOR2I, "center"), "set_center", "get_center");
@@ -38,6 +39,23 @@ void DataGrid::set_size(const Size2i &p_size) {
 	center = Point2i((size.x / 2), (size.y / 2));
 	data.resize(size.x * size.y);
 	data.fill(0.0);
+}
+
+void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, const MathCurve *curve, float magnitude) {
+	Point2i radius_topleft = p_position - Vector2i(radius, radius);
+	Point2i radius_botright = p_position + Vector2i(radius + 1, radius + 1);
+
+	radius_topleft = radius_topleft.max(Point2i(0, 0));
+	radius_botright = radius_botright.min(size);
+	
+	for (int y = radius_topleft.y; y < radius_botright.y; y++) {
+		for (int x = radius_topleft.x; x < radius_botright.x; x++) {
+			float distance = Vector2i(p_position.x - x, p_position.y - y).length();
+			distance = Math::min(1.0f, distance / radius);
+			float value = curve->calculate_value(distance);
+			data[x + y * size.x] = value * magnitude;
+		}
+	}
 }
 
 void DataGrid::add_grid_at_pos(const DataGrid *other_grid, Point2i p_position, float magnitude) {
