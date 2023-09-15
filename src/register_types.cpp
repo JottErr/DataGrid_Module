@@ -2,6 +2,7 @@
 
 #include "math_curve.h"
 #include "data_grid.h"
+#include "data_grid_manager.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -16,6 +17,7 @@ void initialize_data_grid_module(ModuleInitializationLevel p_level) {
     }
     ClassDB::register_class<MathCurve>();
     ClassDB::register_class<DataGrid>();
+    ClassDB::register_class<DataGridManager>();
 }
 
 void uninitialize_data_grid_module(ModuleInitializationLevel p_level) {
