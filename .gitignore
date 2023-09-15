@@ -1,5 +1,6 @@
 .vscode
 .sconsign.dblite
+*.bat
 src/*.obj
 demo/bin/*.dll
 demo/bin/*.exp
