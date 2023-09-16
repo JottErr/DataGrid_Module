@@ -19,7 +19,6 @@ private:
 
 	Ref<DataGrid> datagrid;
 
-
 protected:
 	static void _bind_methods();
 
@@ -43,9 +42,7 @@ public:
 	void set_update_frequency(float p_update_frequency) { update_frequency = p_update_frequency; }
 
 	Ref<DataGrid> get_datagrid() const { return datagrid; }
-
 };
-
 }
 
 #endif // DATAGRIDMANAGER_H

@@ -31,7 +31,7 @@ DataGridManager::DataGridManager() {
 	datagrid.instantiate();
 	datagrid->set_cell_size(cell_size);
 	datagrid->set_size_in_cells(datagrid_size);
-		
+
 	update_frequency = 1.0;
 }
 
@@ -51,4 +51,3 @@ void DataGridManager::set_cell_size(int p_cell_size) {
 	datagrid->set_cell_size(cell_size);
 	datagrid->set_size_in_cells(datagrid_size);
 }
-
