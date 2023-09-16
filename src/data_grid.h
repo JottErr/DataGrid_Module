@@ -36,8 +36,8 @@ public:
 
 	void fill(float p_value) { data.fill(p_value); };
 
-	void radiate_value_at_position(const Point2i &p_position, int radius, const MathCurve *curve, float magnitude = 1.0f);
-	void add_grid_at_pos(const DataGrid *other_map, Point2i p_position, float magnitude = 1.0f);
+	void radiate_value_at_position(const Point2i &p_position, int radius, Ref<MathCurve> curve, float magnitude = 1.0f);
+	void add_grid_at_pos(Ref<DataGrid> other_map, Point2i p_position, float magnitude = 1.0f);
 	void show_grid();
 
 };

@@ -44,7 +44,7 @@ void DataGrid::set_size_in_cells(const Size2i &p_size_in_cells) {
 	reset_data();
 }
 
-void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, const MathCurve *curve, float magnitude) {
+void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, Ref<MathCurve> curve, float magnitude) {
 	Point2i radius_topleft = p_position - Vector2i(radius, radius);
 	Point2i radius_botright = p_position + Vector2i(radius + 1, radius + 1);
 
@@ -61,7 +61,7 @@ void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, 
 	}
 }
 
-void DataGrid::add_grid_at_pos(const DataGrid *other_grid, Point2i p_position, float magnitude) {
+void DataGrid::add_grid_at_pos(Ref<DataGrid> other_grid, Point2i p_position, float magnitude) {
 	Point2i other_topleft = p_position - other_grid->get_center();
 	Point2i other_botright = other_topleft + other_grid->get_size_in_cells();
 
@@ -69,9 +69,9 @@ void DataGrid::add_grid_at_pos(const DataGrid *other_grid, Point2i p_position, f
 	Point2i intersection_botright = other_botright.min(size_in_cells);
 	
 	for (int y = intersection_topleft.y; y < intersection_botright.y; y++) {
+		int other_y = y - intersection_topleft.y;
 		for (int x = intersection_topleft.x; x < intersection_botright.x; x++) {
 			int other_x = x - intersection_topleft.x;
-			int other_y = y - intersection_topleft.y;
 			float other_value = other_grid->data[other_x + other_y * other_grid->get_size_in_cells().x];
 			float value = data[x + y * size_in_cells.x];
 			data[x + y * size_in_cells.x] = value + other_value * magnitude;
