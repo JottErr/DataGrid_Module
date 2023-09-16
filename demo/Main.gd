@@ -21,10 +21,18 @@ func _process(delta: float) -> void:
 
 
 func _on_data_grid_timer_timeout() -> void:
-	for node in get_tree().get_nodes_in_group("ProximityGrid"):
-		var cell = Vector2i(node.get_global_position()) / data_grid_manager.get_cell_size()
-		var grid = data_grid_manager.get_datagrid()
-		grid.fill(0.0)
-		grid.radiate_value_at_position(cell, 10, testcurve)
-		grid_sprite._on_main_data_grid_updated(data_grid_manager.get_datagrid_size(), grid.get_data())
-
+	var grid = data_grid_manager.get_datagrid()
+	
+	for node in get_tree().get_nodes_in_group("ProximityComponents"):
+		var prox_comp := node as ProximityComponent
+		var radius = prox_comp.radius / data_grid_manager.get_cell_size()
+		if prox_comp.registered:
+			var last_cell := prox_comp.last_registered_position / data_grid_manager.get_cell_size()
+			grid.radiate_value_at_position(last_cell, radius, testcurve, -1.0)
+		
+		var new_cell = Vector2i(prox_comp.get_global_position()) / data_grid_manager.get_cell_size()
+		grid.radiate_value_at_position(new_cell, radius, testcurve)
+		prox_comp.last_registered_position = prox_comp.get_global_position()
+		prox_comp.registered = true
+	
+	grid_sprite._on_main_data_grid_updated(data_grid_manager.get_datagrid_size(), grid.get_data())

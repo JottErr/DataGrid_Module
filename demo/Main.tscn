@@ -1,13 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://bmn4r8gqpcu08"]
+[gd_scene load_steps=9 format=3 uid="uid://bmn4r8gqpcu08"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_kbwwx"]
 [ext_resource type="Shader" path="res://visualization/DataGridVis.gdshader" id="2_mh84n"]
+[ext_resource type="Script" path="res://example/ProximityComponent.gd" id="2_xi071"]
 [ext_resource type="Texture2D" uid="uid://dcrnhhfjy8ssd" path="res://icon.svg" id="3_mbij7"]
 [ext_resource type="Script" path="res://visualization/GridSprite.gd" id="4_4yywm"]
 
 [sub_resource type="MathCurve" id="MathCurve_7i80h"]
-slope = -1.0
-y_shift = 1.0
 
 [sub_resource type="DataGrid" id="DataGrid_ftocu"]
 cell_size = 15
@@ -27,7 +26,9 @@ testgrid = SubResource("DataGrid_ftocu")
 
 [node name="DataGridTimer" type="Timer" parent="."]
 
-[node name="MouseProximity" type="Node2D" parent="." groups=["ProximityGrid"]]
+[node name="MouseProximity" type="Node2D" parent="."]
+script = ExtResource("2_xi071")
+radius = 150.0
 
 [node name="GridSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_p7g0d")
@@ -40,6 +41,6 @@ script = ExtResource("4_4yywm")
 world_size = Vector2i(1280, 720)
 cell_size = 15
 datagrid_size = Vector2i(85, 48)
-update_frequency = 0.1
+update_frequency = 0.75
 
 [connection signal="timeout" from="DataGridTimer" to="." method="_on_data_grid_timer_timeout"]
