@@ -80,12 +80,12 @@ void DataGrid::add_grid_at_pos(Ref<DataGrid> other_grid, Point2i p_position, flo
 }
 
 void DataGrid::show_grid() {
+	String row = String("");
 	for (int y = 0; y < size_in_cells.y; y++) {
-		Array row;
-		row.resize(size_in_cells.x);
 		for (int x = 0; x < size_in_cells.x; x++) {
-			row[x] = data[x + y * size_in_cells.x];
+			row += UtilityFunctions::str(data[x + y * size_in_cells.x]).pad_decimals(1) + " ";
 		}
-		UtilityFunctions::print(row);
+		row += "\n";
 	}
+	UtilityFunctions::print(row);
 }
