@@ -69,9 +69,9 @@ void DataGrid::add_grid_at_pos(Ref<DataGrid> other_grid, Point2i p_position, flo
 	Point2i intersection_botright = other_botright.min(size_in_cells);
 	
 	for (int y = intersection_topleft.y; y < intersection_botright.y; y++) {
-		int other_y = y - intersection_topleft.y;
+		int other_y = y - other_topleft.y;
 		for (int x = intersection_topleft.x; x < intersection_botright.x; x++) {
-			int other_x = x - intersection_topleft.x;
+			int other_x = x - other_topleft.x;
 			float other_value = other_grid->data[other_x + other_y * other_grid->get_size_in_cells().x];
 			float value = data[x + y * size_in_cells.x];
 			data[x + y * size_in_cells.x] = value + other_value * magnitude;
