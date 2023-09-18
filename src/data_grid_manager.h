@@ -6,6 +6,20 @@
 
 namespace godot {
 
+class DataGridTemplate : public Resource {
+	GDCLASS(DataGridTemplate, Resource)
+
+protected:
+	static void _bind_methods();
+
+public:
+	DataGridTemplate();
+	~DataGridTemplate();
+	int radius;
+	Ref<DataGrid> datagrid;
+	void initialize(int p_radius, int p_cell_size, Ref<MathCurve> p_curve);
+};
+
 class DataGridManager : public Node {
 	GDCLASS(DataGridManager, Node)
 
@@ -18,6 +32,7 @@ private:
 	float update_frequency;
 
 	Ref<DataGrid> datagrid;
+	TypedArray<DataGridTemplate> templates;
 
 protected:
 	static void _bind_methods();
@@ -42,6 +57,9 @@ public:
 	void set_update_frequency(float p_update_frequency) { update_frequency = p_update_frequency; }
 
 	Ref<DataGrid> get_datagrid() const { return datagrid; }
+
+	void initialize_templates(int min_radius, int max_radius, int steps);
+	Ref<DataGrid> get_template(int p_radius) const;
 };
 }
 
