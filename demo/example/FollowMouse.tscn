@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://6l5ivfcqm12o"]
+
+[ext_resource type="Texture2D" uid="uid://ciii8x3gl27fm" path="res://sprite_icon.svg" id="1_em0dk"]
+[ext_resource type="Script" path="res://example/FollowMouse.gd" id="2_8xdh2"]
+
+[node name="FollowMouse" type="Sprite2D"]
+texture = ExtResource("1_em0dk")
+script = ExtResource("2_8xdh2")
+
+[node name="DataGridComponent" type="DataGridComponent" parent="."]
+layers = Array[int]([1])
+radius = 150.0
