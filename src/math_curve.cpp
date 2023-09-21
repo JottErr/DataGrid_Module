@@ -22,7 +22,7 @@ void MathCurve::_bind_methods() {
 	ClassDB::add_property("MathCurve", PropertyInfo(Variant::FLOAT, "y_shift"), "set_y_shift", "get_y_shift");
 }
 
-MathCurve::MathCurve(){
+MathCurve::MathCurve() {
 	slope = -1.0;
 	exponent = 1.0;
 	x_shift = 0.0;
@@ -36,7 +36,6 @@ void MathCurve::set_parameters(float p_slope, float p_exponent, float p_x_shift,
 	y_shift = p_y_shift;
 }
 
-float MathCurve::calculate_value(float x_value) const
-{
+float MathCurve::calculate_value(float x_value) const {
 	return slope * Math::pow((x_value + x_shift), exponent) + y_shift;
 }

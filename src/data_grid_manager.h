@@ -3,6 +3,8 @@
 
 #include <godot_cpp/classes/node.hpp>
 #include "data_grid.h"
+#include "data_grid_collection.h"
+#include "data_grid_component.h"
 
 namespace godot {
 
@@ -31,7 +33,7 @@ private:
 	
 	float update_frequency;
 
-	Ref<DataGrid> datagrid;
+	Ref<DataGridCollection> datagrid_collection;
 	TypedArray<DataGridTemplate> templates;
 
 protected:
@@ -40,26 +42,26 @@ protected:
 public:
 	DataGridManager();
 	~DataGridManager();
-
-	const Size2i &get_world_size() const { return world_size; }
-	void set_world_size(const Size2i &p_world_size);
-
-	const Size2i &get_datagrid_count() const { return datagrid_count; }
-	void set_datagrid_count(const Size2i &p_datagrid_count) { return; }
 	
-	int get_cell_size() const { return cell_size; }
+	void set_world_size(const Size2i &p_world_size);
+	const Size2i &get_world_size() const { return world_size; }
+	void set_datagrid_count(const Size2i &p_datagrid_count) { return; } // TODO: add methods for templates overlapping multiple grids
+	const Size2i &get_datagrid_count() const { return datagrid_count; }
 	void set_cell_size(int p_cell_size);
-
-	const Size2i &get_datagrid_size() const { return datagrid_size; }
+	int get_cell_size() const { return cell_size; }
 	void set_datagrid_size(const Size2i &p_datagrid_size) { return; }
-
-	float get_update_frequency() const { return update_frequency; }
+	const Size2i &get_datagrid_size() const { return datagrid_size; }
 	void set_update_frequency(float p_update_frequency) { update_frequency = p_update_frequency; }
-
-	Ref<DataGrid> get_datagrid() const { return datagrid; }
-
+	float get_update_frequency() const { return update_frequency; }
+	
 	void initialize_templates(int min_radius, int max_radius, int steps);
 	Ref<DataGrid> get_template(int p_radius) const;
+	void update();
+	void emit_updated(Ref<DataGridCollection> datagrid_collection);
+
+	Vector2i world_position_to_grid_position(const Vector2i &p_world_position) const;
+	bool grid_position_in_bounds(const Vector2i &p_data_grid_position) const;
+	Vector2i world_position_to_cell_in_data_grid(const Vector2 &p_world_position, const Vector2i &p_data_grid_position) const;
 };
 }
 
