@@ -49,8 +49,9 @@ public:
 	const Size2i &get_datagrid_count() const { return datagrid_count; }
 	void set_cell_size(int p_cell_size);
 	int get_cell_size() const { return cell_size; }
-	void set_datagrid_size(const Size2i &p_datagrid_size) { return; }
+	void set_datagrid_size(const Size2i &p_datagrid_size = Size2i(0, 0));
 	const Size2i &get_datagrid_size() const { return datagrid_size; }
+	void emit_datagrid_size_changed();
 	void set_update_frequency(float p_update_frequency) { update_frequency = p_update_frequency; }
 	float get_update_frequency() const { return update_frequency; }
 	

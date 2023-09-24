@@ -30,8 +30,9 @@ void DataGridManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_datagrid_count"), &DataGridManager::get_datagrid_count);
 	ClassDB::bind_method(D_METHOD("set_cell_size", "cell_size"), &DataGridManager::set_cell_size);
 	ClassDB::bind_method(D_METHOD("get_cell_size"), &DataGridManager::get_cell_size);
-	ClassDB::bind_method(D_METHOD("set_datagrid_size", "datagrid_size"), &DataGridManager::set_datagrid_size);
+	ClassDB::bind_method(D_METHOD("set_datagrid_size", "datagrid_size"), &DataGridManager::set_datagrid_size, DEFVAL(Size2i(0, 0))); 
 	ClassDB::bind_method(D_METHOD("get_datagrid_size"), &DataGridManager::get_datagrid_size);
+	ClassDB::bind_method(D_METHOD("emit_datagrid_size_changed"), &DataGridManager::emit_datagrid_size_changed);
 	ClassDB::bind_method(D_METHOD("set_update_frequency", "update_frequency"), &DataGridManager::set_update_frequency);
 	ClassDB::bind_method(D_METHOD("get_update_frequency"), &DataGridManager::get_update_frequency);
 	ClassDB::bind_method(D_METHOD("initialize_templates", "min_radius", "max_radius", "steps"), &DataGridManager::initialize_templates);
@@ -49,6 +50,8 @@ void DataGridManager::_bind_methods() {
 	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::FLOAT, "update_frequency"), "set_update_frequency", "get_update_frequency");
 
 	ADD_SIGNAL(MethodInfo("updated", PropertyInfo(Variant::OBJECT, "datagrid_collection")));
+	ADD_SIGNAL(MethodInfo("datagrid_size_changed", PropertyInfo(Variant::VECTOR2I, "datagrid_size")));
+
 }
 
 DataGridManager::DataGridManager() {
@@ -65,14 +68,23 @@ DataGridManager::~DataGridManager() {
 
 void DataGridManager::set_world_size(const Size2i &p_world_size) {
 	world_size = p_world_size;
-	datagrid_size = world_size / (datagrid_count * cell_size);
+	set_datagrid_size();
 	datagrid_collection->clear();
 }
 
 void DataGridManager::set_cell_size(int p_cell_size) {
 	cell_size = p_cell_size;
-	datagrid_size = world_size / (datagrid_count * cell_size);
+	set_datagrid_size();
 	datagrid_collection->clear();
+}
+
+void DataGridManager::set_datagrid_size(const Size2i &p_datagrid_size) {
+	datagrid_size = world_size / (datagrid_count * cell_size);
+	emit_datagrid_size_changed();
+}
+
+void DataGridManager::emit_datagrid_size_changed() {
+	emit_signal("datagrid_size_changed", datagrid_size);
 }
 
 void DataGridManager::initialize_templates(int min_radius, int max_radius, int steps) {
