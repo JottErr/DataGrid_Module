@@ -182,6 +182,6 @@ void DataGridManager::update() {
 	emit_updated(datagrid_collection);
 }
 
-void DataGridManager::emit_updated(Ref<DataGridCollection> p_datagrid_collection) {
+void DataGridManager::emit_updated(const Ref<DataGridCollection> &p_datagrid_collection) {
 	emit_signal("updated", p_datagrid_collection);
 }

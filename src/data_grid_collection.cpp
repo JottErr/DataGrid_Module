@@ -17,7 +17,7 @@ DataGridCollection::DataGridCollection() {
 DataGridCollection::~DataGridCollection() {
 }
 
-void DataGridCollection::add_datagrid_to_collection(const Point2i &p_datagrid_position, int p_layer, Ref<DataGrid> p_datagrid) {
+void DataGridCollection::add_datagrid_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<DataGrid> &p_datagrid) {
 	if (!layered_datagrid_collection.has(p_datagrid_position)) {
 		Dictionary layer_stack;
 		layer_stack[p_layer] = p_datagrid;

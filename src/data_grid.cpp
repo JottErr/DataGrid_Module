@@ -44,7 +44,7 @@ void DataGrid::set_size_in_cells(const Size2i &p_size_in_cells) {
 	reset_data();
 }
 
-void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, Ref<MathCurve> curve, float magnitude) {
+void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, const Ref<MathCurve> &curve, float magnitude) {
 	Point2i radius_topleft = p_position - Vector2i(radius, radius);
 	Point2i radius_botright = p_position + Vector2i(radius + 1, radius + 1);
 
@@ -52,8 +52,9 @@ void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, 
 	radius_botright = radius_botright.min(size_in_cells);
 	
 	for (int y = radius_topleft.y; y < radius_botright.y; y++) {
+		int y_from_center = p_position.y - y;
 		for (int x = radius_topleft.x; x < radius_botright.x; x++) {
-			float distance = Vector2i(p_position.x - x, p_position.y - y).length();
+			float distance = Vector2i(p_position.x - x, y_from_center).length();
 			distance = Math::min(1.0f, distance / radius);
 			float value = curve->calculate_value(distance);
 			data[x + y * size_in_cells.x] = value * magnitude;
@@ -61,7 +62,7 @@ void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, 
 	}
 }
 
-void DataGrid::add_grid_at_pos(Ref<DataGrid> other_grid, Point2i p_position, float magnitude) {
+void DataGrid::add_grid_at_pos(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude) {
 	Point2i other_topleft = p_position - other_grid->get_center();
 	Point2i other_botright = other_topleft + other_grid->get_size_in_cells();
 

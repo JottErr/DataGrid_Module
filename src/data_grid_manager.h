@@ -58,7 +58,7 @@ public:
 	void initialize_templates(int min_radius, int max_radius, int steps);
 	Ref<DataGrid> get_template(int p_radius) const;
 	void update();
-	void emit_updated(Ref<DataGridCollection> datagrid_collection);
+	void emit_updated(const Ref<DataGridCollection> &datagrid_collection);
 
 	Vector2i world_position_to_grid_position(const Vector2i &p_world_position) const;
 	bool grid_position_in_bounds(const Vector2i &p_data_grid_position) const;
