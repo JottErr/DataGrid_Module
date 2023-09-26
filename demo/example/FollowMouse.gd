@@ -7,6 +7,7 @@ extends Sprite2D
 func _process(delta: float) -> void:
 	set_global_position(get_global_mouse_position())
 
+
 func _unhandled_input(event: InputEvent) -> void:
 	if Input.is_action_just_pressed("scroll_down"):
 		data_grid_component.radius -= 15

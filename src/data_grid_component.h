@@ -36,7 +36,6 @@ public:
 	const Array &get_registered_layers() const { return registered_layers; } // *1
 	void set_registered_radius(float p_radius) { registered_radius = p_radius; }
 	float get_registered_radius() const { return registered_radius; }
-	
 };
 }
 // *1: cant return TypedArray<int32_t> binder_common.hpp(209): error C2039: "encode" ist kein Member von "godot::PtrToArg<R>".

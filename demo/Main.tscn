@@ -15,7 +15,6 @@ shader_parameter/data_grid = null
 script = ExtResource("1_kbwwx")
 
 [node name="DataGridTimer" type="Timer" parent="."]
-autostart = true
 
 [node name="GridSprite" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_p7g0d")
