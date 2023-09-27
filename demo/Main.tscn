@@ -4,7 +4,7 @@
 [ext_resource type="Shader" path="res://visualization/DataGridVis.gdshader" id="2_mh84n"]
 [ext_resource type="Texture2D" uid="uid://dcrnhhfjy8ssd" path="res://icon.svg" id="3_mbij7"]
 [ext_resource type="Script" path="res://visualization/GridSprite.gd" id="4_4yywm"]
-[ext_resource type="PackedScene" uid="uid://6l5ivfcqm12o" path="res://example/FollowMouse.tscn" id="5_yl5ko"]
+[ext_resource type="PackedScene" uid="uid://6l5ivfcqm12o" path="res://example/FollowMouse.tscn" id="5_j18mb"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_p7g0d"]
 shader = ExtResource("2_mh84n")
@@ -29,7 +29,9 @@ world_size = Vector2i(1280, 720)
 cell_size = 15
 datagrid_size = Vector2i(85, 48)
 
-[node name="FollowMouse" parent="." instance=ExtResource("5_yl5ko")]
+[node name="FollowMouse" parent="." instance=ExtResource("5_j18mb")]
+
+[node name="FollowMouse2" parent="." instance=ExtResource("5_j18mb")]
 
 [connection signal="timeout" from="DataGridTimer" to="." method="_on_data_grid_timer_timeout"]
 [connection signal="datagrid_size_changed" from="GridSprite/DataGridManager" to="GridSprite" method="_on_data_grid_manager_datagrid_size_changed"]

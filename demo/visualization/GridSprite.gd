@@ -17,5 +17,8 @@ func _on_data_grid_manager_datagrid_size_changed(datagrid_size: Vector2i) -> voi
 func _on_data_grid_manager_updated(datagrid_collection: Object) -> void:
 	datagrid_collection = datagrid_collection as DataGridCollection
 	var datagrid: DataGrid = datagrid_collection.get_layer_at_pos(datagrid_position, layer)
+	if datagrid == null:
+		print("nothing to show")
+		return
 	var data := PackedFloat32Array(datagrid.get_data())
 	material.set_shader_parameter("data_grid", data)

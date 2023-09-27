@@ -5,6 +5,9 @@ extends Node2D
 @onready var timer: Timer = $DataGridTimer
 @onready var grid_sprite: Sprite2D = $GridSprite
 
+func _unhandled_input(event: InputEvent) -> void:
+	if Input.is_action_just_pressed("ui_down"):
+		$FollowMouse.queue_free()
 
 func _ready() -> void:
 	timer.set_wait_time(data_grid_manager.get_update_frequency())
