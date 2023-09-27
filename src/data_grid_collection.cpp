@@ -56,7 +56,7 @@ bool DataGridCollection::has_layer_at_pos(const Point2i &p_datagrid_position, in
 }
 
 Ref<DataGrid> DataGridCollection::get_layer_at_pos(const Point2i &p_datagrid_position, int p_layer) const {
-	if (!layered_datagrid_collection.has(p_datagrid_position)) {
+	if (!this->has_layer_at_pos(p_datagrid_position, p_layer)) {
 		return nullptr;
 	}
 	Dictionary layer_stack = layered_datagrid_collection[p_datagrid_position];
