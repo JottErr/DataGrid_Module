@@ -5,13 +5,17 @@
 #include "data_grid_collection.h"
 #include "data_grid_component.h"
 #include "data_grid_manager.h"
+#include "data_grid_hub.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 using namespace godot;
+
+static DataGridHub *_datagrid_hub;
 
 void initialize_data_grid_module(ModuleInitializationLevel p_level) {
     if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
@@ -23,12 +27,18 @@ void initialize_data_grid_module(ModuleInitializationLevel p_level) {
     ClassDB::register_class<DataGridTemplate>();
     ClassDB::register_class<DataGridComponent>();
     ClassDB::register_class<DataGridManager>();
+	ClassDB::register_class<DataGridHub>();
+
+	_datagrid_hub = memnew(DataGridHub);
+	Engine::get_singleton()->register_singleton("DataGridHub", DataGridHub::get_singleton());
 }
 
 void uninitialize_data_grid_module(ModuleInitializationLevel p_level) {
     if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
         return;
     }
+	Engine::get_singleton()->unregister_singleton("DataGridHub");
+	//memdelete(_datagrid_hub);
 }
 
 extern "C" {
