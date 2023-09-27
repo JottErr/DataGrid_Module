@@ -2,6 +2,8 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/classes/engine.hpp>
+#include "data_grid_hub.h"
 
 using namespace godot;
 
@@ -132,12 +134,20 @@ Vector2i DataGridManager::world_position_to_cell_in_data_grid(const Vector2 &p_w
 
 
 void DataGridManager::update() {
-	SceneTree *tree = get_tree();
-	Array nodes = tree->get_nodes_in_group("DataComponents");
+	Engine *engine = Engine::get_singleton();
+	if (engine->is_editor_hint() || !(engine->has_singleton("DataGridHub"))) {
+		return;
+	}
+	DataGridHub *hub = Object::cast_to<DataGridHub>(Engine::get_singleton()->get_singleton("DataGridHub"));
+	Array nodes = hub->get_registered_components();
+	TypedArray<int> removed_nodes;
 	for (int i = 0; i < nodes.size(); i++) {
-		Variant node = nodes[i];
-		DataGridComponent *component = Object::cast_to<DataGridComponent>(node);
-		// De-Register
+		DataGridComponent *component = Object::cast_to<DataGridComponent>(nodes[i]);
+		if (component == nullptr || !(component->is_inside_tree())) {
+			removed_nodes.append(i);
+			continue;
+		}
+		// Deregister
 		if (component->is_registered()) {
 			Vector2 world_position = component->get_registered_position();
 			Vector2i data_grid_position = world_position_to_grid_position(world_position);
@@ -179,6 +189,7 @@ void DataGridManager::update() {
 		component->set_registered_layers(component->get_layers());
 		component->set_registered_radius(component->get_radius());
 	}
+	hub->remove_components(removed_nodes);
 	emit_updated(datagrid_collection);
 }
 

@@ -1,6 +1,8 @@
 #include "data_grid_component.h"
+#include "data_grid_hub.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 using namespace godot;
 
@@ -31,8 +33,15 @@ DataGridComponent::DataGridComponent() {
 	registered = false;
 	registered_position = Vector2(0, 0);
 	registered_radius = 0.0;
-	add_to_group("DataComponents");
 }
 
 DataGridComponent::~DataGridComponent() {
+}
+
+void DataGridComponent::_enter_tree() {
+	Engine *engine = Engine::get_singleton();
+	if (!engine->is_editor_hint() && engine->has_singleton("DataGridHub")) {
+		DataGridHub *hub = Object::cast_to<DataGridHub>(Engine::get_singleton()->get_singleton("DataGridHub"));
+		hub->add_component(this);
+	}
 }
