@@ -5,9 +5,11 @@ extends Node2D
 @onready var timer: Timer = $DataGridTimer
 @onready var grid_sprite: Sprite2D = $GridSprite
 
+
 func _unhandled_input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("ui_down"):
+	if Input.is_action_just_pressed("ui_up"):
 		$FollowMouse.queue_free()
+
 
 func _ready() -> void:
 	test_data_grid_manager()
