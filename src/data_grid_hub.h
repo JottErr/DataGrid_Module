@@ -11,7 +11,7 @@ class DataGridHub : public Object {
 
 private:
 	static DataGridHub *singleton;
-	TypedArray<DataGridComponent> registered_components;
+	TypedArray<DataGridCompRef> registered_components;
 
 protected:
 	static void _bind_methods();
@@ -22,9 +22,8 @@ public:
 	DataGridHub();
 	~DataGridHub();
 
-	void hello_singleton();
-	void add_component(DataGridComponent *p_datagrid_component);
-	TypedArray<DataGridComponent> &get_registered_components() { return registered_components; }
+	void add_component_data_res(Ref<DataGridCompRef> p_datagrid_component_data_res);
+	TypedArray<DataGridCompRef> get_registered_components_data_res() { return registered_components; }
 	void remove_components(const TypedArray<int> &p_indices);
 };
 

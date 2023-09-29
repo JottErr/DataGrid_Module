@@ -139,14 +139,10 @@ void DataGridManager::update() {
 		return;
 	}
 	DataGridHub *hub = Object::cast_to<DataGridHub>(Engine::get_singleton()->get_singleton("DataGridHub"));
-	Array nodes = hub->get_registered_components();
+	TypedArray<DataGridCompRef> nodes = hub->get_registered_components_data_res();
 	TypedArray<int> removed_nodes;
 	for (int i = 0; i < nodes.size(); i++) {
-		DataGridComponent *component = Object::cast_to<DataGridComponent>(nodes[i]);
-		if (component == nullptr || !(component->is_inside_tree())) {
-			removed_nodes.append(i);
-			continue;
-		}
+		Ref<DataGridCompRef> component = nodes[i]; //Object::cast_to<DataGridComponent>(nodes[i]);
 		// Deregister
 		if (component->is_registered()) {
 			Vector2 world_position = component->get_registered_position();
@@ -162,6 +158,12 @@ void DataGridManager::update() {
 				}
 			}
 		}
+		DataGridComponent *comp_ptr = component->get_component();
+		if (comp_ptr == nullptr || !(comp_ptr->is_inside_tree())) {
+			removed_nodes.append(i);
+			continue;
+		}
+
 		// Register
 		Vector2 world_position = component->get_global_position();
 		Vector2i data_grid_position = world_position_to_grid_position(world_position);
