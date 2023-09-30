@@ -50,14 +50,21 @@ void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, 
 
 	radius_topleft = radius_topleft.max(Point2i(0, 0));
 	radius_botright = radius_botright.min(size_in_cells);
+
+	int radius_squared = radius * radius;
 	
 	for (int y = radius_topleft.y; y < radius_botright.y; y++) {
-		int y_from_center = p_position.y - y;
+		int row = y * size_in_cells.x;
+		int dy = p_position.y - y;
 		for (int x = radius_topleft.x; x < radius_botright.x; x++) {
-			float distance = Vector2i(p_position.x - x, y_from_center).length();
-			distance = Math::min(1.0f, distance / radius);
+			int dx = p_position.x - x;
+			int distance_squared = dx * dx + dy * dy;
+			if (distance_squared > radius_squared) {
+				continue;
+			}
+			float distance = Vector2i(dx, dy).length() / radius;
 			float value = curve->calculate_value(distance);
-			data[x + y * size_in_cells.x] = value * magnitude;
+			data[x + row] = value * magnitude;
 		}
 	}
 }
