@@ -63,7 +63,7 @@ void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, 
 				continue;
 			}
 			float distance = Vector2i(dx, dy).length() / radius;
-			float value = curve->calculate_value(distance);
+			float value = curve->sample_curve(distance);
 			data[x + row] = value * magnitude;
 		}
 	}

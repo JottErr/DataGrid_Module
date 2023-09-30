@@ -31,7 +31,7 @@ public:
 	void set_y_shift(const float p_y_shift) { y_shift = p_y_shift; }
 	
 	void set_parameters(float p_slope, float p_exponent, float p_x_shift, float p_y_shift);
-	float calculate_value(float x_value) const;
+	float sample_curve(float x_value) const;
 };
 
 }

@@ -14,7 +14,7 @@ void MathCurve::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_y_shift", "y_shift"), &MathCurve::set_y_shift);
 
 	ClassDB::bind_method(D_METHOD("set_parameters", "slope", "exponent", "x_shift", "y_shift"), &MathCurve::set_parameters);
-	ClassDB::bind_method(D_METHOD("calculate_value", "x_value"), &MathCurve::calculate_value);
+	ClassDB::bind_method(D_METHOD("sample_curve", "x_value"), &MathCurve::sample_curve);
 
 	ClassDB::add_property("MathCurve", PropertyInfo(Variant::FLOAT, "slope"), "set_slope", "get_slope");
 	ClassDB::add_property("MathCurve", PropertyInfo(Variant::FLOAT, "exponent"), "set_exponent", "get_exponent");
@@ -36,6 +36,6 @@ void MathCurve::set_parameters(float p_slope, float p_exponent, float p_x_shift,
 	y_shift = p_y_shift;
 }
 
-float MathCurve::calculate_value(float x_value) const {
+float MathCurve::sample_curve(float x_value) const {
 	return slope * Math::pow((x_value + x_shift), exponent) + y_shift;
 }
