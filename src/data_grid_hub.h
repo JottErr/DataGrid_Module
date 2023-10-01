@@ -2,6 +2,7 @@
 #define DATAGRIDHUB_H
 
 #include "data_grid_component.h"
+#include "data_grid_manager.h"
 #include <godot_cpp/classes/object.hpp>
 
 using namespace godot;
@@ -11,7 +12,9 @@ class DataGridHub : public Object {
 
 private:
 	static DataGridHub *singleton;
+	DataGridManager *world_grid_manager;
 	TypedArray<DataGridCompRef> registered_components;
+	
 
 protected:
 	static void _bind_methods();
@@ -22,9 +25,12 @@ public:
 	DataGridHub();
 	~DataGridHub();
 
+	void set_world_grid_manager(DataGridManager *p_world_grid_manager);
+	DataGridManager *get_world_grid_manager() const;
 	void add_component_data_res(Ref<DataGridCompRef> p_datagrid_component_data_res);
 	TypedArray<DataGridCompRef> get_registered_components_data_res() { return registered_components; }
 	void remove_components(const TypedArray<int> &p_indices);
+
 };
 
 #endif // DATAGRIDHUB_H
