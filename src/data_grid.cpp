@@ -17,6 +17,7 @@ void DataGrid::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("fill", "value"), &DataGrid::fill);
 	ClassDB::bind_method(D_METHOD("radiate_value_at_position", "position", "radius", "curve", "magnitude"), &DataGrid::radiate_value_at_position, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("add_grid_centered_at_pos", "other_grid", "position", "magnitude"), &DataGrid::add_grid_centered_at_pos, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("add_from_pos_in_grid", "other_grid", "position", "magnitude"), &DataGrid::add_from_pos_in_grid, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("show_grid"), &DataGrid::show_grid);
 	
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
@@ -77,7 +78,7 @@ void DataGrid::add_grid_centered_at_pos(const Ref<DataGrid> &other_grid, Point2i
 
 	Point2i intersection_topleft = other_topleft.max(Point2i(0, 0));
 	Point2i intersection_botright = other_botright.min(size_in_cells);
-	
+
 	int other_grid_width = other_grid->get_size_in_cells().x;
 	
 	for (int y = intersection_topleft.y; y < intersection_botright.y; y++) {
@@ -88,6 +89,28 @@ void DataGrid::add_grid_centered_at_pos(const Ref<DataGrid> &other_grid, Point2i
 			float other_value = other_grid->data[other_x + other_row];
 			float value = data[x + row];
 			data[x + row] = value + other_value * magnitude;
+		}
+	}
+}
+// Adds from the given grid to the current DataGrid. A region with the size of the this grid is defined around the specified position in the other grid.
+// Values added from the other grid are scaled with the specified magnitude. Used to add part of a large grid into a smaller grid.
+void DataGrid::add_from_pos_in_grid(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude) {
+	Point2i topleft_in_other = p_position - center;
+	Point2i botright_in_other = topleft_in_other + size_in_cells;
+
+	Point2i intersection_topleft = topleft_in_other.max(Point2i(0, 0));
+	Point2i intersection_botright = botright_in_other.min(other_grid->get_size_in_cells());
+
+	int other_grid_width = other_grid->get_size_in_cells().x;
+
+	for (int y = intersection_topleft.y; y < intersection_botright.y; y++) {
+		int row = (y - topleft_in_other.y) * size_in_cells.x;
+		int other_row = y * other_grid_width;
+		for (int x = intersection_topleft.x; x < intersection_botright.x; x++) {
+			int this_x = x - topleft_in_other.x;
+			float other_value = other_grid->data[x + other_row];
+			float value = data[this_x + row];
+			data[this_x + row] = value + other_value * magnitude;
 		}
 	}
 }
