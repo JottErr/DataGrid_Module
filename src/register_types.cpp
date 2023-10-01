@@ -2,7 +2,6 @@
 
 #include "math_curve.h"
 #include "data_grid.h"
-#include "data_grid_collection.h"
 #include "data_grid_component.h"
 #include "data_grid_comp_ref.h"
 #include "data_grid_manager.h"
@@ -24,7 +23,6 @@ void initialize_data_grid_module(ModuleInitializationLevel p_level) {
 	}
 	ClassDB::register_class<MathCurve>();
 	ClassDB::register_class<DataGrid>();
-	ClassDB::register_class<DataGridCollection>();
 	ClassDB::register_class<DataGridTemplate>();
 	ClassDB::register_class<DataGridCompRef>();
 	ClassDB::register_class<DataGridComponent>();

@@ -44,6 +44,11 @@ void DataGridManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("world_position_to_grid_position", "world_position"), &DataGridManager::world_position_to_grid_position);
 	ClassDB::bind_method(D_METHOD("grid_position_in_bounds", "data_grid_position"), &DataGridManager::grid_position_in_bounds);
 	ClassDB::bind_method(D_METHOD("world_position_to_cell_in_data_grid", "world_position", "data_grid_position"), &DataGridManager::world_position_to_cell_in_data_grid);
+	
+	ClassDB::bind_method(D_METHOD("add_datagrid_layer_to_collection", "datagrid_position", "layer", "datagrid"), &DataGridManager::add_datagrid_layer_to_collection);
+	ClassDB::bind_method(D_METHOD("has_datagrid_layer", "datagrid_position", "layer"), &DataGridManager::has_datagrid_layer);
+	ClassDB::bind_method(D_METHOD("get_datagrid_layer", "datagrid_position", "layer"), &DataGridManager::get_datagrid_layer);
+	ClassDB::bind_method(D_METHOD("filter_datagrid_layers", "datagrid_position", "filter_layers"), &DataGridManager::filter_datagrid_layers);
 
 	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "world_size"), "set_world_size", "get_world_size");
 	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "datagrid_count"), "set_datagrid_count", "get_datagrid_count");
@@ -51,9 +56,8 @@ void DataGridManager::_bind_methods() {
 	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "datagrid_size"), "set_datagrid_size", "get_datagrid_size");
 	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::FLOAT, "update_frequency"), "set_update_frequency", "get_update_frequency");
 
-	ADD_SIGNAL(MethodInfo("updated", PropertyInfo(Variant::OBJECT, "datagrid_collection")));
+	ADD_SIGNAL(MethodInfo("updated", PropertyInfo(Variant::DICTIONARY, "datagrid_collection")));
 	ADD_SIGNAL(MethodInfo("datagrid_size_changed", PropertyInfo(Variant::VECTOR2I, "datagrid_size")));
-
 }
 
 DataGridManager::DataGridManager() {
@@ -61,7 +65,6 @@ DataGridManager::DataGridManager() {
 	datagrid_count = Size2i(1, 1);
 	cell_size = 1;
 	datagrid_size = Size2i(1, 1);
-	datagrid_collection.instantiate();
 	update_frequency = 1.0;
 }
 
@@ -71,13 +74,13 @@ DataGridManager::~DataGridManager() {
 void DataGridManager::set_world_size(const Size2i &p_world_size) {
 	world_size = p_world_size;
 	set_datagrid_size();
-	datagrid_collection->clear();
+	datagrid_collection.clear();
 }
 
 void DataGridManager::set_cell_size(int p_cell_size) {
 	cell_size = p_cell_size;
 	set_datagrid_size();
-	datagrid_collection->clear();
+	datagrid_collection.clear();
 }
 
 void DataGridManager::set_datagrid_size(const Size2i &p_datagrid_size) {
@@ -132,6 +135,52 @@ Vector2i DataGridManager::world_position_to_cell_in_data_grid(const Vector2 &p_w
 	return Vector2i((p_world_position - p_data_grid_position * datagrid_size * cell_size) / cell_size);
 }
 
+void godot::DataGridManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<DataGrid> &p_datagrid) {
+	if (!datagrid_collection.has(p_datagrid_position)) {
+		Dictionary layer_stack;
+		layer_stack[p_layer] = p_datagrid;
+		datagrid_collection[p_datagrid_position] = layer_stack;
+		return;
+	}
+	Dictionary layer_stack = datagrid_collection[p_datagrid_position];
+	if (!layer_stack.has(p_layer)) {
+		layer_stack[p_layer] = p_datagrid;
+	}
+}
+
+bool DataGridManager::has_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
+	if (!datagrid_collection.has(p_datagrid_position)) {
+		return false;
+	}
+	Dictionary layer_stack = datagrid_collection[p_datagrid_position];
+	return layer_stack.has(p_layer);
+}
+
+Ref<DataGrid> DataGridManager::get_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
+	if (!has_datagrid_layer(p_datagrid_position, p_layer)) {
+		return nullptr;
+	}
+	Dictionary layer_stack = datagrid_collection[p_datagrid_position];
+	Ref<DataGrid> layer = layer_stack[p_layer];
+	return layer;
+}
+
+Dictionary DataGridManager::filter_datagrid_layers(const Point2i &p_datagrid_position, const Array &filter_layers) const {
+	Dictionary result;
+	if (datagrid_collection.has(p_datagrid_position)) {
+		Dictionary all_layers = datagrid_collection[p_datagrid_position];
+		if (filter_layers.is_empty()) {
+			return all_layers;
+		}
+		for (int i = 0; i < filter_layers.size(); i++) {
+			int layer = filter_layers[i];
+			if (all_layers.has(layer)) {
+				result[layer] = all_layers[layer];
+			}
+		}
+	}
+	return result;
+}
 
 void DataGridManager::update() {
 	Engine *engine = Engine::get_singleton();
@@ -152,8 +201,8 @@ void DataGridManager::update() {
 			int amount_layers = component->get_registered_layers().size();
 			for (int i = 0; i < amount_layers; i++) {
 				int layer = component->get_layers()[i];
-				if (datagrid_collection->has_layer_at_pos(data_grid_position, layer)) {
-					Ref<DataGrid> datagrid = datagrid_collection->get_layer_at_pos(data_grid_position, layer);
+				if (has_datagrid_layer(data_grid_position, layer)) {
+					Ref<DataGrid> datagrid = get_datagrid_layer(data_grid_position, layer);
 					datagrid->add_grid_centered_at_pos(get_template(radius), cell_in_data_grid, -1.0);
 				}
 			}
@@ -176,14 +225,14 @@ void DataGridManager::update() {
 		int amount_layers = component->get_layers().size();
 		for (int i = 0; i < amount_layers; i++) {
 			int layer = component->get_layers()[i];
-			if (!datagrid_collection->has_layer_at_pos(data_grid_position, layer)) {
+			if (!has_datagrid_layer(data_grid_position, layer)) {
 				Ref<DataGrid> datagrid;
 				datagrid.instantiate();
 				datagrid->set_cell_size(cell_size);
 				datagrid->set_size_in_cells(Vector2i(datagrid_size));
-				datagrid_collection->add_datagrid_to_collection(data_grid_position, layer, datagrid);
+				add_datagrid_layer_to_collection(data_grid_position, layer, datagrid);
 			}
-			Ref<DataGrid> datagrid = datagrid_collection->get_layer_at_pos(data_grid_position, layer);
+			Ref<DataGrid> datagrid = get_datagrid_layer(data_grid_position, layer);
 			datagrid->add_grid_centered_at_pos(get_template(radius), cell_in_data_grid, 1.0);
 		}
 		component->set_registered(true);
@@ -195,6 +244,6 @@ void DataGridManager::update() {
 	emit_updated(datagrid_collection);
 }
 
-void DataGridManager::emit_updated(const Ref<DataGridCollection> &p_datagrid_collection) {
+void DataGridManager::emit_updated(const Dictionary &p_datagrid_collection) {
 	emit_signal("updated", p_datagrid_collection);
 }

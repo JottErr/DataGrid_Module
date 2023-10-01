@@ -3,7 +3,6 @@
 
 #include <godot_cpp/classes/node.hpp>
 #include "data_grid.h"
-#include "data_grid_collection.h"
 #include "data_grid_component.h"
 
 namespace godot {
@@ -33,7 +32,7 @@ private:
 	
 	float update_frequency;
 
-	Ref<DataGridCollection> datagrid_collection;
+	Dictionary datagrid_collection;
 	TypedArray<DataGridTemplate> templates;
 
 protected:
@@ -58,11 +57,16 @@ public:
 	void initialize_templates(int min_radius, int max_radius, int steps);
 	Ref<DataGrid> get_template(int p_radius) const;
 	void update();
-	void emit_updated(const Ref<DataGridCollection> &datagrid_collection);
+	void emit_updated(const Dictionary &datagrid_collection);
 
 	Vector2i world_position_to_grid_position(const Vector2i &p_world_position) const;
 	bool grid_position_in_bounds(const Vector2i &p_data_grid_position) const;
 	Vector2i world_position_to_cell_in_data_grid(const Vector2 &p_world_position, const Vector2i &p_data_grid_position) const;
+	
+	void add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<DataGrid> &p_datagrid);
+	bool has_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const;
+	Ref<DataGrid> get_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const;
+	Dictionary filter_datagrid_layers(const Point2i &p_datagrid_position, const Array &filter_layers) const;
 };
 }
 
