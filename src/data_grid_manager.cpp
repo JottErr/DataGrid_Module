@@ -154,7 +154,7 @@ void DataGridManager::update() {
 				int layer = component->get_layers()[i];
 				if (datagrid_collection->has_layer_at_pos(data_grid_position, layer)) {
 					Ref<DataGrid> datagrid = datagrid_collection->get_layer_at_pos(data_grid_position, layer);
-					datagrid->add_grid_at_pos(get_template(radius), cell_in_data_grid, -1.0);
+					datagrid->add_grid_centered_at_pos(get_template(radius), cell_in_data_grid, -1.0);
 				}
 			}
 		}
@@ -184,7 +184,7 @@ void DataGridManager::update() {
 				datagrid_collection->add_datagrid_to_collection(data_grid_position, layer, datagrid);
 			}
 			Ref<DataGrid> datagrid = datagrid_collection->get_layer_at_pos(data_grid_position, layer);
-			datagrid->add_grid_at_pos(get_template(radius), cell_in_data_grid, 1.0);
+			datagrid->add_grid_centered_at_pos(get_template(radius), cell_in_data_grid, 1.0);
 		}
 		component->set_registered(true);
 		component->set_registered_position(world_position);

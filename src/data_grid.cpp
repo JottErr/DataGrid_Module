@@ -16,7 +16,7 @@ void DataGrid::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("fill", "value"), &DataGrid::fill);
 	ClassDB::bind_method(D_METHOD("radiate_value_at_position", "position", "radius", "curve", "magnitude"), &DataGrid::radiate_value_at_position, DEFVAL(1.0f));
-	ClassDB::bind_method(D_METHOD("add_grid_at_pos", "other_grid", "position", "magnitude"), &DataGrid::add_grid_at_pos, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("add_grid_centered_at_pos", "other_grid", "position", "magnitude"), &DataGrid::add_grid_centered_at_pos, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("show_grid"), &DataGrid::show_grid);
 	
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
@@ -69,20 +69,25 @@ void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, 
 	}
 }
 
-void DataGrid::add_grid_at_pos(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude) {
+// Adds the given grid to the current DataGrid. The other grid is centered at the specified position in this grid. 
+// The other grid is scaled with the specified magnitude. Used to add a smaller grid into a large grid.
+void DataGrid::add_grid_centered_at_pos(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude) {
 	Point2i other_topleft = p_position - other_grid->get_center();
 	Point2i other_botright = other_topleft + other_grid->get_size_in_cells();
 
 	Point2i intersection_topleft = other_topleft.max(Point2i(0, 0));
 	Point2i intersection_botright = other_botright.min(size_in_cells);
 	
+	int other_grid_width = other_grid->get_size_in_cells().x;
+	
 	for (int y = intersection_topleft.y; y < intersection_botright.y; y++) {
-		int other_y = y - other_topleft.y;
+		int row = y * size_in_cells.x;
+		int other_row = (y - other_topleft.y) * other_grid_width;
 		for (int x = intersection_topleft.x; x < intersection_botright.x; x++) {
 			int other_x = x - other_topleft.x;
-			float other_value = other_grid->data[other_x + other_y * other_grid->get_size_in_cells().x];
-			float value = data[x + y * size_in_cells.x];
-			data[x + y * size_in_cells.x] = value + other_value * magnitude;
+			float other_value = other_grid->data[other_x + other_row];
+			float value = data[x + row];
+			data[x + row] = value + other_value * magnitude;
 		}
 	}
 }
