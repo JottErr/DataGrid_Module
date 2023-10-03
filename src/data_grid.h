@@ -41,6 +41,8 @@ public:
 	void add_from_pos_in_grid(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude = 1.0f);
 	void show_grid();
 
+	Point2i get_highest_cell() const;
+	Point2i get_lowest_cell() const;
 };
 
 }

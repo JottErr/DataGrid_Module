@@ -18,6 +18,8 @@ void DataGrid::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("radiate_value_at_position", "position", "radius", "curve", "magnitude"), &DataGrid::radiate_value_at_position, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("add_grid_centered_at_pos", "other_grid", "position", "magnitude"), &DataGrid::add_grid_centered_at_pos, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("add_from_pos_in_grid", "other_grid", "position", "magnitude"), &DataGrid::add_from_pos_in_grid, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("get_highest_cell"), &DataGrid::get_highest_cell);
+	ClassDB::bind_method(D_METHOD("get_lowest_cell"), &DataGrid::get_lowest_cell);
 	ClassDB::bind_method(D_METHOD("show_grid"), &DataGrid::show_grid);
 	
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
@@ -113,6 +115,52 @@ void DataGrid::add_from_pos_in_grid(const Ref<DataGrid> &other_grid, Point2i p_p
 			data[this_x + row] = value + other_value * magnitude;
 		}
 	}
+}
+
+Point2i DataGrid::get_highest_cell() const {
+	float maxValue = -INFINITY;
+	Size2i position = Vector2i();
+
+	Vector2i offset;
+	offset.x = UtilityFunctions::randi_range(0, size_in_cells.x);
+	offset.y = UtilityFunctions::randi_range(0, size_in_cells.y);
+
+	for (int y = 0; y < size_in_cells.y; y++) {
+		int rand_y = (y + offset.y) % size_in_cells.y;
+		int row = rand_y * size_in_cells.x;
+		for (int x = 0; x < size_in_cells.x; x++) {
+			int rand_x = (x + offset.x) % size_in_cells.x;
+			float value = data[rand_x + row];
+			if (value > maxValue) {
+				maxValue = value;
+				position = Vector2i(rand_x, rand_y);
+			}
+		}
+	}
+	return position;
+}
+
+Point2i DataGrid::get_lowest_cell() const {
+	float minValue = INFINITY;
+	Size2i position = Vector2i();
+
+	Vector2i offset;
+	offset.x = UtilityFunctions::randi_range(0, size_in_cells.x);
+	offset.y = UtilityFunctions::randi_range(0, size_in_cells.y);
+
+	for (int y = 0; y < size_in_cells.y; y++) {
+		int rand_y = (y + offset.y) % size_in_cells.y;
+		int row = rand_y * size_in_cells.x;
+		for (int x = 0; x < size_in_cells.x; x++) {
+			int rand_x = (x + offset.x) % size_in_cells.x;
+			float value = data[rand_x + row];
+			if (value < minValue) {
+				minValue = value;
+				position = Vector2i(rand_x, rand_y);
+			}
+		}
+	}
+	return position;
 }
 
 void DataGrid::show_grid() {
