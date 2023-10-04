@@ -44,7 +44,9 @@ void DataGridManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("world_position_to_grid_position", "world_position"), &DataGridManager::world_position_to_grid_position);
 	ClassDB::bind_method(D_METHOD("grid_position_in_bounds", "data_grid_position"), &DataGridManager::grid_position_in_bounds);
 	ClassDB::bind_method(D_METHOD("world_position_to_cell_in_data_grid", "world_position", "data_grid_position"), &DataGridManager::world_position_to_cell_in_data_grid);
-	
+	ClassDB::bind_method(D_METHOD("get_touched_datagrids", "center_cell", "radius"), &DataGridManager::get_touched_datagrids); 
+	ClassDB::bind_method(D_METHOD("add_datagrid_centered_to_collection", "grid_to_add", "layer", "global_position", "magnitude", "add_new"), &DataGridManager::add_datagrid_centered_to_collection, DEFVAL(1.0f), DEFVAL(true));
+	ClassDB::bind_method(D_METHOD("add_into_datagrid_from_collection", "grid_to_add_into", "layer", "global_position", "magnitude"), &DataGridManager::add_into_datagrid_from_collection, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("add_datagrid_layer_to_collection", "datagrid_position", "layer", "datagrid"), &DataGridManager::add_datagrid_layer_to_collection);
 	ClassDB::bind_method(D_METHOD("has_datagrid_layer", "datagrid_position", "layer"), &DataGridManager::has_datagrid_layer);
 	ClassDB::bind_method(D_METHOD("get_datagrid_layer", "datagrid_position", "layer"), &DataGridManager::get_datagrid_layer);
@@ -73,6 +75,12 @@ DataGridManager::~DataGridManager() {
 
 void DataGridManager::set_world_size(const Size2i &p_world_size) {
 	world_size = p_world_size;
+	set_datagrid_size();
+	datagrid_collection.clear();
+}
+
+void DataGridManager::set_datagrid_count(const Size2i &p_datagrid_count) {
+	datagrid_count = p_datagrid_count;
 	set_datagrid_size();
 	datagrid_collection.clear();
 }
@@ -128,11 +136,90 @@ Vector2i DataGridManager::world_position_to_grid_position(const Vector2i &p_worl
 }
 
 bool DataGridManager::grid_position_in_bounds(const Vector2i &p_data_grid_position) const {
-	return p_data_grid_position >= Vector2i(0, 0) && p_data_grid_position <= datagrid_count - Vector2i(1,  1);
+	bool positive = p_data_grid_position.x >= 0 && p_data_grid_position.y >= 0;
+	return positive && (p_data_grid_position.x < datagrid_count.x) && (p_data_grid_position.y < datagrid_count.y);
 }
 
 Vector2i DataGridManager::world_position_to_cell_in_data_grid(const Vector2 &p_world_position, const Vector2i &p_data_grid_position) const {
 	return Vector2i((p_world_position - p_data_grid_position * datagrid_size * cell_size) / cell_size);
+}
+
+Array DataGridManager::get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const {
+	//Only works for direct neighbours, if (radius > datagrid_size+2) a second neighbour could be touched 
+	Array result;
+	result.append(Vector2i(0, 0));
+
+	bool north = p_center_cell.y - p_radius < 0;
+	bool south = p_center_cell.y + p_radius > datagrid_size.y - 1;
+	bool west = p_center_cell.x - p_radius < 0;
+	bool east = p_center_cell.x + p_radius > datagrid_size.x - 1;
+
+	if (north) { result.append(Vector2i(0, -1)); }
+	if (south) { result.append(Vector2i(0, 1)); }
+	if (west) { result.append(Vector2i(-1, 0)); }
+	if (east) { result.append(Vector2i(1, 0)); }
+
+	if (north && west) { result.append(Vector2i(-1, -1)); }
+	if (north && east) { result.append(Vector2i(1, -1)); }
+	if (south && west) { result.append(Vector2i(-1, 1)); }
+	if (south && east) { result.append(Vector2i(1, 1)); }
+
+	return result;
+}
+
+void DataGridManager::add_datagrid_centered_to_collection(const Ref<DataGrid> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude, bool add_new) {
+	Vector2i datagrid_index = world_position_to_grid_position(p_global_position);
+	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
+	int radius = grid_to_add->get_center().x;
+	Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
+	int amount_grids = touched_grids.size();
+	for (int i = 0; i < amount_grids; i++) {
+		Vector2i index_offset = touched_grids[i];
+		Vector2i this_grid_index = datagrid_index + index_offset;
+		if (!grid_position_in_bounds(this_grid_index)) {
+			if (index_offset == Vector2i(0, 0)) {
+				break; //center is out of bounds, ignore completely
+			}
+			continue; //only fraction is out of bounds, skip to next
+		}
+		if (!has_datagrid_layer(this_grid_index, p_layer)) {
+			if (!add_new) {
+				continue;
+			}
+			Ref<DataGrid> new_datagrid;
+			new_datagrid.instantiate();
+			new_datagrid->set_cell_size(cell_size);
+			new_datagrid->set_size_in_cells(Vector2i(datagrid_size));
+			add_datagrid_layer_to_collection(this_grid_index, p_layer, new_datagrid);
+		}
+		Ref<DataGrid> datagrid = get_datagrid_layer(this_grid_index, p_layer);
+		Vector2i offset = (-1 * index_offset) * datagrid_size;
+		datagrid->add_grid_centered_at_pos(grid_to_add, grid_cell_index, p_magnitude, offset);
+	}	
+}
+
+void DataGridManager::add_into_datagrid_from_collection(const Ref<DataGrid> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude) {
+	Vector2i datagrid_index = world_position_to_grid_position(p_global_position);
+	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
+	int radius = grid_to_add_into->get_center().x;
+	Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
+	int amount_grids = touched_grids.size();
+	for (int i = 0; i < amount_grids; i++) {
+		Vector2i index_offset = touched_grids[i];
+		Vector2i this_grid_index = datagrid_index + index_offset;
+		if (!grid_position_in_bounds(this_grid_index)) {
+			if (index_offset == Vector2i(0, 0)) {
+				break; //center is out of bounds, ignore completely
+			}
+			continue; //only fraction is out of bounds, skip to next
+		}
+		if (!has_datagrid_layer(this_grid_index, p_layer)) {
+			continue;
+		}
+		Ref<DataGrid> datagrid = get_datagrid_layer(this_grid_index, p_layer);
+		Vector2i offset = (-1 * index_offset) * datagrid_size;
+		grid_to_add_into->add_from_pos_in_grid(datagrid, grid_cell_index, p_magnitude, offset);
+	}
 }
 
 void godot::DataGridManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<DataGrid> &p_datagrid) {
@@ -191,54 +278,25 @@ void DataGridManager::update() {
 	TypedArray<DataGridCompRef> nodes = hub->get_registered_components_data_res();
 	TypedArray<int> removed_nodes;
 	for (int i = 0; i < nodes.size(); i++) {
-		Ref<DataGridCompRef> component = nodes[i]; //Object::cast_to<DataGridComponent>(nodes[i]);
+		Ref<DataGridCompRef> component_data = nodes[i];
 		// Deregister
-		if (component->is_registered()) {
-			Vector2 world_position = component->get_registered_position();
-			Vector2i data_grid_position = world_position_to_grid_position(world_position);
-			Vector2i cell_in_data_grid = world_position_to_cell_in_data_grid(world_position, data_grid_position);
-			int radius = component->get_registered_radius() / cell_size;
-			int amount_layers = component->get_registered_layers().size();
-			for (int i = 0; i < amount_layers; i++) {
-				int layer = component->get_layers()[i];
-				if (has_datagrid_layer(data_grid_position, layer)) {
-					Ref<DataGrid> datagrid = get_datagrid_layer(data_grid_position, layer);
-					datagrid->add_grid_centered_at_pos(get_template(radius), cell_in_data_grid, -1.0);
-				}
-			}
+		if (component_data->is_registered()) {
+			Vector2 global_position = component_data->get_registered_position();
+			Ref<DataGrid> template_grid = get_template(component_data->get_registered_radius() / cell_size);
+			add_datagrid_centered_to_collection(template_grid, component_data->get_registered_layer(), global_position, -1.0, false);
+			component_data->set_registered(false);
 		}
-		DataGridComponent *comp_ptr = component->get_component();
+		// Component still valid?
+		DataGridComponent *comp_ptr = component_data->get_component();
 		if (comp_ptr == nullptr || !(comp_ptr->is_inside_tree())) {
 			removed_nodes.append(i);
 			continue;
 		}
-
 		// Register
-		Vector2 world_position = component->get_global_position();
-		Vector2i data_grid_position = world_position_to_grid_position(world_position);
-		if  (!grid_position_in_bounds(data_grid_position)) {
-			component->set_registered(false);
-			continue;
-		}
-		Vector2i cell_in_data_grid = world_position_to_cell_in_data_grid(world_position, data_grid_position);
-		int radius = component->get_radius() / cell_size;
-		int amount_layers = component->get_layers().size();
-		for (int i = 0; i < amount_layers; i++) {
-			int layer = component->get_layers()[i];
-			if (!has_datagrid_layer(data_grid_position, layer)) {
-				Ref<DataGrid> datagrid;
-				datagrid.instantiate();
-				datagrid->set_cell_size(cell_size);
-				datagrid->set_size_in_cells(Vector2i(datagrid_size));
-				add_datagrid_layer_to_collection(data_grid_position, layer, datagrid);
-			}
-			Ref<DataGrid> datagrid = get_datagrid_layer(data_grid_position, layer);
-			datagrid->add_grid_centered_at_pos(get_template(radius), cell_in_data_grid, 1.0);
-		}
-		component->set_registered(true);
-		component->set_registered_position(world_position);
-		component->set_registered_layers(component->get_layers());
-		component->set_registered_radius(component->get_radius());
+		Vector2 global_position = component_data->get_global_position();
+		Ref<DataGrid> template_grid = get_template(component_data->get_radius() / cell_size);
+		add_datagrid_centered_to_collection(template_grid, component_data->get_layer(), global_position, 1.0);
+		component_data->on_registered(global_position, component_data->get_layer(), component_data->get_radius());
 	}
 	hub->remove_components(removed_nodes);
 	emit_updated(datagrid_collection);

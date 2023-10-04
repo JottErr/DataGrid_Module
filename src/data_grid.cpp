@@ -16,8 +16,8 @@ void DataGrid::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("fill", "value"), &DataGrid::fill);
 	ClassDB::bind_method(D_METHOD("radiate_value_at_position", "position", "radius", "curve", "magnitude"), &DataGrid::radiate_value_at_position, DEFVAL(1.0f));
-	ClassDB::bind_method(D_METHOD("add_grid_centered_at_pos", "other_grid", "position", "magnitude"), &DataGrid::add_grid_centered_at_pos, DEFVAL(1.0f));
-	ClassDB::bind_method(D_METHOD("add_from_pos_in_grid", "other_grid", "position", "magnitude"), &DataGrid::add_from_pos_in_grid, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("add_grid_centered_at_pos", "other_grid", "position", "magnitude", "offset"), &DataGrid::add_grid_centered_at_pos, DEFVAL(1.0f), DEFVAL(Vector2i()));
+	ClassDB::bind_method(D_METHOD("add_from_pos_in_grid", "other_grid", "position", "magnitude"), &DataGrid::add_from_pos_in_grid, DEFVAL(1.0f), DEFVAL(Vector2i()));
 	ClassDB::bind_method(D_METHOD("get_highest_cell"), &DataGrid::get_highest_cell);
 	ClassDB::bind_method(D_METHOD("get_lowest_cell"), &DataGrid::get_lowest_cell);
 	ClassDB::bind_method(D_METHOD("show_grid"), &DataGrid::show_grid);
@@ -74,8 +74,8 @@ void DataGrid::radiate_value_at_position(const Point2i &p_position, int radius, 
 
 // Adds the given grid to the current DataGrid. The other grid is centered at the specified position in this grid. 
 // The other grid is scaled with the specified magnitude. Used to add a smaller grid into a large grid.
-void DataGrid::add_grid_centered_at_pos(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude) {
-	Point2i other_topleft = p_position - other_grid->get_center();
+void DataGrid::add_grid_centered_at_pos(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude, const Point2i &p_offset) {
+	Point2i other_topleft = p_position - other_grid->get_center() + p_offset;
 	Point2i other_botright = other_topleft + other_grid->get_size_in_cells();
 
 	Point2i intersection_topleft = other_topleft.max(Point2i(0, 0));
@@ -96,8 +96,8 @@ void DataGrid::add_grid_centered_at_pos(const Ref<DataGrid> &other_grid, Point2i
 }
 // Adds from the given grid to the current DataGrid. A region with the size of the this grid is defined around the specified position in the other grid.
 // Values added from the other grid are scaled with the specified magnitude. Used to add part of a large grid into a smaller grid.
-void DataGrid::add_from_pos_in_grid(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude) {
-	Point2i topleft_in_other = p_position - center;
+void DataGrid::add_from_pos_in_grid(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude, const Point2i &p_offset) {
+	Point2i topleft_in_other = p_position - center + p_offset;
 	Point2i botright_in_other = topleft_in_other + size_in_cells;
 
 	Point2i intersection_topleft = topleft_in_other.max(Point2i(0, 0));

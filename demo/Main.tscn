@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cvnvlklovbnuu"]
+[gd_scene load_steps=6 format=3 uid="uid://cvnvlklovbnuu"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_kbwwx"]
 [ext_resource type="Script" path="res://visualization/ManagerVisualizer.gd" id="2_gbjyx"]
+[ext_resource type="Script" path="res://visualization/ManagerShapeVisualizer.gd" id="4_lpybi"]
 [ext_resource type="PackedScene" uid="uid://6l5ivfcqm12o" path="res://example/FollowMouse.tscn" id="5_j18mb"]
-[ext_resource type="PackedScene" uid="uid://7s7txn7g2bux" path="res://example/Entity/Entity.tscn" id="6_5wi1w"]
+[ext_resource type="PackedScene" uid="uid://7s7txn7g2bux" path="res://example/Entity/Entity.tscn" id="5_y0hbg"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kbwwx")
@@ -11,9 +12,10 @@ script = ExtResource("1_kbwwx")
 [node name="DataGridTimer" type="Timer" parent="."]
 
 [node name="DataGridManager" type="DataGridManager" parent="."]
-world_size = Vector2i(1280, 720)
-cell_size = 15
-datagrid_size = Vector2i(85, 48)
+world_size = Vector2i(1500, 900)
+datagrid_count = Vector2i(5, 3)
+cell_size = 10
+datagrid_size = Vector2i(30, 30)
 
 [node name="ManagerVisualizer" type="Node2D" parent="."]
 script = ExtResource("2_gbjyx")
@@ -22,8 +24,14 @@ base_color = Color(0.588235, 0, 0, 1)
 
 [node name="FollowMouse" parent="." instance=ExtResource("5_j18mb")]
 
-[node name="Entity" parent="." instance=ExtResource("6_5wi1w")]
-position = Vector2(637.5, 367.5)
+[node name="ManagerShape" type="Node2D" parent="."]
+script = ExtResource("4_lpybi")
+datagrid_count = Vector2i(5, 3)
+datagrid_size = Vector2i(30, 30)
+cell_size = 10
+
+[node name="Entity" parent="." instance=ExtResource("5_y0hbg")]
+position = Vector2(752, 426)
 
 [connection signal="timeout" from="DataGridTimer" to="." method="_on_data_grid_timer_timeout"]
 [connection signal="updated" from="DataGridManager" to="ManagerVisualizer" method="_on_data_grid_manager_updated"]

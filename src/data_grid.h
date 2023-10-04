@@ -37,8 +37,8 @@ public:
 	void fill(float p_value) { data.fill(p_value); };
 
 	void radiate_value_at_position(const Point2i &p_position, int radius, const Ref<MathCurve> &curve, float magnitude = 1.0f);
-	void add_grid_centered_at_pos(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude = 1.0f);
-	void add_from_pos_in_grid(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude = 1.0f);
+	void add_grid_centered_at_pos(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude = 1.0f, const Point2i &p_offset = Vector2i());
+	void add_from_pos_in_grid(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude = 1.0f, const Point2i &p_offset = Vector2i());
 	void show_grid();
 
 	Point2i get_highest_cell() const;

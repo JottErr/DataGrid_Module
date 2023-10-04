@@ -44,7 +44,7 @@ public:
 	
 	void set_world_size(const Size2i &p_world_size);
 	const Size2i &get_world_size() const { return world_size; }
-	void set_datagrid_count(const Size2i &p_datagrid_count) { return; } // TODO: add methods for templates overlapping multiple grids
+	void set_datagrid_count(const Size2i &p_datagrid_count);
 	const Size2i &get_datagrid_count() const { return datagrid_count; }
 	void set_cell_size(int p_cell_size);
 	int get_cell_size() const { return cell_size; }
@@ -62,6 +62,9 @@ public:
 	Vector2i world_position_to_grid_position(const Vector2i &p_world_position) const;
 	bool grid_position_in_bounds(const Vector2i &p_data_grid_position) const;
 	Vector2i world_position_to_cell_in_data_grid(const Vector2 &p_world_position, const Vector2i &p_data_grid_position) const;
+	Array get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const;
+	void add_datagrid_centered_to_collection(const Ref<DataGrid> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f, bool add_new = true);
+	void add_into_datagrid_from_collection(const Ref<DataGrid> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f);
 	
 	void add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<DataGrid> &p_datagrid);
 	bool has_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const;
