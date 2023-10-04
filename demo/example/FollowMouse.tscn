@@ -4,8 +4,9 @@
 [ext_resource type="Script" path="res://example/FollowMouse.gd" id="2_8xdh2"]
 
 [sub_resource type="DataGridCompRef" id="DataGridCompRef_yetfo"]
-layers = Array[int]([1])
+layer = 1
 radius = 150.0
+registered_layer = 0
 
 [node name="FollowMouse" type="Sprite2D"]
 texture = ExtResource("1_em0dk")

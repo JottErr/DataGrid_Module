@@ -23,12 +23,12 @@ Vector2 DataGridCompRef::get_global_position() const {
 	return component->get_global_position();
 }
 
-void DataGridCompRef::set_layers(const TypedArray<int32_t> &p_layers) {
-	layers = p_layers;
+void DataGridCompRef::set_layer(int p_layer) {
+	layer = p_layer;
 }
 
-const Array &DataGridCompRef::get_layers() const {
-	return layers;
+int DataGridCompRef::get_layer() const {
+	return layer;
 }
 
 void DataGridCompRef::set_radius(float p_radius) {
@@ -55,12 +55,12 @@ const Vector2 &DataGridCompRef::get_registered_position() const {
 	return registered_position;
 }
 
-void DataGridCompRef::set_registered_layers(const TypedArray<int32_t> &p_layers) {
-	registered_layers = p_layers;
+void DataGridCompRef::set_registered_layer(int p_layer) {
+	registered_layer = p_layer;
 }
 
-const Array &DataGridCompRef::get_registered_layers() const {
-	return registered_layers;
+int DataGridCompRef::get_registered_layer() const {
+	return registered_layer;
 }
 
 void DataGridCompRef::set_registered_radius(float p_radius) {
@@ -71,28 +71,36 @@ float DataGridCompRef::get_registered_radius() const {
 	return registered_radius;
 }
 
+void DataGridCompRef::on_registered(const Vector2 &p_position, int p_layer, float p_radius) {
+	registered = true;
+	registered_position = p_position;
+	registered_layer = p_layer;
+	registered_radius = p_radius;
+}
+
 void DataGridCompRef::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_component", "component"), &DataGridCompRef::set_component);
 	ClassDB::bind_method(D_METHOD("get_component"), &DataGridCompRef::get_component);
 	ClassDB::bind_method(D_METHOD("component_is_valid"), &DataGridCompRef::component_is_valid);
-	ClassDB::bind_method(D_METHOD("set_layers", "layers"), &DataGridCompRef::set_layers);
-	ClassDB::bind_method(D_METHOD("get_layers"), &DataGridCompRef::get_layers);
+	ClassDB::bind_method(D_METHOD("set_layer", "layer"), &DataGridCompRef::set_layer);
+	ClassDB::bind_method(D_METHOD("get_layer"), &DataGridCompRef::get_layer);
 	ClassDB::bind_method(D_METHOD("set_radius", "radius"), &DataGridCompRef::set_radius);
 	ClassDB::bind_method(D_METHOD("get_radius"), &DataGridCompRef::get_radius);
 	ClassDB::bind_method(D_METHOD("is_registered"), &DataGridCompRef::is_registered);
 	ClassDB::bind_method(D_METHOD("set_registered", "registered"), &DataGridCompRef::set_registered);
 	ClassDB::bind_method(D_METHOD("set_registered_position", "position"), &DataGridCompRef::set_registered_position);
 	ClassDB::bind_method(D_METHOD("get_registered_position"), &DataGridCompRef::get_registered_position);
-	ClassDB::bind_method(D_METHOD("set_registered_layers", "layers"), &DataGridCompRef::set_registered_layers);
-	ClassDB::bind_method(D_METHOD("get_registered_layers"), &DataGridCompRef::get_registered_layers);
+	ClassDB::bind_method(D_METHOD("set_registered_layer", "layer"), &DataGridCompRef::set_registered_layer);
+	ClassDB::bind_method(D_METHOD("get_registered_layer"), &DataGridCompRef::get_registered_layer);
 	ClassDB::bind_method(D_METHOD("set_registered_radius", "radius"), &DataGridCompRef::set_registered_radius);
 	ClassDB::bind_method(D_METHOD("get_registered_radius"), &DataGridCompRef::get_registered_radius);
+	ClassDB::bind_method(D_METHOD("on_registered", "position", "layer", "radius"), &DataGridCompRef::on_registered);
 
-	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::ARRAY, "layers"), "set_layers", "get_layers");
+	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::INT, "layer"), "set_layer", "get_layer");
 	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::FLOAT, "radius"), "set_radius", "get_radius");
 	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::BOOL, "registered"), "set_registered", "is_registered");
 	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::VECTOR2, "registered_position"), "set_registered_position", "get_registered_position");
-	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::ARRAY, "registered_layers"), "set_registered_layers", "get_registered_layers");
+	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::INT, "registered_layer"), "set_registered_layer", "get_registered_layer");
 	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::FLOAT, "registered_radius"), "set_registered_radius", "get_registered_radius");
 }
 

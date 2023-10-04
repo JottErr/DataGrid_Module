@@ -24,8 +24,8 @@ public:
 
 	void set_data_resource(Ref<DataGridCompRef> p_data_resource);
 	Ref<DataGridCompRef> get_data_resource();
-	void set_layers(const TypedArray<int32_t> &p_layers);
-	const Array &get_layers() const;
+	void set_layer(int p_layer);
+	int get_layer() const;
 	void set_radius(float p_radius);
 	float get_radius() const;
 };

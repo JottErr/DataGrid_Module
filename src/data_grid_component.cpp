@@ -31,12 +31,12 @@ Ref<DataGridCompRef> DataGridComponent::get_data_resource() {
 	return data_resource;
 }
 
-void DataGridComponent::set_layers(const TypedArray<int32_t> &p_layers) {
-	data_resource->set_layers(p_layers);
+void DataGridComponent::set_layer(int p_layer) {
+	data_resource->set_layer(p_layer);
 }
 
-const Array &DataGridComponent::get_layers() const {
-	return data_resource->get_layers();
+int DataGridComponent::get_layer() const {
+	return data_resource->get_layer();
 }
 
 void DataGridComponent::set_radius(float p_radius) {
@@ -50,8 +50,8 @@ float DataGridComponent::get_radius() const {
 void DataGridComponent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_data_resource", "data_resource"), &DataGridComponent::set_data_resource);
 	ClassDB::bind_method(D_METHOD("get_data_resource"), &DataGridComponent::get_data_resource);
-	ClassDB::bind_method(D_METHOD("set_layers", "layers"), &DataGridComponent::set_layers);
-	ClassDB::bind_method(D_METHOD("get_layers"), &DataGridComponent::get_layers);
+	ClassDB::bind_method(D_METHOD("set_layer", "layer"), &DataGridComponent::set_layer);
+	ClassDB::bind_method(D_METHOD("get_layer"), &DataGridComponent::get_layer);
 	ClassDB::bind_method(D_METHOD("set_radius", "radius"), &DataGridComponent::set_radius);
 	ClassDB::bind_method(D_METHOD("get_radius"), &DataGridComponent::get_radius);
 	
