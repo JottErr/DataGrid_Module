@@ -59,11 +59,14 @@ public:
 	void update();
 	void emit_updated(const Dictionary &datagrid_collection);
 
-	Vector2i world_position_to_grid_position(const Vector2i &p_world_position) const;
+	Vector2 snap_global_postion_to_cell_center(const Vector2 &p_global_position) const;
+	Vector2 find_corner_from_center(const Vector2 &p_global_position, Vector2i p_datagrid_center);
+
+	Vector2i global_position_to_datagrid_index(const Vector2i &p_global_position) const;
 	bool grid_position_in_bounds(const Vector2i &p_data_grid_position) const;
 	Vector2i world_position_to_cell_in_data_grid(const Vector2 &p_world_position, const Vector2i &p_data_grid_position) const;
 	Array get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const;
-	void add_datagrid_centered_to_collection(const Ref<DataGrid> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f, bool add_new = true);
+	void add_datagrid_centered_to_collection(const Ref<DataGrid> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f, bool registering = true);
 	void add_into_datagrid_from_collection(const Ref<DataGrid> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f);
 	
 	void add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<DataGrid> &p_datagrid);

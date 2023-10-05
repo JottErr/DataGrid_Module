@@ -34,27 +34,33 @@ void DataGridManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_cell_size"), &DataGridManager::get_cell_size);
 	ClassDB::bind_method(D_METHOD("set_datagrid_size", "datagrid_size"), &DataGridManager::set_datagrid_size, DEFVAL(Size2i(0, 0))); 
 	ClassDB::bind_method(D_METHOD("get_datagrid_size"), &DataGridManager::get_datagrid_size);
-	ClassDB::bind_method(D_METHOD("emit_datagrid_size_changed"), &DataGridManager::emit_datagrid_size_changed);
-	ClassDB::bind_method(D_METHOD("set_update_frequency", "update_frequency"), &DataGridManager::set_update_frequency);
-	ClassDB::bind_method(D_METHOD("get_update_frequency"), &DataGridManager::get_update_frequency);
+	ClassDB::bind_method(D_METHOD("emit_datagrid_size_changed"), &DataGridManager::emit_datagrid_size_changed); //deprecated, was to inform shader
+	ClassDB::bind_method(D_METHOD("set_update_frequency", "update_frequency"), &DataGridManager::set_update_frequency); //deprecated, components keep time
+	ClassDB::bind_method(D_METHOD("get_update_frequency"), &DataGridManager::get_update_frequency); //deprecated, components keep time
+
 	ClassDB::bind_method(D_METHOD("initialize_templates", "min_radius", "max_radius", "steps"), &DataGridManager::initialize_templates);
 	ClassDB::bind_method(D_METHOD("get_template"), &DataGridManager::get_template);
 	ClassDB::bind_method(D_METHOD("update"), &DataGridManager::update);
 	ClassDB::bind_method(D_METHOD("emit_updated", "datagrid_collection"), &DataGridManager::emit_updated);
-	ClassDB::bind_method(D_METHOD("world_position_to_grid_position", "world_position"), &DataGridManager::world_position_to_grid_position);
+	
+	ClassDB::bind_method(D_METHOD("snap_global_postion_to_cell_center", "p_global_position"), &DataGridManager::snap_global_postion_to_cell_center);
+	ClassDB::bind_method(D_METHOD("find_corner_from_center", "p_global_position", "p_datagrid_center"), &DataGridManager::find_corner_from_center);
+
+	ClassDB::bind_method(D_METHOD("global_position_to_datagrid_index", "global_position"), &DataGridManager::global_position_to_datagrid_index);
 	ClassDB::bind_method(D_METHOD("grid_position_in_bounds", "data_grid_position"), &DataGridManager::grid_position_in_bounds);
 	ClassDB::bind_method(D_METHOD("world_position_to_cell_in_data_grid", "world_position", "data_grid_position"), &DataGridManager::world_position_to_cell_in_data_grid);
 	ClassDB::bind_method(D_METHOD("get_touched_datagrids", "center_cell", "radius"), &DataGridManager::get_touched_datagrids); 
-	ClassDB::bind_method(D_METHOD("add_datagrid_centered_to_collection", "grid_to_add", "layer", "global_position", "magnitude", "add_new"), &DataGridManager::add_datagrid_centered_to_collection, DEFVAL(1.0f), DEFVAL(true));
+	ClassDB::bind_method(D_METHOD("add_datagrid_centered_to_collection", "grid_to_add", "layer", "global_position", "magnitude", "registering"), &DataGridManager::add_datagrid_centered_to_collection, DEFVAL(1.0f), DEFVAL(true));
 	ClassDB::bind_method(D_METHOD("add_into_datagrid_from_collection", "grid_to_add_into", "layer", "global_position", "magnitude"), &DataGridManager::add_into_datagrid_from_collection, DEFVAL(1.0f));
+	
 	ClassDB::bind_method(D_METHOD("add_datagrid_layer_to_collection", "datagrid_position", "layer", "datagrid"), &DataGridManager::add_datagrid_layer_to_collection);
 	ClassDB::bind_method(D_METHOD("has_datagrid_layer", "datagrid_position", "layer"), &DataGridManager::has_datagrid_layer);
 	ClassDB::bind_method(D_METHOD("get_datagrid_layer", "datagrid_position", "layer"), &DataGridManager::get_datagrid_layer);
 	ClassDB::bind_method(D_METHOD("filter_datagrid_layers", "datagrid_position", "filter_layers"), &DataGridManager::filter_datagrid_layers);
 
 	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "world_size"), "set_world_size", "get_world_size");
-	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "datagrid_count"), "set_datagrid_count", "get_datagrid_count");
 	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
+	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "datagrid_count"), "set_datagrid_count", "get_datagrid_count");
 	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "datagrid_size"), "set_datagrid_size", "get_datagrid_size");
 	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::FLOAT, "update_frequency"), "set_update_frequency", "get_update_frequency");
 
@@ -125,13 +131,14 @@ Ref<DataGrid> DataGridManager::get_template(int p_radius) const {
 	return t->datagrid;
 }
 
-Vector2i DataGridManager::world_position_to_grid_position(const Vector2i &p_world_position) const {
-	// if manager position is not 0,0 get_relative_position = p_world_position - manager_position
-	int neg_x = p_world_position.x < 0 ? 1 : 0;
-	int neg_y = p_world_position.y < 0 ? 1 : 0;
+Vector2i DataGridManager::global_position_to_datagrid_index(const Vector2i &p_global_position) const {
+	// if DataGrid index is never negative, this can be simplified
+	// if manager global position is not 0,0 get_relative_position = p_global_position - manager_position
+	int neg_x = p_global_position.x < 0 ? 1 : 0;
+	int neg_y = p_global_position.y < 0 ? 1 : 0;
 	Vector2i result;
-	result.x = (p_world_position.x + neg_x) / (datagrid_size.x * cell_size) - neg_x;
-	result.y = (p_world_position.y + neg_y) / (datagrid_size.y * cell_size) - neg_y;
+	result.x = (p_global_position.x + neg_x) / (datagrid_size.x * cell_size) - neg_x;
+	result.y = (p_global_position.y + neg_y) / (datagrid_size.y * cell_size) - neg_y;
 	return result;
 }
 
@@ -167,8 +174,8 @@ Array DataGridManager::get_touched_datagrids(const Vector2i &p_center_cell, int 
 	return result;
 }
 
-void DataGridManager::add_datagrid_centered_to_collection(const Ref<DataGrid> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude, bool add_new) {
-	Vector2i datagrid_index = world_position_to_grid_position(p_global_position);
+void DataGridManager::add_datagrid_centered_to_collection(const Ref<DataGrid> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude, bool registering) {
+	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = grid_to_add->get_center().x;
 	Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
@@ -177,13 +184,10 @@ void DataGridManager::add_datagrid_centered_to_collection(const Ref<DataGrid> &g
 		Vector2i index_offset = touched_grids[i];
 		Vector2i this_grid_index = datagrid_index + index_offset;
 		if (!grid_position_in_bounds(this_grid_index)) {
-			if (index_offset == Vector2i(0, 0)) {
-				break; //center is out of bounds, ignore completely
-			}
-			continue; //only fraction is out of bounds, skip to next
+			continue;
 		}
 		if (!has_datagrid_layer(this_grid_index, p_layer)) {
-			if (!add_new) {
+			if (!registering) {
 				continue;
 			}
 			Ref<DataGrid> new_datagrid;
@@ -199,19 +203,17 @@ void DataGridManager::add_datagrid_centered_to_collection(const Ref<DataGrid> &g
 }
 
 void DataGridManager::add_into_datagrid_from_collection(const Ref<DataGrid> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude) {
-	Vector2i datagrid_index = world_position_to_grid_position(p_global_position);
+	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = grid_to_add_into->get_center().x;
 	Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
 	int amount_grids = touched_grids.size();
+	
 	for (int i = 0; i < amount_grids; i++) {
 		Vector2i index_offset = touched_grids[i];
 		Vector2i this_grid_index = datagrid_index + index_offset;
 		if (!grid_position_in_bounds(this_grid_index)) {
-			if (index_offset == Vector2i(0, 0)) {
-				break; //center is out of bounds, ignore completely
-			}
-			continue; //only fraction is out of bounds, skip to next
+			continue;
 		}
 		if (!has_datagrid_layer(this_grid_index, p_layer)) {
 			continue;
@@ -304,4 +306,14 @@ void DataGridManager::update() {
 
 void DataGridManager::emit_updated(const Dictionary &p_datagrid_collection) {
 	emit_signal("updated", p_datagrid_collection);
+}
+
+Vector2 DataGridManager::snap_global_postion_to_cell_center(const Vector2 &p_global_position) const {
+	return Vector2(p_global_position / cell_size).floor() * cell_size + Vector2(cell_size, cell_size) / 2.0;
+}
+
+Vector2 DataGridManager::find_corner_from_center(const Vector2 &p_global_position, Vector2i p_datagrid_center) {
+	Vector2 center_world_index = Vector2(p_global_position / cell_size).floor();
+	Vector2 corner_pos = (center_world_index - p_datagrid_center) * cell_size;
+	return corner_pos;
 }
