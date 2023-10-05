@@ -43,6 +43,7 @@ public:
 
 	Point2i get_highest_cell() const;
 	Point2i get_lowest_cell() const;
+	void normalize_data();
 };
 
 }

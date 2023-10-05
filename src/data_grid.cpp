@@ -13,14 +13,17 @@ void DataGrid::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_center", "center"), &DataGrid::set_center);
 	ClassDB::bind_method(D_METHOD("get_data"), &DataGrid::get_data);
 	ClassDB::bind_method(D_METHOD("set_data", "data"), &DataGrid::set_data);
+	ClassDB::bind_method(D_METHOD("reset_data"), &DataGrid::reset_data);
 
 	ClassDB::bind_method(D_METHOD("fill", "value"), &DataGrid::fill);
 	ClassDB::bind_method(D_METHOD("radiate_value_at_position", "position", "radius", "curve", "magnitude"), &DataGrid::radiate_value_at_position, DEFVAL(1.0f));
 	ClassDB::bind_method(D_METHOD("add_grid_centered_at_pos", "other_grid", "position", "magnitude", "offset"), &DataGrid::add_grid_centered_at_pos, DEFVAL(1.0f), DEFVAL(Vector2i()));
 	ClassDB::bind_method(D_METHOD("add_from_pos_in_grid", "other_grid", "position", "magnitude"), &DataGrid::add_from_pos_in_grid, DEFVAL(1.0f), DEFVAL(Vector2i()));
+	ClassDB::bind_method(D_METHOD("show_grid"), &DataGrid::show_grid);
+	
 	ClassDB::bind_method(D_METHOD("get_highest_cell"), &DataGrid::get_highest_cell);
 	ClassDB::bind_method(D_METHOD("get_lowest_cell"), &DataGrid::get_lowest_cell);
-	ClassDB::bind_method(D_METHOD("show_grid"), &DataGrid::show_grid);
+	ClassDB::bind_method(D_METHOD("normalize_data"), &DataGrid::normalize_data);
 	
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
 	ClassDB::add_property("DataGrid", PropertyInfo(Variant::VECTOR2I, "size_in_cells"), "set_size_in_cells", "get_size_in_cells");
@@ -161,6 +164,28 @@ Point2i DataGrid::get_lowest_cell() const {
 		}
 	}
 	return position;
+}
+
+void DataGrid::normalize_data() {
+	float minValue = INFINITY;
+	float maxValue = -INFINITY;
+	for (int i = 0; i < size_in_cells.x * size_in_cells.y; i++) {
+		float value = data[i];
+		if (value < minValue) {
+			minValue = value;
+		}
+		if (value > maxValue) {
+			maxValue = value;
+		}
+	}
+	float range = maxValue - minValue;
+	if (range == 0.0f) {
+		reset_data();
+		return;
+	}
+	for (int i = 0; i < size_in_cells.x * size_in_cells.y; i++) {
+		data[i] = (float(data[i]) - minValue) / range;
+	}
 }
 
 void DataGrid::show_grid() {
