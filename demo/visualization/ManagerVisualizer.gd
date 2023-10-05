@@ -17,6 +17,8 @@ func _draw():
 		return
 	for datagrid_index in datagrids:
 		var datagrid: DataGrid = datagrids[datagrid_index]
+		if datagrid == null:
+			continue
 		var data := datagrid.get_data()
 		var size := datagrid.get_size_in_cells()
 		var cell_size := datagrid.get_cell_size()
