@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
-var speed := 50
+
+var speed := 150
 var target_position := Vector2()
 
 

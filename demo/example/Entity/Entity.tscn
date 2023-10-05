@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://7s7txn7g2bux"]
+[gd_scene load_steps=7 format=3 uid="uid://7s7txn7g2bux"]
 
 [ext_resource type="Texture2D" uid="uid://ciii8x3gl27fm" path="res://sprite_icon.svg" id="1_l00h6"]
 [ext_resource type="Script" path="res://example/Entity/Entity.gd" id="1_w4puc"]
@@ -6,6 +6,11 @@
 [ext_resource type="Script" path="res://visualization/GridVisualizer.gd" id="7_kh70x"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4jrow"]
+
+[sub_resource type="DataGridCompRef" id="DataGridCompRef_yetls"]
+layer = 2
+radius = 70.0
+registered_layer = 0
 
 [node name="Entity" type="CharacterBody2D"]
 script = ExtResource("1_w4puc")
@@ -23,12 +28,18 @@ script = ExtResource("3_ps11m")
 wait_time = 0.25
 
 [node name="GridVisualizer" type="Node2D" parent="IntelligenceController"]
+visible = false
 script = ExtResource("7_kh70x")
 
 [node name="TargetSprite" type="Sprite2D" parent="IntelligenceController"]
+visible = false
 self_modulate = Color(1, 0, 0, 1)
+top_level = true
 position = Vector2(1000, 1000)
 texture = ExtResource("1_l00h6")
+
+[node name="DataGridComponent" type="DataGridComponent" parent="."]
+data_resource = SubResource("DataGridCompRef_yetls")
 
 [connection signal="found_target" from="IntelligenceController" to="." method="_on_thinky_part_found_target"]
 [connection signal="timeout" from="IntelligenceController/ThinkCycleTimer" to="IntelligenceController" method="_on_think_cycle_timer_timeout"]

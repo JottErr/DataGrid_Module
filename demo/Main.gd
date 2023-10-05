@@ -5,13 +5,10 @@ extends Node2D
 @onready var timer: Timer = $DataGridTimer
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if Input.is_action_just_pressed("ui_up"):
-		$FollowMouse.queue_free()
-
-
 func _ready() -> void:
 	DataGridHub.set_world_grid_manager(data_grid_manager)
+	for wall in $Map.get_children():
+		wall.register_in_manager(data_grid_manager)
 	test_data_grid_manager()
 
 
