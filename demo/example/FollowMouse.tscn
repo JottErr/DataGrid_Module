@@ -5,7 +5,7 @@
 
 [sub_resource type="DataGridCompRef" id="DataGridCompRef_yetfo"]
 layer = 1
-radius = 150.0
+radius = 200.0
 registered_layer = 0
 
 [node name="FollowMouse" type="Sprite2D"]
