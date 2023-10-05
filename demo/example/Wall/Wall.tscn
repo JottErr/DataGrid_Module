@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqtn6885tdb6p"]
+
+[ext_resource type="Texture2D" uid="uid://bpvo7t2wmn63w" path="res://assets/64sq_full.png" id="1_4kf33"]
+[ext_resource type="Script" path="res://example/Wall/Wall.gd" id="1_wncnp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k3pit"]
+size = Vector2(130, 130)
+
+[node name="StaticBody2D" type="StaticBody2D"]
+script = ExtResource("1_wncnp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_k3pit")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+self_modulate = Color(0, 0.180392, 0.227451, 1)
+scale = Vector2(2, 2)
+texture = ExtResource("1_4kf33")
