@@ -8,6 +8,7 @@ using namespace godot;
 DataGridHub *DataGridHub::singleton = nullptr;
 
 void DataGridHub::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_cell_size"), &DataGridHub::get_cell_size);
 	ClassDB::bind_method(D_METHOD("set_world_grid_manager", "p_world_grid_manager"), &DataGridHub::set_world_grid_manager);
 	ClassDB::bind_method(D_METHOD("get_world_grid_manager"), &DataGridHub::get_world_grid_manager);
 	ClassDB::bind_method(D_METHOD("add_component", "p_datagrid_component"), &DataGridHub::add_component_data_res);

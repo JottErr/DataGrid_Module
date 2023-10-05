@@ -21,10 +21,12 @@ protected:
 
 public:
 	static DataGridHub *get_singleton();
+	const float cell_size = 10; //move to Project settings
 
 	DataGridHub();
 	~DataGridHub();
 
+	float get_cell_size() const { return cell_size; };
 	void set_world_grid_manager(DataGridManager *p_world_grid_manager);
 	DataGridManager *get_world_grid_manager() const;
 	void add_component_data_res(Ref<DataGridCompRef> p_datagrid_component_data_res);
