@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://bw3rs5bqbjt2l"]
+
+[ext_resource type="Texture2D" uid="uid://ciii8x3gl27fm" path="res://sprite_icon.svg" id="1_j8h2j"]
+[ext_resource type="Script" path="res://example/Player/Player.gd" id="1_xds3a"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tdr82"]
+size = Vector2(30, 28)
+
+[sub_resource type="DataGridCompRef" id="DataGridCompRef_nkx7s"]
+layer = 1
+radius = 200.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_xds3a")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_tdr82")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+self_modulate = Color(0.168627, 0.764706, 0.396078, 1)
+scale = Vector2(2, 2)
+texture = ExtResource("1_j8h2j")
+
+[node name="DataGridComponent" type="DataGridComponent" parent="."]
+data_resource = SubResource("DataGridCompRef_nkx7s")
