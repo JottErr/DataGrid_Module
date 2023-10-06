@@ -14,14 +14,13 @@ private:
 	static DataGridHub *singleton;
 	DataGridManager *world_grid_manager;
 	TypedArray<DataGridCompRef> registered_components;
-	
 
 protected:
 	static void _bind_methods();
 
 public:
 	static DataGridHub *get_singleton();
-	const float cell_size = 10; //move to Project settings
+	const float cell_size = 10;
 
 	DataGridHub();
 	~DataGridHub();
@@ -32,7 +31,6 @@ public:
 	void add_component_data_res(Ref<DataGridCompRef> p_datagrid_component_data_res);
 	TypedArray<DataGridCompRef> get_registered_components_data_res() { return registered_components; }
 	void remove_components(const TypedArray<int> &p_indices);
-
 };
 
 #endif // DATAGRIDHUB_H
