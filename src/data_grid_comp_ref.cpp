@@ -117,9 +117,11 @@ void DataGridCompRef::_bind_methods() {
 
 DataGridCompRef::DataGridCompRef() {
 	set_local_to_scene(true);
+	layer = 0;
 	radius = 0.0;
 	registered = false;
 	registered_position = Vector2(0, 0);
+	registered_layer = 0;
 	registered_radius = 0.0;
 	registerable = true;
 }
