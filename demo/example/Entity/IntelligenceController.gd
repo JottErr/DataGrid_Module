@@ -34,9 +34,9 @@ func _on_think_cycle_timer_timeout() -> void:
 	var lin_curve := MathCurve.new()
 	lin_curve.set_parameters(-1, 1, 0, 1)
 	interest_grid.radiate_value_at_position(interest_grid.get_center(), 7, lin_curve, 1.0) #own pos
-	manager.add_into_datagrid_from_collection(interest_grid, 1, global_position, -1.0)
+	manager.add_into_datagrid_from_collection(interest_grid, 1, global_position, -2.0)
 	manager.add_into_datagrid_from_collection(interest_grid, 2, global_position, -1.0)
-	manager.add_into_datagrid_from_collection(interest_grid, 9, global_position, -2.0)
+	manager.add_into_datagrid_from_collection(interest_grid, 9, global_position, -3.0)
 
 	
 

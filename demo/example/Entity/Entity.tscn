@@ -40,6 +40,7 @@ texture = ExtResource("1_l00h6")
 
 [node name="DataGridComponent" type="DataGridComponent" parent="."]
 data_resource = SubResource("DataGridCompRef_yetls")
+registration_frequency = 0.25
 
 [connection signal="found_target" from="IntelligenceController" to="." method="_on_thinky_part_found_target"]
 [connection signal="timeout" from="IntelligenceController/ThinkCycleTimer" to="IntelligenceController" method="_on_think_cycle_timer_timeout"]

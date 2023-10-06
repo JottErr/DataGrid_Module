@@ -2,24 +2,13 @@ extends Node2D
 
 
 @onready var data_grid_manager: DataGridManager = $DataGridManager
-@onready var timer: Timer = $DataGridTimer
 
 
 func _ready() -> void:
 	DataGridHub.set_world_grid_manager(data_grid_manager)
 	for wall in $Map.get_children():
 		wall.register_in_manager(data_grid_manager)
-	test_data_grid_manager()
-
-
-func test_data_grid_manager() -> void:
-	timer.set_wait_time(data_grid_manager.get_update_frequency())
-	timer.start()
-	data_grid_manager.initialize_templates(1, 20, 1)
-
-
-func _on_data_grid_timer_timeout() -> void:
-	data_grid_manager.update()
+	data_grid_manager.initialize_templates(1, 21, 1)
 
 
 func test_performance() -> void:
