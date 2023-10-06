@@ -76,6 +76,15 @@ void DataGridCompRef::on_registered(const Vector2 &p_position, int p_layer, floa
 	registered_position = p_position;
 	registered_layer = p_layer;
 	registered_radius = p_radius;
+	registerable = false;
+}
+
+void DataGridCompRef::set_registerable(bool p_registerable) {
+	registerable = p_registerable;
+}
+
+bool DataGridCompRef::is_registerable() const {
+	return registerable;
 }
 
 void DataGridCompRef::_bind_methods() {
@@ -95,6 +104,8 @@ void DataGridCompRef::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_registered_radius", "radius"), &DataGridCompRef::set_registered_radius);
 	ClassDB::bind_method(D_METHOD("get_registered_radius"), &DataGridCompRef::get_registered_radius);
 	ClassDB::bind_method(D_METHOD("on_registered", "position", "layer", "radius"), &DataGridCompRef::on_registered);
+	ClassDB::bind_method(D_METHOD("set_registerable", "registerable"), &DataGridCompRef::set_registerable);
+	ClassDB::bind_method(D_METHOD("is_registerable"), &DataGridCompRef::is_registerable);
 
 	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::INT, "layer"), "set_layer", "get_layer");
 	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::FLOAT, "radius"), "set_radius", "get_radius");
@@ -110,6 +121,7 @@ DataGridCompRef::DataGridCompRef() {
 	registered = false;
 	registered_position = Vector2(0, 0);
 	registered_radius = 0.0;
+	registerable = true;
 }
 
 DataGridCompRef::~DataGridCompRef() {

@@ -13,6 +13,8 @@ class DataGridComponent : public Node2D {
 
 private:
 	Ref<DataGridCompRef> data_resource;
+	float time_since_registration;
+	float registration_frequency;
 	
 protected:
 	void _notification(int p_what);
@@ -28,6 +30,11 @@ public:
 	int get_layer() const;
 	void set_radius(float p_radius);
 	float get_radius() const;
+	void set_time_since_registration(int p_time);
+	int get_time_since_registration() const;
+	void set_registration_frequency(float p_freq);
+	float get_registration_frequency() const;
+	void _process(float p_delta);
 };
 }
 
