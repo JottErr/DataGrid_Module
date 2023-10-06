@@ -40,7 +40,7 @@ DataGrid::DataGrid() {
 DataGrid::~DataGrid() {
 }
 
-void godot::DataGrid::set_cell_size(int p_cell_size) { 
+void DataGrid::set_cell_size(int p_cell_size) { 
 	cell_size = p_cell_size; 
 }
 

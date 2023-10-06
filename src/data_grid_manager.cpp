@@ -11,13 +11,13 @@ void DataGridTemplate::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("initialize", "p_radius", "p_cell_size", "p_curve"), &DataGridTemplate::initialize);
 }
 
-godot::DataGridTemplate::DataGridTemplate() {
+DataGridTemplate::DataGridTemplate() {
 }
 
-godot::DataGridTemplate::~DataGridTemplate() {
+DataGridTemplate::~DataGridTemplate() {
 }
 
-void godot::DataGridTemplate::initialize(int p_radius, int p_cell_size, Ref<MathCurve> p_curve) {
+void DataGridTemplate::initialize(int p_radius, int p_cell_size, Ref<MathCurve> p_curve) {
 	radius = p_radius;
 	datagrid.instantiate();
 	datagrid->set_cell_size(p_cell_size);
@@ -224,7 +224,7 @@ void DataGridManager::add_into_datagrid_from_collection(const Ref<DataGrid> &gri
 	}
 }
 
-void godot::DataGridManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<DataGrid> &p_datagrid) {
+void DataGridManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<DataGrid> &p_datagrid) {
 	if (!datagrid_collection.has(p_datagrid_position)) {
 		Dictionary layer_stack;
 		layer_stack[p_layer] = p_datagrid;
