@@ -1,12 +1,12 @@
-#ifndef DATAGRID_H
-#define DATAGRID_H
+#ifndef INFLUENCEMAP_H
+#define INFLUENCEMAP_H
 
 #include "math_curve.h"
 
 namespace godot {
 
-class DataGrid : public Resource {
-	GDCLASS(DataGrid, Resource)
+class InfluenceMap : public Resource {
+	GDCLASS(InfluenceMap, Resource)
 
 private:
 	int cell_size;
@@ -18,8 +18,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	DataGrid();
-	~DataGrid();
+	InfluenceMap();
+	~InfluenceMap();
 	
 	int get_cell_size() const { return cell_size; }
 	void set_cell_size(int p_cell_size);
@@ -37,8 +37,8 @@ public:
 	void fill(float p_value) { data.fill(p_value); };
 
 	void radiate_value_at_position(const Point2i &p_position, int radius, const Ref<MathCurve> &curve, float magnitude = 1.0f);
-	void add_grid_centered_at_pos(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude = 1.0f, const Point2i &p_offset = Vector2i());
-	void add_from_pos_in_grid(const Ref<DataGrid> &other_grid, Point2i p_position, float magnitude = 1.0f, const Point2i &p_offset = Vector2i());
+	void add_grid_centered_at_pos(const Ref<InfluenceMap> &other_grid, Point2i p_position, float magnitude = 1.0f, const Point2i &p_offset = Vector2i());
+	void add_from_pos_in_grid(const Ref<InfluenceMap> &other_grid, Point2i p_position, float magnitude = 1.0f, const Point2i &p_offset = Vector2i());
 	void show_grid();
 
 	Point2i get_highest_cell() const;
@@ -48,4 +48,4 @@ public:
 
 }
 
-#endif // DATAGRID_H
+#endif // INFLUENCEMAP_H

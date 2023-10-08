@@ -62,7 +62,7 @@ void DataGridManager::initialize_templates(int min_radius, int max_radius, int s
 	}
 }
 
-Ref<DataGrid> DataGridManager::get_template(int p_radius) const {
+Ref<InfluenceMap> DataGridManager::get_template(int p_radius) const {
 	for (int i = 0; i < templates.size(); i++) {
 		Ref<DataGridTemplate> t = templates[i];
 		if (p_radius <= t->radius) {
@@ -105,7 +105,7 @@ void DataGridManager::_process(float p_delta) {
 		// Deregister
 		if (component_data->is_registered()) {
 			Vector2 global_position = component_data->get_registered_position();
-			Ref<DataGrid> template_grid = get_template(component_data->get_registered_radius() / cell_size);
+			Ref<InfluenceMap> template_grid = get_template(component_data->get_registered_radius() / cell_size);
 			add_datagrid_centered_to_collection(template_grid, component_data->get_registered_layer(), global_position, -1.0, false);
 			component_data->set_registered(false);
 		}
@@ -120,7 +120,7 @@ void DataGridManager::_process(float p_delta) {
 		}
 		// Register
 		Vector2 global_position = component_data->get_global_position();
-		Ref<DataGrid> template_grid = get_template(component_data->get_radius() / cell_size);
+		Ref<InfluenceMap> template_grid = get_template(component_data->get_radius() / cell_size);
 		add_datagrid_centered_to_collection(template_grid, component_data->get_layer(), global_position, 1.0);
 		component_data->on_registered(global_position, component_data->get_layer(), component_data->get_radius());
 		if (updates_so_far < updates_per_frame) {
@@ -137,7 +137,7 @@ void DataGridManager::emit_updated(const Dictionary &p_datagrid_collection) {
 	emit_signal("updated", p_datagrid_collection);
 }
 
-void DataGridManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<DataGrid> &p_datagrid) {
+void DataGridManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<InfluenceMap> &p_datagrid) {
 	if (!datagrid_collection.has(p_datagrid_position)) {
 		Dictionary layer_stack;
 		layer_stack[p_layer] = p_datagrid;
@@ -158,12 +158,12 @@ bool DataGridManager::has_datagrid_layer(const Point2i &p_datagrid_position, int
 	return layer_stack.has(p_layer);
 }
 
-Ref<DataGrid> DataGridManager::get_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
+Ref<InfluenceMap> DataGridManager::get_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
 	if (!has_datagrid_layer(p_datagrid_position, p_layer)) {
 		return nullptr;
 	}
 	Dictionary layer_stack = datagrid_collection[p_datagrid_position];
-	Ref<DataGrid> layer = layer_stack[p_layer];
+	Ref<InfluenceMap> layer = layer_stack[p_layer];
 	return layer;
 }
 
@@ -185,7 +185,7 @@ Dictionary DataGridManager::filter_datagrid_layers(const Point2i &p_datagrid_pos
 }
 
 Vector2i DataGridManager::global_position_to_datagrid_index(const Vector2i &p_global_position) const {
-	// if DataGrid index is never negative, this can be simplified
+	// if InfluenceMap index is never negative, this can be simplified
 	// if manager global position is not 0,0 get_relative_position = p_global_position - manager_position
 	int neg_x = p_global_position.x < 0 ? 1 : 0;
 	int neg_y = p_global_position.y < 0 ? 1 : 0;
@@ -227,7 +227,7 @@ Array DataGridManager::get_touched_datagrids(const Vector2i &p_center_cell, int 
 	return result;
 }
 
-void DataGridManager::add_datagrid_centered_to_collection(const Ref<DataGrid> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude, bool registering) {
+void DataGridManager::add_datagrid_centered_to_collection(const Ref<InfluenceMap> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude, bool registering) {
 	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = grid_to_add->get_center().x;
@@ -243,19 +243,19 @@ void DataGridManager::add_datagrid_centered_to_collection(const Ref<DataGrid> &g
 			if (!registering) {
 				continue;
 			}
-			Ref<DataGrid> new_datagrid;
+			Ref<InfluenceMap> new_datagrid;
 			new_datagrid.instantiate();
 			new_datagrid->set_cell_size(cell_size);
 			new_datagrid->set_size_in_cells(Vector2i(datagrid_size));
 			add_datagrid_layer_to_collection(this_grid_index, p_layer, new_datagrid);
 		}
-		Ref<DataGrid> datagrid = get_datagrid_layer(this_grid_index, p_layer);
+		Ref<InfluenceMap> datagrid = get_datagrid_layer(this_grid_index, p_layer);
 		Vector2i offset = (-1 * index_offset) * datagrid_size;
 		datagrid->add_grid_centered_at_pos(grid_to_add, grid_cell_index, p_magnitude, offset);
 	}	
 }
 
-void DataGridManager::add_into_datagrid_from_collection(const Ref<DataGrid> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude) {
+void DataGridManager::add_into_datagrid_from_collection(const Ref<InfluenceMap> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude) {
 	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = grid_to_add_into->get_center().x;
@@ -271,7 +271,7 @@ void DataGridManager::add_into_datagrid_from_collection(const Ref<DataGrid> &gri
 		if (!has_datagrid_layer(this_grid_index, p_layer)) {
 			continue;
 		}
-		Ref<DataGrid> datagrid = get_datagrid_layer(this_grid_index, p_layer);
+		Ref<InfluenceMap> datagrid = get_datagrid_layer(this_grid_index, p_layer);
 		Vector2i offset = (-1 * index_offset) * datagrid_size;
 		grid_to_add_into->add_from_pos_in_grid(datagrid, grid_cell_index, p_magnitude, offset);
 	}
