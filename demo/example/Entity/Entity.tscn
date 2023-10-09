@@ -10,7 +10,6 @@
 [sub_resource type="DataGridCompRef" id="DataGridCompRef_yetls"]
 layer = 2
 radius = 70.0
-registered_layer = 0
 
 [node name="Entity" type="CharacterBody2D"]
 script = ExtResource("1_w4puc")

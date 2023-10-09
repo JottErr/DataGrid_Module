@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dufu622hrascd"]
+
+[ext_resource type="Script" path="res://visualization/GridVisualizer.gd" id="1_o1ble"]
+[ext_resource type="Script" path="res://node_2d.gd" id="1_smxkp"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_smxkp")
+
+[node name="GridVisualizer" type="Node2D" parent="."]
+script = ExtResource("1_o1ble")
