@@ -4,22 +4,9 @@
 #include <godot_cpp/classes/node.hpp>
 #include "influence_map.h"
 #include "data_grid_component.h"
+#include "godot_cpp/templates/local_vector.hpp"
 
 namespace godot {
-
-class DataGridTemplate : public Resource {
-	GDCLASS(DataGridTemplate, Resource)
-
-protected:
-	static void _bind_methods();
-
-public:
-	DataGridTemplate();
-	~DataGridTemplate();
-	int radius;
-	Ref<InfluenceMap> datagrid;
-	void initialize(int p_radius, int p_cell_size, Ref<MathCurve> p_curve);
-};
 
 class DataGridManager : public Node {
 	GDCLASS(DataGridManager, Node)
@@ -31,7 +18,19 @@ private:
 	Size2i datagrid_size;
 
 	Dictionary datagrid_collection;
-	TypedArray<DataGridTemplate> templates;
+
+	struct InfluenceMapTemplate {
+		int radius;
+		Ref<InfluenceMap> datagrid;
+		
+		InfluenceMapTemplate() {}
+		InfluenceMapTemplate(int p_radius, Ref<InfluenceMap> p_datagrid) {
+			radius = p_radius;
+			datagrid = p_datagrid;
+		}
+	};
+
+	LocalVector<InfluenceMapTemplate> templates;
 
 protected:
 	void _notification(int p_what);

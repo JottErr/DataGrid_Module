@@ -23,7 +23,6 @@ void initialize_data_grid_module(ModuleInitializationLevel p_level) {
 	}
 	ClassDB::register_class<MathCurve>();
 	ClassDB::register_class<InfluenceMap>();
-	ClassDB::register_class<DataGridTemplate>();
 	ClassDB::register_class<DataGridCompRef>();
 	ClassDB::register_class<DataGridComponent>();
 	ClassDB::register_class<DataGridManager>();

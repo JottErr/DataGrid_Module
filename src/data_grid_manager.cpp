@@ -7,24 +7,6 @@
 
 using namespace godot;
 
-void DataGridTemplate::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("initialize", "p_radius", "p_cell_size", "p_curve"), &DataGridTemplate::initialize);
-}
-
-DataGridTemplate::DataGridTemplate() {
-}
-
-DataGridTemplate::~DataGridTemplate() {
-}
-
-void DataGridTemplate::initialize(int p_radius, int p_cell_size, Ref<MathCurve> p_curve) {
-	radius = p_radius;
-	datagrid.instantiate();
-	datagrid->set_cell_size(p_cell_size);
-	datagrid->set_size_in_cells(Size2i(2 * radius + 1, 2 * radius + 1)); // uneven number of cells to get grid with a center cell
-	datagrid->radiate_value_at_position(Point2i(radius, radius), radius, p_curve, 1.0);
-}
-
 void DataGridManager::set_world_size(const Size2i &p_world_size) {
 	world_size = p_world_size;
 	set_datagrid_size();
@@ -55,22 +37,24 @@ void DataGridManager::initialize_templates(int min_radius, int max_radius, int s
 
 	templates.resize(max_radius - min_radius);
 	for (int radius = min_radius; radius < max_radius; radius += steps) {
-		Ref<DataGridTemplate> datagrid_template;
-		datagrid_template.instantiate();
-		datagrid_template->initialize(radius, cell_size, tcurve);
-		templates[radius - min_radius] = datagrid_template;
+		Ref<InfluenceMap> imap;
+		imap.instantiate();
+		imap->set_cell_size(cell_size);
+		imap->set_size_in_cells(Size2i(2 * radius + 1, 2 * radius + 1)); // uneven number of cells to get grid with a center cell
+		imap->radiate_value_at_position(Point2i(radius, radius), radius, tcurve, 1.0);
+		templates[radius - min_radius] = InfluenceMapTemplate(radius, imap);
 	}
 }
 
 Ref<InfluenceMap> DataGridManager::get_template(int p_radius) const {
 	for (int i = 0; i < templates.size(); i++) {
-		Ref<DataGridTemplate> t = templates[i];
-		if (p_radius <= t->radius) {
-			return t->datagrid;
+		const InfluenceMapTemplate &t = templates[i];
+		if (p_radius <= t.radius) {
+			return t.datagrid;
 		}
 	}
-	Ref<DataGridTemplate> t = templates[templates.size() - 1];
-	return t->datagrid;
+	const InfluenceMapTemplate &t = templates[templates.size() - 1];
+	return t.datagrid;
 }
 
 void DataGridManager::_notification(int p_what) {
