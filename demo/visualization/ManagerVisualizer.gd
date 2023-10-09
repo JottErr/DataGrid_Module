@@ -20,7 +20,7 @@ func _draw():
 		if imap == null:
 			continue
 		var data := imap.get_data()
-		var size := imap.get_size_in_cells()
+		var size := imap.get_size()
 		var cell_size := imap.get_cell_size()
 		var offset: Vector2 = datagrid_index * size * cell_size
 		for y in size.y:

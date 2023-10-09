@@ -7,8 +7,8 @@ using namespace godot;
 void InfluenceMap::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_cell_size"), &InfluenceMap::get_cell_size);
 	ClassDB::bind_method(D_METHOD("set_cell_size", "cell_size"), &InfluenceMap::set_cell_size);
-	ClassDB::bind_method(D_METHOD("get_size_in_cells"), &InfluenceMap::get_size_in_cells);
-	ClassDB::bind_method(D_METHOD("set_size_in_cells", "size"), &InfluenceMap::set_size_in_cells);
+	ClassDB::bind_method(D_METHOD("get_size"), &InfluenceMap::get_size);
+	ClassDB::bind_method(D_METHOD("set_size", "size"), &InfluenceMap::set_size);
 	ClassDB::bind_method(D_METHOD("get_center"), &InfluenceMap::get_center);
 	ClassDB::bind_method(D_METHOD("set_center", "center"), &InfluenceMap::set_center);
 	ClassDB::bind_method(D_METHOD("get_data"), &InfluenceMap::get_data);
@@ -26,14 +26,14 @@ void InfluenceMap::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("normalize_data"), &InfluenceMap::normalize_data);
 	
 	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
-	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::VECTOR2I, "size_in_cells"), "set_size_in_cells", "get_size_in_cells");
+	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::VECTOR2I, "size"), "set_size", "get_size");
 	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::VECTOR2I, "center"), "set_center", "get_center");
 	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::ARRAY, "data"), "set_data", "get_data");
 }
 
 InfluenceMap::InfluenceMap() {
 	cell_size = 1;
-	size_in_cells = Size2i(0, 0);
+	size = Size2i(0, 0);
 	center = Point2i(0, 0);
 }
 
@@ -44,9 +44,10 @@ void InfluenceMap::set_cell_size(int p_cell_size) {
 	cell_size = p_cell_size; 
 }
 
-void InfluenceMap::set_size_in_cells(const Size2i &p_size_in_cells) {
-	size_in_cells = p_size_in_cells;
-	center = Point2i((size_in_cells.x / 2), (size_in_cells.y / 2));
+void InfluenceMap::set_size(const Size2i &p_size) {
+	ERR_FAIL_COND(p_size.x < 0 || p_size.y < 0);
+	size = p_size;
+	center = Point2i((size.x / 2), (size.y / 2));
 	reset_data();
 }
 
@@ -55,12 +56,12 @@ void InfluenceMap::radiate_value_at_position(const Point2i &p_position, int radi
 	Point2i radius_botright = p_position + Vector2i(radius + 1, radius + 1);
 
 	radius_topleft = radius_topleft.max(Point2i(0, 0));
-	radius_botright = radius_botright.min(size_in_cells);
+	radius_botright = radius_botright.min(size);
 
 	int radius_squared = radius * radius;
 	
 	for (int y = radius_topleft.y; y < radius_botright.y; y++) {
-		int row = y * size_in_cells.x;
+		int row = y * size.x;
 		int dy = p_position.y - y;
 		for (int x = radius_topleft.x; x < radius_botright.x; x++) {
 			int dx = p_position.x - x;
@@ -77,17 +78,17 @@ void InfluenceMap::radiate_value_at_position(const Point2i &p_position, int radi
 
 // Adds the given grid to the current InfluenceMap. The other grid is centered at the specified position in this grid. 
 // The other grid is scaled with the specified magnitude. Used to add a smaller grid into a large grid.
-void InfluenceMap::add_grid_centered_at_pos(const Ref<InfluenceMap> &other_grid, Point2i p_position, float magnitude, const Point2i &p_offset) {
+void InfluenceMap::add_grid_centered_at_pos(const Ref<InfluenceMap> &other_grid, const Point2i &p_position, float magnitude, const Point2i &p_offset) {
 	Point2i other_topleft = p_position - other_grid->get_center() + p_offset;
-	Point2i other_botright = other_topleft + other_grid->get_size_in_cells();
+	Point2i other_botright = other_topleft + other_grid->get_size();
 
 	Point2i intersection_topleft = other_topleft.max(Point2i(0, 0));
-	Point2i intersection_botright = other_botright.min(size_in_cells);
+	Point2i intersection_botright = other_botright.min(size);
 
-	int other_grid_width = other_grid->get_size_in_cells().x;
+	int other_grid_width = other_grid->get_size().x;
 	
 	for (int y = intersection_topleft.y; y < intersection_botright.y; y++) {
-		int row = y * size_in_cells.x;
+		int row = y * size.x;
 		int other_row = (y - other_topleft.y) * other_grid_width;
 		for (int x = intersection_topleft.x; x < intersection_botright.x; x++) {
 			int other_x = x - other_topleft.x;
@@ -99,17 +100,17 @@ void InfluenceMap::add_grid_centered_at_pos(const Ref<InfluenceMap> &other_grid,
 }
 // Adds from the given grid to the current InfluenceMap. A region with the size of the this grid is defined around the specified position in the other grid.
 // Values added from the other grid are scaled with the specified magnitude. Used to add part of a large grid into a smaller grid.
-void InfluenceMap::add_from_pos_in_grid(const Ref<InfluenceMap> &other_grid, Point2i p_position, float magnitude, const Point2i &p_offset) {
+void InfluenceMap::add_from_pos_in_grid(const Ref<InfluenceMap> &other_grid, const Point2i &p_position, float magnitude, const Point2i &p_offset) {
 	Point2i topleft_in_other = p_position - center + p_offset;
-	Point2i botright_in_other = topleft_in_other + size_in_cells;
+	Point2i botright_in_other = topleft_in_other + size;
 
 	Point2i intersection_topleft = topleft_in_other.max(Point2i(0, 0));
-	Point2i intersection_botright = botright_in_other.min(other_grid->get_size_in_cells());
+	Point2i intersection_botright = botright_in_other.min(other_grid->get_size());
 
-	int other_grid_width = other_grid->get_size_in_cells().x;
+	int other_grid_width = other_grid->get_size().x;
 
 	for (int y = intersection_topleft.y; y < intersection_botright.y; y++) {
-		int row = (y - topleft_in_other.y) * size_in_cells.x;
+		int row = (y - topleft_in_other.y) * size.x;
 		int other_row = y * other_grid_width;
 		for (int x = intersection_topleft.x; x < intersection_botright.x; x++) {
 			int this_x = x - topleft_in_other.x;
@@ -125,14 +126,14 @@ Point2i InfluenceMap::get_highest_cell() const {
 	Size2i position = Vector2i();
 
 	Vector2i offset;
-	offset.x = UtilityFunctions::randi_range(0, size_in_cells.x);
-	offset.y = UtilityFunctions::randi_range(0, size_in_cells.y);
+	offset.x = UtilityFunctions::randi_range(0, size.x);
+	offset.y = UtilityFunctions::randi_range(0, size.y);
 
-	for (int y = 0; y < size_in_cells.y; y++) {
-		int rand_y = (y + offset.y) % size_in_cells.y;
-		int row = rand_y * size_in_cells.x;
-		for (int x = 0; x < size_in_cells.x; x++) {
-			int rand_x = (x + offset.x) % size_in_cells.x;
+	for (int y = 0; y < size.y; y++) {
+		int rand_y = (y + offset.y) % size.y;
+		int row = rand_y * size.x;
+		for (int x = 0; x < size.x; x++) {
+			int rand_x = (x + offset.x) % size.x;
 			float value = data[rand_x + row];
 			if (value > maxValue) {
 				maxValue = value;
@@ -148,14 +149,14 @@ Point2i InfluenceMap::get_lowest_cell() const {
 	Size2i position = Vector2i();
 
 	Vector2i offset;
-	offset.x = UtilityFunctions::randi_range(0, size_in_cells.x);
-	offset.y = UtilityFunctions::randi_range(0, size_in_cells.y);
+	offset.x = UtilityFunctions::randi_range(0, size.x);
+	offset.y = UtilityFunctions::randi_range(0, size.y);
 
-	for (int y = 0; y < size_in_cells.y; y++) {
-		int rand_y = (y + offset.y) % size_in_cells.y;
-		int row = rand_y * size_in_cells.x;
-		for (int x = 0; x < size_in_cells.x; x++) {
-			int rand_x = (x + offset.x) % size_in_cells.x;
+	for (int y = 0; y < size.y; y++) {
+		int rand_y = (y + offset.y) % size.y;
+		int row = rand_y * size.x;
+		for (int x = 0; x < size.x; x++) {
+			int rand_x = (x + offset.x) % size.x;
 			float value = data[rand_x + row];
 			if (value < minValue) {
 				minValue = value;
@@ -169,7 +170,7 @@ Point2i InfluenceMap::get_lowest_cell() const {
 void InfluenceMap::normalize_data() {
 	float minValue = INFINITY;
 	float maxValue = -INFINITY;
-	for (int i = 0; i < size_in_cells.x * size_in_cells.y; i++) {
+	for (int i = 0; i < size.x * size.y; i++) {
 		float value = data[i];
 		if (value < minValue) {
 			minValue = value;
@@ -183,16 +184,16 @@ void InfluenceMap::normalize_data() {
 		reset_data();
 		return;
 	}
-	for (int i = 0; i < size_in_cells.x * size_in_cells.y; i++) {
+	for (int i = 0; i < size.x * size.y; i++) {
 		data[i] = (float(data[i]) - minValue) / range;
 	}
 }
 
 void InfluenceMap::show_grid() {
 	String row = String("");
-	for (int y = 0; y < size_in_cells.y; y++) {
-		for (int x = 0; x < size_in_cells.x; x++) {
-			row += UtilityFunctions::str(data[x + y * size_in_cells.x]).pad_decimals(1) + " ";
+	for (int y = 0; y < size.y; y++) {
+		for (int x = 0; x < size.x; x++) {
+			row += UtilityFunctions::str(data[x + y * size.x]).pad_decimals(1) + " ";
 		}
 		row += "\n";
 	}

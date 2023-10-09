@@ -15,7 +15,7 @@ func _draw():
 	if imap == null:
 		return
 	var data := imap.get_data()
-	var size := imap.get_size_in_cells()
+	var size := imap.get_size()
 	var cell_size := imap.get_cell_size()
 	for y in size.y:
 		var row := y * size.x

@@ -18,7 +18,7 @@ var interest_template := InfluenceMap.new()
 func _ready() -> void:
 	interest_grid = InfluenceMap.new()
 	interest_grid.set_cell_size(cell_size)
-	interest_grid.set_size_in_cells(interest_grid_size)
+	interest_grid.set_size(interest_grid_size)
 	create_interest_template()
 	think_cycle_timer.start()
 
@@ -62,5 +62,5 @@ func create_interest_template() -> void:
 	var curve := MathCurve.new()
 	curve.set_parameters(-1.0, 4, 0.0, 1.0)
 	interest_template.set_cell_size(cell_size)
-	interest_template.set_size_in_cells(interest_grid_size)
+	interest_template.set_size(interest_grid_size)
 	interest_template.radiate_value_at_position(interest_template.get_center(), interest_template.get_center().x, curve)

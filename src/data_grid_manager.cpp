@@ -40,7 +40,7 @@ void DataGridManager::initialize_templates(int min_radius, int max_radius, int s
 		Ref<InfluenceMap> imap;
 		imap.instantiate();
 		imap->set_cell_size(cell_size);
-		imap->set_size_in_cells(Size2i(2 * radius + 1, 2 * radius + 1)); // uneven number of cells to get grid with a center cell
+		imap->set_size(Size2i(2 * radius + 1, 2 * radius + 1)); // uneven number of cells to get grid with a center cell
 		imap->radiate_value_at_position(Point2i(radius, radius), radius, tcurve, 1.0);
 		templates[radius - min_radius] = InfluenceMapTemplate(radius, imap);
 	}
@@ -230,7 +230,7 @@ void DataGridManager::add_datagrid_centered_to_collection(const Ref<InfluenceMap
 			Ref<InfluenceMap> new_datagrid;
 			new_datagrid.instantiate();
 			new_datagrid->set_cell_size(cell_size);
-			new_datagrid->set_size_in_cells(Vector2i(datagrid_size));
+			new_datagrid->set_size(Vector2i(datagrid_size));
 			add_datagrid_layer_to_collection(this_grid_index, p_layer, new_datagrid);
 		}
 		Ref<InfluenceMap> datagrid = get_datagrid_layer(this_grid_index, p_layer);

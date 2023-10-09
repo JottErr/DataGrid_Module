@@ -14,7 +14,7 @@ func _ready() -> void:
 	var shape := collision_shape.get_shape()
 	var rect := shape.get_rect()
 	imap.set_cell_size(cell_size)
-	imap.set_size_in_cells(rect.size / cell_size)
+	imap.set_size(rect.size / cell_size)
 	if shape is RectangleShape2D:
 		imap.fill(1.0)
 	elif shape is CircleShape2D:
