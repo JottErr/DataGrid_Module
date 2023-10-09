@@ -43,9 +43,9 @@ func _on_think_cycle_timer_timeout() -> void:
 	#normalize layer mix and multiply by interest template to favor closer cells
 	interest_grid.normalize_data()
 	for y in interest_grid_size.y:
-		var row := y * interest_grid_size.x
 		for x in interest_grid_size.x:
-			interest_grid.get_data()[x + row] *= interest_template.get_data()[x + row]
+			var value := interest_grid.get_cell_value(Vector2i(x, y)) * interest_template.get_cell_value(Vector2i(x, y))
+			interest_grid.set_cell_value(Vector2i(x, y), value)
 	
 	#Vector in cells from Entity to target, used to get a direction atm, could be made global_position
 	var target: Vector2i = interest_grid.get_highest_cell()

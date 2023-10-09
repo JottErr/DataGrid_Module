@@ -6,13 +6,11 @@ extends Node2D
 
 var datagrid: InfluenceMap
 var width: int
-var data: Array[float]
 
 
 func _ready() -> void:
 	datagrid = grid_visualizer.datagrid
 	width = datagrid.get_size_in_cells().x
-	data = datagrid.get_data()
 
 
 func _input(event: InputEvent) -> void:
@@ -28,7 +26,7 @@ func _input(event: InputEvent) -> void:
 		
 			var line = get_line_cell_indices(start, end)
 			for point in line:
-				data[point.x + point.y * width] = 1.0
+				datagrid.set_cell_value(point, 1.0)
 		grid_visualizer._on_data_grid_updated(datagrid)
 	
 

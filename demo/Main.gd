@@ -6,8 +6,6 @@ extends Node2D
 
 
 func _ready() -> void:
-	test_performance()
-	return
 	DataGridHub.set_world_grid_manager(data_grid_manager)
 	for wall in $Map.get_children():
 		wall.register_in_manager(data_grid_manager)

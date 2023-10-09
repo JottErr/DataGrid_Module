@@ -14,16 +14,14 @@ func _ready() -> void:
 func _draw():
 	if imap == null:
 		return
-	var data := imap.get_data()
 	var size := imap.get_size()
 	var cell_size := imap.get_cell_size()
 	for y in size.y:
-		var row := y * size.x
 		var y_pos := y * cell_size
 		for x in size.x:
 			var x_pos := x * cell_size
 			var color := base_color
-			color.a = data[x + row]
+			color.a = imap.get_cell_value(Vector2i(x, y))
 			draw_rect(Rect2(x_pos, y_pos, cell_size, cell_size), color)
 
 

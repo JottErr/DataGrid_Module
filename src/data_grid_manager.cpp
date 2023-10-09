@@ -235,7 +235,7 @@ void DataGridManager::add_datagrid_centered_to_collection(const Ref<InfluenceMap
 		}
 		Ref<InfluenceMap> datagrid = get_datagrid_layer(this_grid_index, p_layer);
 		Vector2i offset = (-1 * index_offset) * datagrid_size;
-		datagrid->add_grid_centered_at_pos(grid_to_add, grid_cell_index, p_magnitude, offset);
+		datagrid->add_map(grid_to_add, grid_cell_index, p_magnitude, offset);
 	}	
 }
 
@@ -257,7 +257,7 @@ void DataGridManager::add_into_datagrid_from_collection(const Ref<InfluenceMap> 
 		}
 		Ref<InfluenceMap> datagrid = get_datagrid_layer(this_grid_index, p_layer);
 		Vector2i offset = (-1 * index_offset) * datagrid_size;
-		grid_to_add_into->add_from_pos_in_grid(datagrid, grid_cell_index, p_magnitude, offset);
+		grid_to_add_into->add_from_map(datagrid, grid_cell_index, p_magnitude, offset);
 	}
 }
 

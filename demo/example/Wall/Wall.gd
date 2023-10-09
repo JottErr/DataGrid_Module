@@ -16,7 +16,7 @@ func _ready() -> void:
 	imap.set_cell_size(cell_size)
 	imap.set_size(rect.size / cell_size)
 	if shape is RectangleShape2D:
-		imap.fill(1.0)
+		imap.reset_data(1.0)
 	elif shape is CircleShape2D:
 		var curve := MathCurve.new()
 		curve.set_parameters(0, 0, 0, 1)

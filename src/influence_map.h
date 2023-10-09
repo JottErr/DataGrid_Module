@@ -2,6 +2,7 @@
 #define INFLUENCEMAP_H
 
 #include "math_curve.h"
+#include "godot_cpp/templates/local_vector.hpp"
 
 namespace godot {
 
@@ -10,9 +11,9 @@ class InfluenceMap : public Resource {
 
 private:
 	int cell_size;
-	Size2i size;
-	Point2i center;
-	TypedArray<float> data;
+	Vector2i size;
+	Vector2i center;
+	LocalVector<float> data;
 	
 protected:
 	static void _bind_methods();
@@ -21,29 +22,26 @@ public:
 	InfluenceMap();
 	~InfluenceMap();
 	
-	int get_cell_size() const { return cell_size; }
 	void set_cell_size(int p_cell_size);
+	int get_cell_size() const { return cell_size; }
+	void set_size(const Vector2i &p_size);
+	const Vector2i &get_size() const { return size; }
+	void set_center(const Vector2i &p_position) { return; }
+	const Vector2i &get_center() const { return center; }
+	void reset_data(float p_value = 0.0f);
+	bool is_in_bounds(const Vector2i &p_id) const;
+	void set_cell_value(const Vector2i &p_id, float p_value);
+	float get_cell_value(const Vector2i &p_id) const;
 	
-	const Size2i &get_size() const { return size; }
-	void set_size(const Size2i &p_size);
-	
-	const Point2i &get_center() const { return center; }
-	void set_center(const Point2i &p_position) { return; }
-	
-	const Array &get_data() const { return data; }
-	void set_data(const TypedArray<float> &p_data) { return; }
-	void reset_data() { data.resize(size.x * size.y); data.fill(0.0); }
+	void radiate_value_at_position(const Vector2i &p_position, int radius, const Ref<MathCurve> &curve, float magnitude = 1.0f);
+	void add_map(const Ref<InfluenceMap> &other_map, const Vector2i &p_position, float magnitude = 1.0f, const Vector2i &p_offset = Vector2i());
+	void add_from_map(const Ref<InfluenceMap> &other_map, const Vector2i &p_position, float magnitude = 1.0f, const Vector2i &p_offset = Vector2i());
 
-	void fill(float p_value) { data.fill(p_value); };
-
-	void radiate_value_at_position(const Point2i &p_position, int radius, const Ref<MathCurve> &curve, float magnitude = 1.0f);
-	void add_grid_centered_at_pos(const Ref<InfluenceMap> &other_grid, const Point2i &p_position, float magnitude = 1.0f, const Point2i &p_offset = Vector2i());
-	void add_from_pos_in_grid(const Ref<InfluenceMap> &other_grid, const Point2i &p_position, float magnitude = 1.0f, const Point2i &p_offset = Vector2i());
-	void show_grid();
-
-	Point2i get_highest_cell() const;
-	Point2i get_lowest_cell() const;
+	Vector2i get_highest_cell() const;
+	Vector2i get_lowest_cell() const;
 	void normalize_data();
+
+	void show_map();
 };
 
 }
