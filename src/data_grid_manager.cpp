@@ -44,6 +44,11 @@ void DataGridManager::initialize_templates(int min_radius, int max_radius, int s
 		imap->radiate_value_at_position(Point2i(radius, radius), radius, tcurve, 1.0);
 		templates[radius - min_radius] = InfluenceMapTemplate(radius, imap);
 	}
+
+	out_of_boundaries_template.instantiate();
+	out_of_boundaries_template->set_cell_size(cell_size);
+	out_of_boundaries_template->set_size(datagrid_size);
+	out_of_boundaries_template->reset_data(1.0);
 }
 
 Ref<InfluenceMap> DataGridManager::get_template(int p_radius) const {
@@ -189,7 +194,7 @@ Vector2i DataGridManager::world_position_to_cell_in_data_grid(const Vector2 &p_w
 }
 
 Array DataGridManager::get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const {
-	//Only works for direct neighbours, if (radius > datagrid_size+2) a second neighbour could be touched 
+	//Only works for direct neighbours, if (radius > datagrid_size+1) a second neighbour could be touched 
 	Array result;
 	result.append(Vector2i(0, 0));
 
@@ -261,6 +266,24 @@ void DataGridManager::add_into_datagrid_from_collection(const Ref<InfluenceMap> 
 	}
 }
 
+void godot::DataGridManager::mark_cells_outside_boundaries(const Ref<InfluenceMap> &p_imap, Vector2i p_global_position, float p_magnitude) {
+	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
+	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
+	int radius = p_imap->get_center().x;
+	Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
+	int amount_grids = touched_grids.size();
+
+	for (int i = 0; i < amount_grids; i++) {
+		Vector2i index_offset = touched_grids[i];
+		Vector2i this_grid_index = datagrid_index + index_offset;
+		if (grid_position_in_bounds(this_grid_index)) {
+			continue;
+		}
+		Vector2i offset = (-1 * index_offset) * datagrid_size;
+		p_imap->add_from_map(out_of_boundaries_template, grid_cell_index, p_magnitude, offset);
+	}
+}
+
 Vector2 DataGridManager::snap_global_postion_to_cell_center(const Vector2 &p_global_position) const {
 	return Vector2(p_global_position / cell_size).floor() * cell_size + Vector2(cell_size, cell_size) / 2.0;
 }
@@ -297,7 +320,8 @@ void DataGridManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_touched_datagrids", "center_cell", "radius"), &DataGridManager::get_touched_datagrids); 
 	ClassDB::bind_method(D_METHOD("add_datagrid_centered_to_collection", "grid_to_add", "layer", "global_position", "magnitude", "registering"), &DataGridManager::add_datagrid_centered_to_collection, DEFVAL(1.0f), DEFVAL(true));
 	ClassDB::bind_method(D_METHOD("add_into_datagrid_from_collection", "grid_to_add_into", "layer", "global_position", "magnitude"), &DataGridManager::add_into_datagrid_from_collection, DEFVAL(1.0f));
-	
+	ClassDB::bind_method(D_METHOD("mark_cells_outside_boundaries", "imap", "global_position", "magnitude"), &DataGridManager::mark_cells_outside_boundaries, DEFVAL(1.0f));
+
 	ClassDB::bind_method(D_METHOD("snap_global_postion_to_cell_center", "p_global_position"), &DataGridManager::snap_global_postion_to_cell_center);
 	ClassDB::bind_method(D_METHOD("find_corner_from_center", "p_global_position", "p_datagrid_center"), &DataGridManager::find_corner_from_center);
 

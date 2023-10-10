@@ -31,6 +31,7 @@ private:
 	};
 
 	LocalVector<InfluenceMapTemplate> templates;
+	Ref<InfluenceMap> out_of_boundaries_template;
 
 protected:
 	void _notification(int p_what);
@@ -66,6 +67,7 @@ public:
 	Array get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const;
 	void add_datagrid_centered_to_collection(const Ref<InfluenceMap> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f, bool registering = true);
 	void add_into_datagrid_from_collection(const Ref<InfluenceMap> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f);
+	void mark_cells_outside_boundaries(const Ref<InfluenceMap> &p_imap, Vector2i p_global_position, float p_magnitude = 1.0f);
 	
 	Vector2 snap_global_postion_to_cell_center(const Vector2 &p_global_position) const;
 	Vector2 find_corner_from_center(const Vector2 &p_global_position, Vector2i p_datagrid_center);
