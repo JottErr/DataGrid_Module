@@ -90,7 +90,7 @@ void DataGridComponent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_registration_frequency", "frequency"), &DataGridComponent::set_registration_frequency);
 	ClassDB::bind_method(D_METHOD("get_registration_frequency"), &DataGridComponent::get_registration_frequency);
 	
-	ClassDB::add_property("DataGridComponent", PropertyInfo(Variant::OBJECT, "data_resource"), "set_data_resource", "get_data_resource");
+	ClassDB::add_property("DataGridComponent", PropertyInfo(Variant::OBJECT, "data_resource", PROPERTY_HINT_RESOURCE_TYPE, "DataGridCompRef"), "set_data_resource", "get_data_resource");
 	ClassDB::add_property("DataGridComponent", PropertyInfo(Variant::FLOAT, "registration_frequency"), "set_registration_frequency", "get_registration_frequency");
 	ClassDB::add_property("DataGridComponent", PropertyInfo(Variant::INT, "time_since_registration"), "set_time_since_registration", "get_time_since_registration");
 }
