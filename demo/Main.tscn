@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cvnvlklovbnuu"]
+[gd_scene load_steps=10 format=3 uid="uid://cvnvlklovbnuu"]
 
 [ext_resource type="Script" path="res://Main.gd" id="1_kbwwx"]
 [ext_resource type="Script" path="res://visualization/ManagerVisualizer.gd" id="2_gbjyx"]
@@ -7,8 +7,19 @@
 [ext_resource type="PackedScene" uid="uid://dqtn6885tdb6p" path="res://example/Wall/Wall.tscn" id="6_4e0vx"]
 [ext_resource type="PackedScene" uid="uid://bw3rs5bqbjt2l" path="res://example/Player/Player.tscn" id="6_xl5u3"]
 
+[sub_resource type="MathCurve" id="MathCurve_cqje4"]
+
+[sub_resource type="MathCurve" id="MathCurve_1wwfb"]
+exponent = 4.0
+
+[sub_resource type="MathCurve" id="MathCurve_hholi"]
+exponent = 6.0
+
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kbwwx")
+dec_lin = SubResource("MathCurve_cqje4")
+dec_4_poly = SubResource("MathCurve_1wwfb")
+dec_6_poly = SubResource("MathCurve_hholi")
 
 [node name="DataGridManager" type="DataGridManager" parent="."]
 world_size = Vector2i(1500, 900)
