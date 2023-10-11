@@ -2,9 +2,11 @@
 #define DATAGRIDMANAGER_H
 
 #include <godot_cpp/classes/node.hpp>
+#include "math_curve.h"
 #include "influence_map.h"
 #include "data_grid_component.h"
 #include "godot_cpp/templates/local_vector.hpp"
+#include "godot_cpp/templates/hash_map.hpp"
 
 namespace godot {
 
@@ -30,8 +32,8 @@ private:
 		}
 	};
 
-	LocalVector<InfluenceMapTemplate> templates;
 	Ref<InfluenceMap> out_of_boundaries_template;
+	HashMap<int, LocalVector<InfluenceMapTemplate>> hashed_templates;
 
 protected:
 	void _notification(int p_what);
@@ -50,8 +52,8 @@ public:
 	void set_datagrid_size(const Size2i &p_datagrid_size = Size2i(0, 0));
 	const Size2i &get_datagrid_size() const { return datagrid_size; }
 	
-	void initialize_templates(int min_radius, int max_radius, int steps);
-	Ref<InfluenceMap> get_template(int p_radius) const;
+	void create_templates(int p_type, int min_radius, int max_radius, const Ref<MathCurve> &p_curve);
+	Ref<InfluenceMap> get_template(int p_type, int p_radius) const;
 
 	void _process(float p_delta);
 	void emit_updated(const Dictionary &datagrid_collection);

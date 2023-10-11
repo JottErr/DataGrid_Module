@@ -1,15 +1,23 @@
 extends Node2D
 
+@export var dec_lin : MathCurve
+@export var dec_4_poly : MathCurve
+@export var dec_6_poly : MathCurve
 
 @onready var data_grid_manager: DataGridManager = $DataGridManager
 @onready var manager_visualizer: Node2D = $ManagerVisualizer
+
+enum InfluenceType {PROX = 1, THREAT = 2, INTEREST = 3}
 
 
 func _ready() -> void:
 	DataGridHub.set_world_grid_manager(data_grid_manager)
 	for wall in $Map.get_children():
 		wall.register_in_manager(data_grid_manager)
-	data_grid_manager.initialize_templates(1, 21, 1)
+	data_grid_manager.create_templates(InfluenceType.PROX, 1, 21, dec_lin)
+	data_grid_manager.create_templates(InfluenceType.THREAT, 3, 21, dec_4_poly)
+	data_grid_manager.create_templates(InfluenceType.INTEREST, 11, 31, dec_6_poly)
+	get_tree().call_group("IntelligenceControllers", "initialize")
 
 
 func _input(event: InputEvent) -> void:
@@ -29,7 +37,7 @@ func test_performance() -> void:
 		var start = Time.get_ticks_usec()
 		for i in 600:
 			for j in 600:
-				data2.add_grid_centered_at_pos(data1, Vector2i(i, j), 1.0)
+				data2.add_map(data1, Vector2i(i, j), 1.0)
 		print(Time.get_ticks_usec() - start)
 
 

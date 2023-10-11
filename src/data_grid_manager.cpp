@@ -29,29 +29,35 @@ void DataGridManager::set_datagrid_size(const Size2i &p_datagrid_size) {
 	datagrid_size = world_size / (datagrid_count * cell_size);
 }
 
-void DataGridManager::initialize_templates(int min_radius, int max_radius, int steps) {
-	// curve as parameter, new int type parameter, ENUM.types (PROX; THREAT; INTEREST; FLAT)
-	// Array templates becomes Dict templates <type, Array>
-	Ref<MathCurve> tcurve;
-	tcurve.instantiate();
-
-	templates.resize(max_radius - min_radius);
-	for (int radius = min_radius; radius < max_radius; radius += steps) {
+void DataGridManager::create_templates(int p_type, int min_radius, int max_radius, const Ref<MathCurve> &p_curve) {
+	if (hashed_templates.has(p_type)) {
+		hashed_templates.erase(p_type);
+	}
+	LocalVector<InfluenceMapTemplate> template_vector;
+	template_vector.resize(max_radius - min_radius);
+	
+	for (int radius = min_radius; radius < max_radius; radius++) {
 		Ref<InfluenceMap> imap;
 		imap.instantiate();
 		imap->set_cell_size(cell_size);
 		imap->set_size(Size2i(2 * radius + 1, 2 * radius + 1)); // uneven number of cells to get grid with a center cell
-		imap->radiate_value_at_position(Point2i(radius, radius), radius, tcurve, 1.0);
-		templates[radius - min_radius] = InfluenceMapTemplate(radius, imap);
+		imap->radiate_value_at_position(Point2i(radius, radius), radius, p_curve, 1.0);
+		template_vector[radius - min_radius] = InfluenceMapTemplate(radius, imap);
+	
+	hashed_templates.insert(p_type, template_vector);
 	}
-
 	out_of_boundaries_template.instantiate();
 	out_of_boundaries_template->set_cell_size(cell_size);
 	out_of_boundaries_template->set_size(datagrid_size);
 	out_of_boundaries_template->reset_data(1.0);
 }
 
-Ref<InfluenceMap> DataGridManager::get_template(int p_radius) const {
+Ref<InfluenceMap> DataGridManager::get_template(int p_type, int p_radius) const {
+	if (!hashed_templates.has(p_type)) {
+		return nullptr;
+	}
+	LocalVector<InfluenceMapTemplate> const &templates = hashed_templates.get(p_type);
+	
 	for (int i = 0; i < templates.size(); i++) {
 		const InfluenceMapTemplate &t = templates[i];
 		if (p_radius <= t.radius) {
@@ -94,7 +100,8 @@ void DataGridManager::_process(float p_delta) {
 		// Deregister
 		if (component_data->is_registered()) {
 			Vector2 global_position = component_data->get_registered_position();
-			Ref<InfluenceMap> template_grid = get_template(component_data->get_registered_radius() / cell_size);
+			float radius = component_data->get_registered_radius() / cell_size;
+			Ref<InfluenceMap> template_grid = get_template(component_data->get_influence_type(), radius);
 			add_datagrid_centered_to_collection(template_grid, component_data->get_registered_layer(), global_position, -1.0, false);
 			component_data->set_registered(false);
 		}
@@ -109,7 +116,8 @@ void DataGridManager::_process(float p_delta) {
 		}
 		// Register
 		Vector2 global_position = component_data->get_global_position();
-		Ref<InfluenceMap> template_grid = get_template(component_data->get_radius() / cell_size);
+		float radius = component_data->get_radius() / cell_size;
+		Ref<InfluenceMap> template_grid = get_template(component_data->get_influence_type(), radius);
 		add_datagrid_centered_to_collection(template_grid, component_data->get_layer(), global_position, 1.0);
 		component_data->on_registered(global_position, component_data->get_layer(), component_data->get_radius());
 		if (updates_so_far < updates_per_frame) {
@@ -304,8 +312,8 @@ void DataGridManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_datagrid_size", "datagrid_size"), &DataGridManager::set_datagrid_size, DEFVAL(Size2i(0, 0))); 
 	ClassDB::bind_method(D_METHOD("get_datagrid_size"), &DataGridManager::get_datagrid_size);
 
-	ClassDB::bind_method(D_METHOD("initialize_templates", "min_radius", "max_radius", "steps"), &DataGridManager::initialize_templates);
-	ClassDB::bind_method(D_METHOD("get_template"), &DataGridManager::get_template);
+	ClassDB::bind_method(D_METHOD("create_templates", "type", "min_radius", "max_radius", "curve"), &DataGridManager::create_templates);
+	ClassDB::bind_method(D_METHOD("get_template", "type", "radius"), &DataGridManager::get_template);
 	
 	ClassDB::bind_method(D_METHOD("emit_updated", "datagrid_collection"), &DataGridManager::emit_updated);
 	
