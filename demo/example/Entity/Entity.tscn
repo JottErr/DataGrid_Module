@@ -27,12 +27,10 @@ script = ExtResource("3_ps11m")
 wait_time = 0.25
 
 [node name="GridVisualizer" type="Node2D" parent="IntelligenceController"]
-visible = false
 script = ExtResource("7_kh70x")
 
 [node name="TargetSprite" type="Sprite2D" parent="IntelligenceController"]
-visible = false
-self_modulate = Color(1, 0, 0, 1)
+self_modulate = Color(1, 0, 0, 0.631373)
 top_level = true
 position = Vector2(1000, 1000)
 texture = ExtResource("1_l00h6")
