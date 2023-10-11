@@ -13,6 +13,7 @@ class DataGridCompRef : public Resource {
 private:
 	DataGridComponent *component;
 	
+	int influence_type;
 	int layer;
 	float radius;
 	bool registered;
@@ -32,6 +33,8 @@ public:
 	DataGridComponent *get_component() const;
 	bool component_is_valid() const;
 	Vector2 get_global_position() const;
+	void set_influence_type(int p_influence_type);
+	int get_influence_type() const;
 	void set_layer(int p_layer);
 	int get_layer() const;
 	void set_radius(float p_radius);

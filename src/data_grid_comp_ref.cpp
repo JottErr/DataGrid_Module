@@ -23,6 +23,14 @@ Vector2 DataGridCompRef::get_global_position() const {
 	return component->get_global_position();
 }
 
+void DataGridCompRef::set_influence_type(int p_influence_type) {
+	influence_type = p_influence_type;
+}
+
+int DataGridCompRef::get_influence_type() const {
+	return influence_type;
+}
+
 void DataGridCompRef::set_layer(int p_layer) {
 	layer = p_layer;
 }
@@ -91,6 +99,8 @@ void DataGridCompRef::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_component", "component"), &DataGridCompRef::set_component);
 	ClassDB::bind_method(D_METHOD("get_component"), &DataGridCompRef::get_component);
 	ClassDB::bind_method(D_METHOD("component_is_valid"), &DataGridCompRef::component_is_valid);
+	ClassDB::bind_method(D_METHOD("set_influence_type", "influence_type"), &DataGridCompRef::set_influence_type);
+	ClassDB::bind_method(D_METHOD("get_influence_type"), &DataGridCompRef::get_influence_type);
 	ClassDB::bind_method(D_METHOD("set_layer", "layer"), &DataGridCompRef::set_layer);
 	ClassDB::bind_method(D_METHOD("get_layer"), &DataGridCompRef::get_layer);
 	ClassDB::bind_method(D_METHOD("set_radius", "radius"), &DataGridCompRef::set_radius);
@@ -107,6 +117,7 @@ void DataGridCompRef::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_registerable", "registerable"), &DataGridCompRef::set_registerable);
 	ClassDB::bind_method(D_METHOD("is_registerable"), &DataGridCompRef::is_registerable);
 
+	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::INT, "influence_type"), "set_influence_type", "get_influence_type");
 	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::INT, "layer"), "set_layer", "get_layer");
 	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::FLOAT, "radius"), "set_radius", "get_radius");
 	ClassDB::add_property("DataGridCompRef", PropertyInfo(Variant::BOOL, "registered"), "set_registered", "is_registered");
@@ -117,6 +128,7 @@ void DataGridCompRef::_bind_methods() {
 
 DataGridCompRef::DataGridCompRef() {
 	set_local_to_scene(true);
+	influence_type = 0;
 	layer = 0;
 	radius = 0.0;
 	registered = false;
@@ -125,6 +137,7 @@ DataGridCompRef::DataGridCompRef() {
 	registered_radius = 0.0;
 	registerable = true;
 }
+
 
 DataGridCompRef::~DataGridCompRef() {
 }
