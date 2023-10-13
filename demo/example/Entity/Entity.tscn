@@ -38,7 +38,6 @@ wait_time = 0.25
 script = ExtResource("7_kh70x")
 
 [node name="TargetSprite" type="Sprite2D" parent="IntelligenceController"]
-visible = false
 self_modulate = Color(1, 0, 0, 0.631373)
 top_level = true
 position = Vector2(1000, 1000)
