@@ -19,7 +19,7 @@ void DataGridManager::set_datagrid_count(const Size2i &p_datagrid_count) {
 	datagrid_collection.clear();
 }
 
-void DataGridManager::set_cell_size(int p_cell_size) {
+void DataGridManager::set_cell_size(float p_cell_size) {
 	cell_size = p_cell_size;
 	set_datagrid_size();
 	datagrid_collection.clear();
@@ -345,7 +345,7 @@ DataGridManager::DataGridManager() {
 	set_process_mode(PROCESS_MODE_DISABLED);
 	world_size = Size2i(1, 1);
 	datagrid_count = Size2i(1, 1);
-	cell_size = 1;
+	cell_size = 1.0f;
 	datagrid_size = Size2i(1, 1);
 }
 

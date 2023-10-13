@@ -20,7 +20,7 @@ protected:
 
 public:
 	static DataGridHub *get_singleton();
-	const float cell_size = 10;
+	const float cell_size = 10.0f;
 
 	DataGridHub();
 	~DataGridHub();

@@ -4,7 +4,7 @@
 
 using namespace godot;
 
-void InfluenceMap::set_cell_size(int p_cell_size) { 
+void InfluenceMap::set_cell_size(float p_cell_size) { 
 	cell_size = p_cell_size; 
 }
 
@@ -221,13 +221,13 @@ void InfluenceMap::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("show_grid"), &InfluenceMap::show_map);
 	
-	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
+	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::FLOAT, "cell_size"), "set_cell_size", "get_cell_size");
 	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::VECTOR2I, "size"), "set_size", "get_size");
 	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::VECTOR2I, "center"), "set_center", "get_center");
 }
 
 InfluenceMap::InfluenceMap() {
-	cell_size = 1;
+	cell_size = 1.0f;
 	size = Vector2i(0, 0);
 	center = Vector2i(0, 0);
 }

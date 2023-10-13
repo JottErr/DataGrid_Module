@@ -16,7 +16,7 @@ class DataGridManager : public Node {
 private:
 	Size2i world_size;
 	Size2i datagrid_count;
-	int cell_size;
+	float cell_size;
 	Size2i datagrid_size;
 
 	Dictionary datagrid_collection;
@@ -47,8 +47,8 @@ public:
 	const Size2i &get_world_size() const { return world_size; }
 	void set_datagrid_count(const Size2i &p_datagrid_count);
 	const Size2i &get_datagrid_count() const { return datagrid_count; }
-	void set_cell_size(int p_cell_size);
-	int get_cell_size() const { return cell_size; }
+	void set_cell_size(float p_cell_size);
+	float get_cell_size() const { return cell_size; }
 	void set_datagrid_size(const Size2i &p_datagrid_size = Size2i(0, 0));
 	const Size2i &get_datagrid_size() const { return datagrid_size; }
 	

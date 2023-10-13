@@ -10,7 +10,7 @@ class InfluenceMap : public Resource {
 	GDCLASS(InfluenceMap, Resource)
 
 private:
-	int cell_size;
+	float cell_size;
 	Vector2i size;
 	Vector2i center;
 	PackedFloat32Array data;
@@ -22,8 +22,8 @@ public:
 	InfluenceMap();
 	~InfluenceMap();
 	
-	void set_cell_size(int p_cell_size);
-	int get_cell_size() const { return cell_size; }
+	void set_cell_size(float p_cell_size);
+	float get_cell_size() const { return cell_size; }
 	void set_size(const Vector2i &p_size);
 	const Vector2i &get_size() const { return size; }
 	void set_center(const Vector2i &p_position) { return; }
