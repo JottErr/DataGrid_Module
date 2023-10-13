@@ -13,7 +13,7 @@ private:
 	int cell_size;
 	Vector2i size;
 	Vector2i center;
-	LocalVector<float> data;
+	PackedFloat32Array data;
 	
 protected:
 	static void _bind_methods();
