@@ -3,14 +3,14 @@ extends Node2D
 
 signal found_target (target_pos: Vector2)
 
-@export var interest_grid : InfluenceMap
+@export var entity : Entity
 
 @onready var think_cycle_timer: Timer = $ThinkCycleTimer
 @onready var target_sprite: Sprite2D = $TargetSprite
 @onready var grid_visualizer: Node2D = $GridVisualizer
 
 var manager: DataGridManager
-var interest_template: InfluenceMap
+var interest_grid: InfluenceMap
 
 
 func _ready() -> void:
@@ -22,21 +22,26 @@ func initialize() -> void:
 	if manager == null:
 		print("no manager")
 		return
-	interest_template = manager.get_template(3, interest_grid.get_center().x)
+	interest_grid = InfluenceMap.new()
+	interest_grid.set_cell_size(manager.get_cell_size())
+	var grid_size := entity.speed * 2 + 1
+	interest_grid.set_size(Vector2i(grid_size, grid_size) / manager.get_cell_size())
 
 
 func _on_think_cycle_timer_timeout() -> void:
-	interest_grid.reset_data()
+	var grid_size := entity.speed * 2 + 1
+	interest_grid.set_size(Vector2i(grid_size, grid_size) / manager.get_cell_size())
 
 	#add layer of world datagrid to interest grid, export pairs of <layer, magnitude> in an Array?
-	var lin_curve := MathCurve.new()
-	lin_curve.set_parameters(-1.0, 1.0, 0.0, 1.0)
-	interest_grid.radiate_value_at_position(interest_grid.get_center(), 7, lin_curve, 1.0) #own pos
+	var own_prox_template := manager.get_template(1, entity.speed)
+	interest_grid.add_map(own_prox_template, interest_grid.get_center(), 1.4)
 	#combine threat of player and proximity of other entities, more weight to player threat
 	manager.add_into_datagrid_from_collection(interest_grid, 1, global_position, -2.0)
 	manager.add_into_datagrid_from_collection(interest_grid, 2, global_position, -1.0)
 	
-	#normalize layer mix and multiply by interest template to favor closer cells
+	#normalize layer mix and multiply by interest template to favor closer cells 
+	#move to module, check same size, nesting loops not needed, loop w*h, set value unchecked
+	var interest_template := manager.get_template(3, interest_grid.get_center().x)
 	interest_grid.normalize_data()
 	for y in interest_grid.get_size().y:
 		for x in interest_grid.get_size().x:

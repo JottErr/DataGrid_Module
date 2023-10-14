@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://7s7txn7g2bux"]
+[gd_scene load_steps=7 format=3 uid="uid://7s7txn7g2bux"]
 
 [ext_resource type="Texture2D" uid="uid://ciii8x3gl27fm" path="res://sprite_icon.svg" id="1_l00h6"]
 [ext_resource type="Script" path="res://example/Entity/Entity.gd" id="1_w4puc"]
@@ -7,16 +7,10 @@
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4jrow"]
 
-[sub_resource type="InfluenceMap" id="InfluenceMap_daix3"]
-cell_size = 10
-size = Vector2i(31, 31)
-center = Vector2i(15, 15)
-resource_local_to_scene = true
-
 [sub_resource type="DataGridCompRef" id="DataGridCompRef_yetls"]
 influence_type = 1
 layer = 2
-radius = 70.0
+radius = 150.0
 
 [node name="Entity" type="CharacterBody2D"]
 script = ExtResource("1_w4puc")
@@ -27,20 +21,21 @@ shape = SubResource("CircleShape2D_4jrow")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_l00h6")
 
-[node name="IntelligenceController" type="Node2D" parent="." groups=["IntelligenceControllers"]]
+[node name="IntelligenceController" type="Node2D" parent="." node_paths=PackedStringArray("entity") groups=["IntelligenceControllers"]]
 script = ExtResource("3_ps11m")
-interest_grid = SubResource("InfluenceMap_daix3")
+entity = NodePath("..")
 
 [node name="ThinkCycleTimer" type="Timer" parent="IntelligenceController"]
 wait_time = 0.25
 
 [node name="GridVisualizer" type="Node2D" parent="IntelligenceController"]
+visible = false
 script = ExtResource("7_kh70x")
 
 [node name="TargetSprite" type="Sprite2D" parent="IntelligenceController"]
 self_modulate = Color(1, 0, 0, 0.631373)
 top_level = true
-position = Vector2(1000, 1000)
+position = Vector2(-10, -10)
 texture = ExtResource("1_l00h6")
 
 [node name="DataGridComponent" type="DataGridComponent" parent="."]
