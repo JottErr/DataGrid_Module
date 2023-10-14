@@ -2,8 +2,9 @@ class_name GridVisualizer
 extends Node2D
 
 
-@export var imap: InfluenceMap = null
 @export var base_color: Color = Color(1.0, 1.0, 1.0, 1.0)
+
+var imap: InfluenceMap
 
 
 func _ready() -> void:
