@@ -9,7 +9,7 @@ size = Vector2(30, 28)
 [sub_resource type="DataGridCompRef" id="DataGridCompRef_nkx7s"]
 influence_type = 2
 layer = 1
-radius = 200.0
+radius = 250.0
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_xds3a")
@@ -25,3 +25,5 @@ texture = ExtResource("1_j8h2j")
 [node name="DataGridComponent" type="DataGridComponent" parent="."]
 data_resource = SubResource("DataGridCompRef_nkx7s")
 registration_frequency = 0.25
+
+[node name="Camera2D" type="Camera2D" parent="."]
