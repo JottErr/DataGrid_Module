@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Main.gd" id="1_kbwwx"]
 [ext_resource type="Script" path="res://visualization/ManagerVisualizer.gd" id="2_gbjyx"]
 [ext_resource type="Script" path="res://visualization/ManagerShapeVisualizer.gd" id="4_lpybi"]
-[ext_resource type="Texture2D" uid="uid://bpvo7t2wmn63w" path="res://assets/64sq_full.png" id="5_lex4p"]
+[ext_resource type="Texture2D" uid="uid://b2776khiw0s1c" path="res://assets/100sq_full.png" id="5_74mjs"]
 [ext_resource type="PackedScene" uid="uid://7s7txn7g2bux" path="res://example/Entity/Entity.tscn" id="5_y0hbg"]
 [ext_resource type="PackedScene" uid="uid://bw3rs5bqbjt2l" path="res://example/Player/Player.tscn" id="6_xl5u3"]
 
@@ -15,20 +15,19 @@ exponent = 4.0
 [sub_resource type="MathCurve" id="MathCurve_hholi"]
 exponent = 6.0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_dhu58"]
-texture = ExtResource("5_lex4p")
-texture_region_size = Vector2i(64, 64)
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_b5efp"]
+texture = ExtResource("5_74mjs")
+texture_region_size = Vector2i(100, 100)
 0:0/0 = 0
-0:0/0/modulate = Color(0, 0, 0, 1)
 0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 0:0/0/physics_layer_0/angular_velocity = 0.0
-0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-50, -50, 50, -50, 50, 50, -50, 50)
 
 [sub_resource type="TileSet" id="TileSet_hvqox"]
-tile_size = Vector2i(70, 70)
+tile_size = Vector2i(100, 100)
 physics_layer_0/collision_layer = 1
 physics_layer_0/collision_mask = 0
-sources/0 = SubResource("TileSetAtlasSource_dhu58")
+sources/1 = SubResource("TileSetAtlasSource_b5efp")
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kbwwx")
@@ -37,20 +36,19 @@ dec_4_poly = SubResource("MathCurve_1wwfb")
 dec_6_poly = SubResource("MathCurve_hholi")
 
 [node name="DataGridManager" type="DataGridManager" parent="."]
-world_size = Vector2i(1500, 900)
-cell_size = 10
-datagrid_count = Vector2i(5, 3)
-datagrid_size = Vector2i(30, 30)
+world_size = Vector2i(2000, 2000)
+cell_size = 10.0
+datagrid_count = Vector2i(2, 2)
+datagrid_size = Vector2i(100, 100)
 
 [node name="ManagerVisualizer" type="Node2D" parent="."]
-script = ExtResource("2_gbjyx")
-
-[node name="ManagerShape" type="Node2D" parent="."]
 visible = false
+script = ExtResource("2_gbjyx")
+layer = 1
+
+[node name="ManagerShape" type="Node2D" parent="." node_paths=PackedStringArray("manager")]
 script = ExtResource("4_lpybi")
-datagrid_count = Vector2i(5, 3)
-datagrid_size = Vector2i(30, 30)
-cell_size = 10
+manager = NodePath("../DataGridManager")
 
 [node name="Entities" type="Node2D" parent="."]
 
@@ -87,27 +85,14 @@ position = Vector2(1097, 160)
 [node name="Entity11" parent="Entities" instance=ExtResource("5_y0hbg")]
 position = Vector2(1000, 293)
 
-[node name="Entity12" parent="Entities" instance=ExtResource("5_y0hbg")]
-position = Vector2(1048, 296)
-
-[node name="Entity13" parent="Entities" instance=ExtResource("5_y0hbg")]
-position = Vector2(976, 263)
-
-[node name="Entity14" parent="Entities" instance=ExtResource("5_y0hbg")]
-position = Vector2(833, 173)
-
-[node name="Entity15" parent="Entities" instance=ExtResource("5_y0hbg")]
-position = Vector2(622, 443)
-
-[node name="Entity16" parent="Entities" instance=ExtResource("5_y0hbg")]
-position = Vector2(1086, 341)
-
 [node name="Map" type="Node2D" parent="."]
 
 [node name="TileMap" type="TileMap" parent="Map"]
 tile_set = SubResource("TileSet_hvqox")
+cell_quadrant_size = 100
 format = 2
-layer_0/tile_data = PackedInt32Array(196612, 0, 0, 262148, 0, 0, 262149, 0, 0, 196613, 0, 0, 196614, 0, 0, 262150, 0, 0, 327686, 0, 0, 327685, 0, 0, 327684, 0, 0, 262147, 0, 0, 196611, 0, 0, 131075, 0, 0, 131076, 0, 0, 131077, 0, 0, 131078, 0, 0, 327683, 0, 0)
+layer_0/modulate = Color(0.0627451, 0.0627451, 0.0627451, 1)
+layer_0/tile_data = PackedInt32Array(589833, 1, 0, 655369, 1, 0, 655370, 1, 0, 589834, 1, 0, -65536, 1, 0, -65535, 1, 0, -65534, 1, 0, -65533, 1, 0, -65532, 1, 0, -65531, 1, 0, -65530, 1, 0, -65529, 1, 0, -65528, 1, 0, -65527, 1, 0, -65526, 1, 0, -65525, 1, 0, -65524, 1, 0, -65523, 1, 0, -65522, 1, 0, -65521, 1, 0, -65520, 1, 0, -65519, 1, 0, -65518, 1, 0, -65517, 1, 0, -65516, 1, 0, 20, 1, 0, 65556, 1, 0, 131092, 1, 0, 196628, 1, 0, 262164, 1, 0, 327700, 1, 0, 393236, 1, 0, 458772, 1, 0, 1310740, 1, 0, 1376255, 1, 0, 1310735, 1, 0, 1310736, 1, 0, 1310737, 1, 0, 1310738, 1, 0, 1310739, 1, 0, 1310734, 1, 0, 1310733, 1, 0, 1310732, 1, 0, 1310731, 1, 0, 1310730, 1, 0, 1310729, 1, 0, 1310728, 1, 0, 1310727, 1, 0, 1310726, 1, 0, 1310725, 1, 0, 1310724, 1, 0, 1310723, 1, 0, 1310722, 1, 0, 1310721, 1, 0, 1310720, 1, 0, 1245204, 1, 0, 1179668, 1, 0, 1114132, 1, 0, 1048596, 1, 0, 983060, 1, 0, 917524, 1, 0, 851988, 1, 0, 786452, 1, 0, 720916, 1, 0, 655380, 1, 0, 589844, 1, 0, 524308, 1, 0, -1, 1, 0, 65535, 1, 0, 131071, 1, 0, 196607, 1, 0, 262143, 1, 0, 327679, 1, 0, 393215, 1, 0, 458751, 1, 0, 524287, 1, 0, 589823, 1, 0, 655359, 1, 0, 720895, 1, 0, 786431, 1, 0, 851967, 1, 0, 917503, 1, 0, 983039, 1, 0, 1048575, 1, 0, 1114111, 1, 0, 1179647, 1, 0, 1245183, 1, 0, 1310719, 1, 0)
 
 [node name="Player" parent="." instance=ExtResource("6_xl5u3")]
 position = Vector2(584, 488)
