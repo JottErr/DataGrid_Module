@@ -6,7 +6,7 @@ extends Node2D
 @export var dec_6_poly : MathCurve
 
 
-@onready var data_grid_manager: IMapManager = $IMapManager
+@onready var imap_manager: IMapManager = $IMapManager
 @onready var manager_visualizer: Node2D = $ManagerVisualizer
 @onready var tile_map: TileMap = $Map/TileMap
 
@@ -14,13 +14,11 @@ enum InfluenceType {PROX = 1, THREAT = 2, INTEREST = 3}
 
 
 func _ready() -> void:
-	test_manager_performance()
-	return
-	DataGridHub.set_world_grid_manager(data_grid_manager)
+	DataGridHub.set_world_grid_manager(imap_manager)
 	register_tilemap_wall_layer()
-	data_grid_manager.create_templates(InfluenceType.PROX, 1, 21, dec_lin)
-	data_grid_manager.create_templates(InfluenceType.THREAT, 3, 21, dec_4_poly)
-	data_grid_manager.create_templates(InfluenceType.INTEREST, 11, 31, dec_6_poly)
+	imap_manager.create_templates(InfluenceType.PROX, 1, 21, dec_lin)
+	imap_manager.create_templates(InfluenceType.THREAT, 3, 21, dec_4_poly)
+	imap_manager.create_templates(InfluenceType.INTEREST, 11, 31, dec_6_poly)
 	get_tree().call_group("IntelligenceControllers", "initialize")
 
 
@@ -31,7 +29,7 @@ func _input(event: InputEvent) -> void:
 
 
 func register_tilemap_wall_layer() -> void:
-	var cell_size := data_grid_manager.get_cell_size() #10
+	var cell_size := imap_manager.get_cell_size() #10
 	var wall_size := tile_map.get_tileset().get_tile_size() #70x70
 	
 	var imap := InfluenceMap.new()
@@ -41,7 +39,7 @@ func register_tilemap_wall_layer() -> void:
 	
 	for wall_cell_id in tile_map.get_used_cells(0):
 		var global_pos := tile_map.to_global(tile_map.map_to_local(wall_cell_id))
-		data_grid_manager.add_imap_centered_to_collection(imap, 9, global_pos)
+		imap_manager.add_imap_centered_to_collection(imap, 9, global_pos)
 
 
 func test_performance() -> void:
