@@ -79,10 +79,6 @@ void IMapManager::_notification(int p_what) {
 }
 
 void IMapManager::_process(float p_delta) {
-	Engine *engine = Engine::get_singleton();
-	if (engine->is_editor_hint()) {
-		return;
-	}
 	DataGridHub *hub = Object::cast_to<DataGridHub>(Engine::get_singleton()->get_singleton("DataGridHub"));
 	TypedArray<DataGridCompRef> nodes = hub->get_registered_components_data_res();
 	TypedArray<int> freed_components;
@@ -192,7 +188,7 @@ Vector2i IMapManager::global_position_to_imap_id(const Vector2i &p_global_positi
 	return result;
 }
 
-bool IMapManager::imap_id_in_bounds(const Vector2i &p_imap_id) const {
+bool IMapManager::imap_in_bounds(const Vector2i &p_imap_id) const {
 	bool positive = p_imap_id.x >= 0 && p_imap_id.y >= 0;
 	return positive && (p_imap_id.x < imap_count.x) && (p_imap_id.y < imap_count.y);
 }
@@ -234,7 +230,7 @@ void IMapManager::add_imap_centered_to_collection(const Ref<InfluenceMap> &grid_
 	for (int i = 0; i < amount_grids; i++) {
 		Vector2i id_offset = touched_grids[i];
 		Vector2i this_grid_id = imap_id + id_offset;
-		if (!imap_id_in_bounds(this_grid_id)) {
+		if (!imap_in_bounds(this_grid_id)) {
 			continue;
 		}
 		if (!has_imap_layer(this_grid_id, p_layer)) {
@@ -263,7 +259,7 @@ void IMapManager::add_into_imap_from_collection(const Ref<InfluenceMap> &grid_to
 	for (int i = 0; i < amount_grids; i++) {
 		Vector2i id_offset = touched_grids[i];
 		Vector2i this_grid_id = imap_id + id_offset;
-		if (!imap_id_in_bounds(this_grid_id)) {
+		if (!imap_in_bounds(this_grid_id)) {
 			continue;
 		}
 		if (!has_imap_layer(this_grid_id, p_layer)) {
@@ -285,7 +281,7 @@ void IMapManager::mark_cells_outside_boundaries(const Ref<InfluenceMap> &p_imap,
 	for (int i = 0; i < amount_grids; i++) {
 		Vector2i id_offset = touched_grids[i];
 		Vector2i this_grid_id = imap_id + id_offset;
-		if (imap_id_in_bounds(this_grid_id)) {
+		if (imap_in_bounds(this_grid_id)) {
 			continue;
 		}
 		Vector2i offset = (-1 * id_offset) * imap_size;
@@ -324,7 +320,7 @@ void IMapManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("filter_imap_layers", "imap_position", "filter_layers"), &IMapManager::filter_imap_layers);
 
 	ClassDB::bind_method(D_METHOD("global_position_to_imap_id", "global_position"), &IMapManager::global_position_to_imap_id);
-	ClassDB::bind_method(D_METHOD("imap_id_in_bounds", "imap_id"), &IMapManager::imap_id_in_bounds);
+	ClassDB::bind_method(D_METHOD("imap_in_bounds", "imap_id"), &IMapManager::imap_in_bounds);
 	ClassDB::bind_method(D_METHOD("global_position_to_imap_cell_id", "world_position", "imap_id"), &IMapManager::global_position_to_imap_cell_id);
 	ClassDB::bind_method(D_METHOD("get_touched_imaps", "center_cell", "radius"), &IMapManager::get_touched_imaps); 
 	ClassDB::bind_method(D_METHOD("add_imap_centered_to_collection", "grid_to_add", "layer", "global_position", "magnitude", "registering"), &IMapManager::add_imap_centered_to_collection, DEFVAL(1.0f), DEFVAL(true));

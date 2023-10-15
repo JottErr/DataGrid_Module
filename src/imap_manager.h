@@ -64,7 +64,7 @@ public:
 	Dictionary filter_imap_layers(const Vector2i &p_imap_position, const Array &filter_layers) const;
 
 	Vector2i global_position_to_imap_id(const Vector2i &p_global_position) const;
-	bool imap_id_in_bounds(const Vector2i &p_imap_id) const;
+	bool imap_in_bounds(const Vector2i &p_imap_id) const;
 	Vector2i global_position_to_imap_cell_id(const Vector2 &p_world_position, const Vector2i &p_imap_id) const;
 	PackedVector2Array get_touched_imaps(const Vector2i &p_center_cell, int p_radius) const;
 	void add_imap_centered_to_collection(const Ref<InfluenceMap> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f, bool registering = true);
