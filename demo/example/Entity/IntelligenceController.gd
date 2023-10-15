@@ -24,13 +24,13 @@ func initialize() -> void:
 		return
 	interest_grid = InfluenceMap.new()
 	interest_grid.set_cell_size(manager.get_cell_size())
-	var grid_size := entity.speed * 2 + 1
-	interest_grid.set_size(Vector2i(grid_size, grid_size) / manager.get_cell_size())
+	#var grid_size := entity.speed * 2 + 1
+	#interest_grid.set_size(Vector2i(grid_size, grid_size) / manager.get_cell_size())
 
 
 func _on_think_cycle_timer_timeout() -> void:
-	var grid_size := entity.speed * 2 + 1
-	interest_grid.set_size(Vector2i(grid_size, grid_size) / manager.get_cell_size())
+	var imap_size := entity.speed * 2 + 1
+	interest_grid.set_size(Vector2i(imap_size, imap_size) / manager.get_cell_size())
 
 	#add layer of world datagrid to interest grid, export pairs of <layer, magnitude> in an Array?
 	var own_prox_template := manager.get_template(1, entity.speed)
