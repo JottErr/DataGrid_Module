@@ -53,9 +53,7 @@ void IMapManager::create_templates(int p_type, int min_radius, int max_radius, c
 }
 
 Ref<InfluenceMap> IMapManager::get_template(int p_type, int p_radius) const {
-	if (!hashed_templates.has(p_type)) {
-		return nullptr;
-	}
+	ERR_FAIL_COND_V_MSG(!hashed_templates.has(p_type), nullptr, "No Templates found for type " + itos(p_type));
 	LocalVector<InfluenceMapTemplate> const &templates = hashed_templates.get(p_type);
 	
 	for (int i = 0; i < templates.size(); i++) {
