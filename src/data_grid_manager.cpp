@@ -201,9 +201,10 @@ Vector2i DataGridManager::world_position_to_cell_in_data_grid(const Vector2 &p_w
 	return Vector2i((p_world_position - p_data_grid_position * datagrid_size * cell_size) / cell_size);
 }
 
-Array DataGridManager::get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const {
-	//Only works for direct neighbours, if (radius > datagrid_size+1) a second neighbour could be touched 
-	Array result;
+PackedVector2Array DataGridManager::get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const {
+	// Only works for direct neighbours, if (radius > datagrid_size+1) a second neighbour could be touched
+	// return vectors to find the map, doesn't return references, so the result can be used for multiple layers
+	PackedVector2Array result;
 	result.append(Vector2i(0, 0));
 
 	bool north = p_center_cell.y - p_radius < 0;
@@ -228,7 +229,7 @@ void DataGridManager::add_datagrid_centered_to_collection(const Ref<InfluenceMap
 	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = grid_to_add->get_center().x;
-	Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
+	PackedVector2Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
 	int amount_grids = touched_grids.size();
 	for (int i = 0; i < amount_grids; i++) {
 		Vector2i index_offset = touched_grids[i];
@@ -256,7 +257,7 @@ void DataGridManager::add_into_datagrid_from_collection(const Ref<InfluenceMap> 
 	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = grid_to_add_into->get_center().x;
-	Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
+	PackedVector2Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
 	int amount_grids = touched_grids.size();
 	
 	for (int i = 0; i < amount_grids; i++) {
@@ -278,7 +279,7 @@ void godot::DataGridManager::mark_cells_outside_boundaries(const Ref<InfluenceMa
 	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = p_imap->get_center().x;
-	Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
+	PackedVector2Array touched_grids = get_touched_datagrids(grid_cell_index, radius);
 	int amount_grids = touched_grids.size();
 
 	for (int i = 0; i < amount_grids; i++) {

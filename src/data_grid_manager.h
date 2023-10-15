@@ -66,7 +66,7 @@ public:
 	Vector2i global_position_to_datagrid_index(const Vector2i &p_global_position) const;
 	bool grid_position_in_bounds(const Vector2i &p_data_grid_position) const;
 	Vector2i world_position_to_cell_in_data_grid(const Vector2 &p_world_position, const Vector2i &p_data_grid_position) const;
-	Array get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const;
+	PackedVector2Array get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const;
 	void add_datagrid_centered_to_collection(const Ref<InfluenceMap> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f, bool registering = true);
 	void add_into_datagrid_from_collection(const Ref<InfluenceMap> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f);
 	void mark_cells_outside_boundaries(const Ref<InfluenceMap> &p_imap, Vector2i p_global_position, float p_magnitude = 1.0f);
