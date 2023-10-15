@@ -24,19 +24,17 @@ func initialize() -> void:
 		return
 	interest_map = InfluenceMap.new()
 	interest_map.set_cell_size(manager.get_cell_size())
-	#var imap_size := entity.speed * 2 + 1
-	#interest_map.set_size(Vector2i(grid_size, grid_size) / manager.get_cell_size())
 
 
 func _on_think_cycle_timer_timeout() -> void:
-	var imap_size := entity.speed * 2 + 1
-	interest_map.set_size(Vector2i(imap_size, imap_size) / manager.get_cell_size())
+	var imap_size := (entity.speed * 2 + 1) / manager.get_cell_size()
+	interest_map.set_size(Vector2i(imap_size, imap_size))
 
 	#add layer of world datagrid to interest grid, export pairs of <layer, magnitude> in an Array?
 	var own_prox_template := manager.get_template(1, entity.speed)
 	interest_map.add_map(own_prox_template, interest_map.get_center(), 1.4)
 	#combine threat of player and proximity of other entities, more weight to player threat
-	manager.add_into_imap_from_collection(interest_map, 1, global_position, -2.0)
+	manager.add_into_imap_from_collection(interest_map, 1, global_position, 5.0)
 	manager.add_into_imap_from_collection(interest_map, 2, global_position, -1.0)
 	
 	#normalize layer mix and multiply by interest template to favor closer cells 

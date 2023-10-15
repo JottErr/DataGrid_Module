@@ -5,7 +5,6 @@ extends Node2D
 @export var dec_4_poly : MathCurve
 @export var dec_6_poly : MathCurve
 
-
 @onready var imap_manager: IMapManager = $IMapManager
 @onready var manager_visualizer: Node2D = $ManagerVisualizer
 @onready var tile_map: TileMap = $Map/TileMap
