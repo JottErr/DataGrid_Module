@@ -14,10 +14,10 @@ class IMapManager : public Node {
 	GDCLASS(IMapManager, Node)
 
 private:
-	Size2i world_size;
-	Size2i datagrid_count;
+	Vector2i world_size;
+	Vector2i datagrid_count;
 	float cell_size;
-	Size2i datagrid_size;
+	Vector2i datagrid_size;
 
 	Dictionary datagrid_collection;
 
@@ -43,14 +43,14 @@ public:
 	IMapManager();
 	~IMapManager();
 
-	void set_world_size(const Size2i &p_world_size);
-	const Size2i &get_world_size() const { return world_size; }
-	void set_datagrid_count(const Size2i &p_datagrid_count);
-	const Size2i &get_datagrid_count() const { return datagrid_count; }
+	void set_world_size(const Vector2i &p_world_size);
+	const Vector2i &get_world_size() const { return world_size; }
+	void set_datagrid_count(const Vector2i &p_datagrid_count);
+	const Vector2i &get_datagrid_count() const { return datagrid_count; }
 	void set_cell_size(float p_cell_size);
 	float get_cell_size() const { return cell_size; }
-	void set_datagrid_size(const Size2i &p_datagrid_size = Size2i(0, 0));
-	const Size2i &get_datagrid_size() const { return datagrid_size; }
+	void set_datagrid_size(const Vector2i &p_datagrid_size = Vector2i(0, 0));
+	const Vector2i &get_datagrid_size() const { return datagrid_size; }
 	
 	void create_templates(int p_type, int min_radius, int max_radius, const Ref<MathCurve> &p_curve);
 	Ref<InfluenceMap> get_template(int p_type, int p_radius) const;
@@ -58,10 +58,10 @@ public:
 	void _process(float p_delta);
 	void emit_updated(const Dictionary &datagrid_collection);
 
-	void add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<InfluenceMap> &p_datagrid);
-	bool has_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const;
-	Ref<InfluenceMap> get_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const;
-	Dictionary filter_datagrid_layers(const Point2i &p_datagrid_position, const Array &filter_layers) const;
+	void add_datagrid_layer_to_collection(const Vector2i &p_datagrid_position, int p_layer, const Ref<InfluenceMap> &p_datagrid);
+	bool has_datagrid_layer(const Vector2i &p_datagrid_position, int p_layer) const;
+	Ref<InfluenceMap> get_datagrid_layer(const Vector2i &p_datagrid_position, int p_layer) const;
+	Dictionary filter_datagrid_layers(const Vector2i &p_datagrid_position, const Array &filter_layers) const;
 
 	Vector2i global_position_to_datagrid_index(const Vector2i &p_global_position) const;
 	bool grid_position_in_bounds(const Vector2i &p_data_grid_position) const;

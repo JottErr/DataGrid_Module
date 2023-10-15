@@ -7,13 +7,13 @@
 
 using namespace godot;
 
-void IMapManager::set_world_size(const Size2i &p_world_size) {
+void IMapManager::set_world_size(const Vector2i &p_world_size) {
 	world_size = p_world_size;
 	set_datagrid_size();
 	datagrid_collection.clear();
 }
 
-void IMapManager::set_datagrid_count(const Size2i &p_datagrid_count) {
+void IMapManager::set_datagrid_count(const Vector2i &p_datagrid_count) {
 	datagrid_count = p_datagrid_count;
 	set_datagrid_size();
 	datagrid_collection.clear();
@@ -25,7 +25,7 @@ void IMapManager::set_cell_size(float p_cell_size) {
 	datagrid_collection.clear();
 }
 
-void IMapManager::set_datagrid_size(const Size2i &p_datagrid_size) {
+void IMapManager::set_datagrid_size(const Vector2i &p_datagrid_size) {
 	datagrid_size = world_size / (datagrid_count * cell_size);
 }
 
@@ -40,8 +40,8 @@ void IMapManager::create_templates(int p_type, int min_radius, int max_radius, c
 		Ref<InfluenceMap> imap;
 		imap.instantiate();
 		imap->set_cell_size(cell_size);
-		imap->set_size(Size2i(2 * radius + 1, 2 * radius + 1)); // uneven number of cells to get grid with a center cell
-		imap->radiate_value_at_position(Point2i(radius, radius), radius, p_curve, 1.0);
+		imap->set_size(Vector2i(2 * radius + 1, 2 * radius + 1)); // uneven number of cells to get grid with a center cell
+		imap->radiate_value_at_position(Vector2i(radius, radius), radius, p_curve, 1.0);
 		template_vector[radius - min_radius] = InfluenceMapTemplate(radius, imap);
 	
 	hashed_templates.insert(p_type, template_vector);
@@ -134,7 +134,7 @@ void IMapManager::emit_updated(const Dictionary &p_datagrid_collection) {
 	emit_signal("updated", p_datagrid_collection);
 }
 
-void IMapManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<InfluenceMap> &p_datagrid) {
+void IMapManager::add_datagrid_layer_to_collection(const Vector2i &p_datagrid_position, int p_layer, const Ref<InfluenceMap> &p_datagrid) {
 	if (!datagrid_collection.has(p_datagrid_position)) {
 		Dictionary layer_stack;
 		layer_stack[p_layer] = p_datagrid;
@@ -147,7 +147,7 @@ void IMapManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_pos
 	}
 }
 
-bool IMapManager::has_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
+bool IMapManager::has_datagrid_layer(const Vector2i &p_datagrid_position, int p_layer) const {
 	if (!datagrid_collection.has(p_datagrid_position)) {
 		return false;
 	}
@@ -155,7 +155,7 @@ bool IMapManager::has_datagrid_layer(const Point2i &p_datagrid_position, int p_l
 	return layer_stack.has(p_layer);
 }
 
-Ref<InfluenceMap> IMapManager::get_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
+Ref<InfluenceMap> IMapManager::get_datagrid_layer(const Vector2i &p_datagrid_position, int p_layer) const {
 	if (!has_datagrid_layer(p_datagrid_position, p_layer)) {
 		return nullptr;
 	}
@@ -164,7 +164,7 @@ Ref<InfluenceMap> IMapManager::get_datagrid_layer(const Point2i &p_datagrid_posi
 	return layer;
 }
 
-Dictionary IMapManager::filter_datagrid_layers(const Point2i &p_datagrid_position, const Array &filter_layers) const {
+Dictionary IMapManager::filter_datagrid_layers(const Vector2i &p_datagrid_position, const Array &filter_layers) const {
 	Dictionary result;
 	if (datagrid_collection.has(p_datagrid_position)) {
 		Dictionary all_layers = datagrid_collection[p_datagrid_position];
@@ -310,7 +310,7 @@ void IMapManager::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_datagrid_count"), &IMapManager::get_datagrid_count);
 	ClassDB::bind_method(D_METHOD("set_cell_size", "cell_size"), &IMapManager::set_cell_size);
 	ClassDB::bind_method(D_METHOD("get_cell_size"), &IMapManager::get_cell_size);
-	ClassDB::bind_method(D_METHOD("set_datagrid_size", "datagrid_size"), &IMapManager::set_datagrid_size, DEFVAL(Size2i(0, 0))); 
+	ClassDB::bind_method(D_METHOD("set_datagrid_size", "datagrid_size"), &IMapManager::set_datagrid_size, DEFVAL(Vector2i(0, 0))); 
 	ClassDB::bind_method(D_METHOD("get_datagrid_size"), &IMapManager::get_datagrid_size);
 
 	ClassDB::bind_method(D_METHOD("create_templates", "type", "min_radius", "max_radius", "curve"), &IMapManager::create_templates);
@@ -344,10 +344,10 @@ void IMapManager::_bind_methods() {
 
 IMapManager::IMapManager() {
 	set_process_mode(PROCESS_MODE_DISABLED);
-	world_size = Size2i(1, 1);
-	datagrid_count = Size2i(1, 1);
+	world_size = Vector2i(1, 1);
+	datagrid_count = Vector2i(1, 1);
 	cell_size = 1.0f;
-	datagrid_size = Size2i(1, 1);
+	datagrid_size = Vector2i(1, 1);
 }
 
 IMapManager::~IMapManager() {
