@@ -10,7 +10,7 @@ var width: int
 
 func _ready() -> void:
 	datagrid = grid_visualizer.datagrid
-	width = datagrid.get_size_in_cells().x
+	width = datagrid.get_size().x
 
 
 func _input(event: InputEvent) -> void:
