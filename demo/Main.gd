@@ -6,7 +6,7 @@ extends Node2D
 @export var dec_6_poly : MathCurve
 
 
-@onready var data_grid_manager: DataGridManager = $DataGridManager
+@onready var data_grid_manager: IMapManager = $IMapManager
 @onready var manager_visualizer: Node2D = $ManagerVisualizer
 @onready var tile_map: TileMap = $Map/TileMap
 
@@ -58,7 +58,7 @@ func test_performance() -> void:
 
 
 func test_manager_performance() -> void:
-	var manager := DataGridManager.new()
+	var manager := IMapManager.new()
 	manager.set_world_size(Vector2(6000, 6000))
 	manager.set_cell_size(10)
 	manager.set_datagrid_count(Vector2i(6, 6))

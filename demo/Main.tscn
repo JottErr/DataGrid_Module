@@ -35,7 +35,7 @@ dec_lin = SubResource("MathCurve_cqje4")
 dec_4_poly = SubResource("MathCurve_1wwfb")
 dec_6_poly = SubResource("MathCurve_hholi")
 
-[node name="DataGridManager" type="DataGridManager" parent="."]
+[node name="IMapManager" type="IMapManager" parent="."]
 world_size = Vector2i(2000, 2000)
 cell_size = 10.0
 datagrid_count = Vector2i(2, 2)
@@ -48,7 +48,7 @@ layer = 1
 
 [node name="ManagerShape" type="Node2D" parent="." node_paths=PackedStringArray("manager")]
 script = ExtResource("4_lpybi")
-manager = NodePath("../DataGridManager")
+manager = NodePath("../IMapManager")
 
 [node name="Entities" type="Node2D" parent="."]
 
@@ -97,4 +97,4 @@ layer_0/tile_data = PackedInt32Array(589833, 1, 0, 655369, 1, 0, 655370, 1, 0, 5
 [node name="Player" parent="." instance=ExtResource("6_xl5u3")]
 position = Vector2(584, 488)
 
-[connection signal="updated" from="DataGridManager" to="ManagerVisualizer" method="_on_data_grid_manager_updated"]
+[connection signal="updated" from="IMapManager" to="ManagerVisualizer" method="_on_data_grid_manager_updated"]

@@ -1,4 +1,4 @@
-#include "data_grid_manager.h"
+#include "imap_manager.h"
 #include "data_grid_hub.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
@@ -7,29 +7,29 @@
 
 using namespace godot;
 
-void DataGridManager::set_world_size(const Size2i &p_world_size) {
+void IMapManager::set_world_size(const Size2i &p_world_size) {
 	world_size = p_world_size;
 	set_datagrid_size();
 	datagrid_collection.clear();
 }
 
-void DataGridManager::set_datagrid_count(const Size2i &p_datagrid_count) {
+void IMapManager::set_datagrid_count(const Size2i &p_datagrid_count) {
 	datagrid_count = p_datagrid_count;
 	set_datagrid_size();
 	datagrid_collection.clear();
 }
 
-void DataGridManager::set_cell_size(float p_cell_size) {
+void IMapManager::set_cell_size(float p_cell_size) {
 	cell_size = p_cell_size;
 	set_datagrid_size();
 	datagrid_collection.clear();
 }
 
-void DataGridManager::set_datagrid_size(const Size2i &p_datagrid_size) {
+void IMapManager::set_datagrid_size(const Size2i &p_datagrid_size) {
 	datagrid_size = world_size / (datagrid_count * cell_size);
 }
 
-void DataGridManager::create_templates(int p_type, int min_radius, int max_radius, const Ref<MathCurve> &p_curve) {
+void IMapManager::create_templates(int p_type, int min_radius, int max_radius, const Ref<MathCurve> &p_curve) {
 	if (hashed_templates.has(p_type)) {
 		hashed_templates.erase(p_type);
 	}
@@ -52,7 +52,7 @@ void DataGridManager::create_templates(int p_type, int min_radius, int max_radiu
 	out_of_boundaries_template->reset_data(1.0);
 }
 
-Ref<InfluenceMap> DataGridManager::get_template(int p_type, int p_radius) const {
+Ref<InfluenceMap> IMapManager::get_template(int p_type, int p_radius) const {
 	if (!hashed_templates.has(p_type)) {
 		return nullptr;
 	}
@@ -68,7 +68,7 @@ Ref<InfluenceMap> DataGridManager::get_template(int p_type, int p_radius) const 
 	return t.datagrid;
 }
 
-void DataGridManager::_notification(int p_what) {
+void IMapManager::_notification(int p_what) {
 	switch (p_what) {
 		case  NOTIFICATION_ENTER_TREE: {
 			if (!Engine::get_singleton()->is_editor_hint()) {
@@ -78,7 +78,7 @@ void DataGridManager::_notification(int p_what) {
 	}
 }
 
-void DataGridManager::_process(float p_delta) {
+void IMapManager::_process(float p_delta) {
 	Engine *engine = Engine::get_singleton();
 	if (engine->is_editor_hint()) {
 		return;
@@ -130,11 +130,11 @@ void DataGridManager::_process(float p_delta) {
 }
 
 
-void DataGridManager::emit_updated(const Dictionary &p_datagrid_collection) {
+void IMapManager::emit_updated(const Dictionary &p_datagrid_collection) {
 	emit_signal("updated", p_datagrid_collection);
 }
 
-void DataGridManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<InfluenceMap> &p_datagrid) {
+void IMapManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid_position, int p_layer, const Ref<InfluenceMap> &p_datagrid) {
 	if (!datagrid_collection.has(p_datagrid_position)) {
 		Dictionary layer_stack;
 		layer_stack[p_layer] = p_datagrid;
@@ -147,7 +147,7 @@ void DataGridManager::add_datagrid_layer_to_collection(const Point2i &p_datagrid
 	}
 }
 
-bool DataGridManager::has_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
+bool IMapManager::has_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
 	if (!datagrid_collection.has(p_datagrid_position)) {
 		return false;
 	}
@@ -155,7 +155,7 @@ bool DataGridManager::has_datagrid_layer(const Point2i &p_datagrid_position, int
 	return layer_stack.has(p_layer);
 }
 
-Ref<InfluenceMap> DataGridManager::get_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
+Ref<InfluenceMap> IMapManager::get_datagrid_layer(const Point2i &p_datagrid_position, int p_layer) const {
 	if (!has_datagrid_layer(p_datagrid_position, p_layer)) {
 		return nullptr;
 	}
@@ -164,7 +164,7 @@ Ref<InfluenceMap> DataGridManager::get_datagrid_layer(const Point2i &p_datagrid_
 	return layer;
 }
 
-Dictionary DataGridManager::filter_datagrid_layers(const Point2i &p_datagrid_position, const Array &filter_layers) const {
+Dictionary IMapManager::filter_datagrid_layers(const Point2i &p_datagrid_position, const Array &filter_layers) const {
 	Dictionary result;
 	if (datagrid_collection.has(p_datagrid_position)) {
 		Dictionary all_layers = datagrid_collection[p_datagrid_position];
@@ -181,7 +181,7 @@ Dictionary DataGridManager::filter_datagrid_layers(const Point2i &p_datagrid_pos
 	return result;
 }
 
-Vector2i DataGridManager::global_position_to_datagrid_index(const Vector2i &p_global_position) const {
+Vector2i IMapManager::global_position_to_datagrid_index(const Vector2i &p_global_position) const {
 	// if InfluenceMap index is never negative, this can be simplified
 	// if manager global position is not 0,0 get_relative_position = p_global_position - manager_position
 	int neg_x = p_global_position.x < 0 ? 1 : 0;
@@ -192,16 +192,16 @@ Vector2i DataGridManager::global_position_to_datagrid_index(const Vector2i &p_gl
 	return result;
 }
 
-bool DataGridManager::grid_position_in_bounds(const Vector2i &p_data_grid_position) const {
+bool IMapManager::grid_position_in_bounds(const Vector2i &p_data_grid_position) const {
 	bool positive = p_data_grid_position.x >= 0 && p_data_grid_position.y >= 0;
 	return positive && (p_data_grid_position.x < datagrid_count.x) && (p_data_grid_position.y < datagrid_count.y);
 }
 
-Vector2i DataGridManager::world_position_to_cell_in_data_grid(const Vector2 &p_world_position, const Vector2i &p_data_grid_position) const {
+Vector2i IMapManager::world_position_to_cell_in_data_grid(const Vector2 &p_world_position, const Vector2i &p_data_grid_position) const {
 	return Vector2i((p_world_position - p_data_grid_position * datagrid_size * cell_size) / cell_size);
 }
 
-PackedVector2Array DataGridManager::get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const {
+PackedVector2Array IMapManager::get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const {
 	// Only works for direct neighbours, if (radius > datagrid_size+1) a second neighbour could be touched
 	// return vectors to find the map, doesn't return references, so the result can be used for multiple layers
 	PackedVector2Array result;
@@ -225,7 +225,7 @@ PackedVector2Array DataGridManager::get_touched_datagrids(const Vector2i &p_cent
 	return result;
 }
 
-void DataGridManager::add_datagrid_centered_to_collection(const Ref<InfluenceMap> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude, bool registering) {
+void IMapManager::add_datagrid_centered_to_collection(const Ref<InfluenceMap> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude, bool registering) {
 	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = grid_to_add->get_center().x;
@@ -253,7 +253,7 @@ void DataGridManager::add_datagrid_centered_to_collection(const Ref<InfluenceMap
 	}	
 }
 
-void DataGridManager::add_into_datagrid_from_collection(const Ref<InfluenceMap> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude) {
+void IMapManager::add_into_datagrid_from_collection(const Ref<InfluenceMap> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude) {
 	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = grid_to_add_into->get_center().x;
@@ -275,7 +275,7 @@ void DataGridManager::add_into_datagrid_from_collection(const Ref<InfluenceMap> 
 	}
 }
 
-void godot::DataGridManager::mark_cells_outside_boundaries(const Ref<InfluenceMap> &p_imap, Vector2i p_global_position, float p_magnitude) {
+void IMapManager::mark_cells_outside_boundaries(const Ref<InfluenceMap> &p_imap, Vector2i p_global_position, float p_magnitude) {
 	Vector2i datagrid_index = global_position_to_datagrid_index(p_global_position);
 	Vector2i grid_cell_index = world_position_to_cell_in_data_grid(p_global_position, datagrid_index);
 	int radius = p_imap->get_center().x;
@@ -293,56 +293,56 @@ void godot::DataGridManager::mark_cells_outside_boundaries(const Ref<InfluenceMa
 	}
 }
 
-Vector2 DataGridManager::snap_global_postion_to_cell_center(const Vector2 &p_global_position) const {
+Vector2 IMapManager::snap_global_postion_to_cell_center(const Vector2 &p_global_position) const {
 	return Vector2(p_global_position / cell_size).floor() * cell_size + Vector2(cell_size, cell_size) / 2.0;
 }
 
-Vector2 DataGridManager::find_corner_from_center(const Vector2 &p_global_position, Vector2i p_datagrid_center) {
+Vector2 IMapManager::find_corner_from_center(const Vector2 &p_global_position, Vector2i p_datagrid_center) {
 	Vector2 center_world_index = Vector2(p_global_position / cell_size).floor();
 	Vector2 corner_pos = (center_world_index - p_datagrid_center) * cell_size;
 	return corner_pos;
 }
 
-void DataGridManager::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("set_world_size", "world_size"), &DataGridManager::set_world_size);
-	ClassDB::bind_method(D_METHOD("get_world_size"), &DataGridManager::get_world_size);
-	ClassDB::bind_method(D_METHOD("set_datagrid_count", "datagrid_count"), &DataGridManager::set_datagrid_count);
-	ClassDB::bind_method(D_METHOD("get_datagrid_count"), &DataGridManager::get_datagrid_count);
-	ClassDB::bind_method(D_METHOD("set_cell_size", "cell_size"), &DataGridManager::set_cell_size);
-	ClassDB::bind_method(D_METHOD("get_cell_size"), &DataGridManager::get_cell_size);
-	ClassDB::bind_method(D_METHOD("set_datagrid_size", "datagrid_size"), &DataGridManager::set_datagrid_size, DEFVAL(Size2i(0, 0))); 
-	ClassDB::bind_method(D_METHOD("get_datagrid_size"), &DataGridManager::get_datagrid_size);
+void IMapManager::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("set_world_size", "world_size"), &IMapManager::set_world_size);
+	ClassDB::bind_method(D_METHOD("get_world_size"), &IMapManager::get_world_size);
+	ClassDB::bind_method(D_METHOD("set_datagrid_count", "datagrid_count"), &IMapManager::set_datagrid_count);
+	ClassDB::bind_method(D_METHOD("get_datagrid_count"), &IMapManager::get_datagrid_count);
+	ClassDB::bind_method(D_METHOD("set_cell_size", "cell_size"), &IMapManager::set_cell_size);
+	ClassDB::bind_method(D_METHOD("get_cell_size"), &IMapManager::get_cell_size);
+	ClassDB::bind_method(D_METHOD("set_datagrid_size", "datagrid_size"), &IMapManager::set_datagrid_size, DEFVAL(Size2i(0, 0))); 
+	ClassDB::bind_method(D_METHOD("get_datagrid_size"), &IMapManager::get_datagrid_size);
 
-	ClassDB::bind_method(D_METHOD("create_templates", "type", "min_radius", "max_radius", "curve"), &DataGridManager::create_templates);
-	ClassDB::bind_method(D_METHOD("get_template", "type", "radius"), &DataGridManager::get_template);
+	ClassDB::bind_method(D_METHOD("create_templates", "type", "min_radius", "max_radius", "curve"), &IMapManager::create_templates);
+	ClassDB::bind_method(D_METHOD("get_template", "type", "radius"), &IMapManager::get_template);
 	
-	ClassDB::bind_method(D_METHOD("emit_updated", "datagrid_collection"), &DataGridManager::emit_updated);
+	ClassDB::bind_method(D_METHOD("emit_updated", "datagrid_collection"), &IMapManager::emit_updated);
 	
-	ClassDB::bind_method(D_METHOD("add_datagrid_layer_to_collection", "datagrid_position", "layer", "datagrid"), &DataGridManager::add_datagrid_layer_to_collection);
-	ClassDB::bind_method(D_METHOD("has_datagrid_layer", "datagrid_position", "layer"), &DataGridManager::has_datagrid_layer);
-	ClassDB::bind_method(D_METHOD("get_datagrid_layer", "datagrid_position", "layer"), &DataGridManager::get_datagrid_layer);
-	ClassDB::bind_method(D_METHOD("filter_datagrid_layers", "datagrid_position", "filter_layers"), &DataGridManager::filter_datagrid_layers);
+	ClassDB::bind_method(D_METHOD("add_datagrid_layer_to_collection", "datagrid_position", "layer", "datagrid"), &IMapManager::add_datagrid_layer_to_collection);
+	ClassDB::bind_method(D_METHOD("has_datagrid_layer", "datagrid_position", "layer"), &IMapManager::has_datagrid_layer);
+	ClassDB::bind_method(D_METHOD("get_datagrid_layer", "datagrid_position", "layer"), &IMapManager::get_datagrid_layer);
+	ClassDB::bind_method(D_METHOD("filter_datagrid_layers", "datagrid_position", "filter_layers"), &IMapManager::filter_datagrid_layers);
 
-	ClassDB::bind_method(D_METHOD("global_position_to_datagrid_index", "global_position"), &DataGridManager::global_position_to_datagrid_index);
-	ClassDB::bind_method(D_METHOD("grid_position_in_bounds", "data_grid_position"), &DataGridManager::grid_position_in_bounds);
-	ClassDB::bind_method(D_METHOD("world_position_to_cell_in_data_grid", "world_position", "data_grid_position"), &DataGridManager::world_position_to_cell_in_data_grid);
-	ClassDB::bind_method(D_METHOD("get_touched_datagrids", "center_cell", "radius"), &DataGridManager::get_touched_datagrids); 
-	ClassDB::bind_method(D_METHOD("add_datagrid_centered_to_collection", "grid_to_add", "layer", "global_position", "magnitude", "registering"), &DataGridManager::add_datagrid_centered_to_collection, DEFVAL(1.0f), DEFVAL(true));
-	ClassDB::bind_method(D_METHOD("add_into_datagrid_from_collection", "grid_to_add_into", "layer", "global_position", "magnitude"), &DataGridManager::add_into_datagrid_from_collection, DEFVAL(1.0f));
-	ClassDB::bind_method(D_METHOD("mark_cells_outside_boundaries", "imap", "global_position", "magnitude"), &DataGridManager::mark_cells_outside_boundaries, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("global_position_to_datagrid_index", "global_position"), &IMapManager::global_position_to_datagrid_index);
+	ClassDB::bind_method(D_METHOD("grid_position_in_bounds", "data_grid_position"), &IMapManager::grid_position_in_bounds);
+	ClassDB::bind_method(D_METHOD("world_position_to_cell_in_data_grid", "world_position", "data_grid_position"), &IMapManager::world_position_to_cell_in_data_grid);
+	ClassDB::bind_method(D_METHOD("get_touched_datagrids", "center_cell", "radius"), &IMapManager::get_touched_datagrids); 
+	ClassDB::bind_method(D_METHOD("add_datagrid_centered_to_collection", "grid_to_add", "layer", "global_position", "magnitude", "registering"), &IMapManager::add_datagrid_centered_to_collection, DEFVAL(1.0f), DEFVAL(true));
+	ClassDB::bind_method(D_METHOD("add_into_datagrid_from_collection", "grid_to_add_into", "layer", "global_position", "magnitude"), &IMapManager::add_into_datagrid_from_collection, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("mark_cells_outside_boundaries", "imap", "global_position", "magnitude"), &IMapManager::mark_cells_outside_boundaries, DEFVAL(1.0f));
 
-	ClassDB::bind_method(D_METHOD("snap_global_postion_to_cell_center", "p_global_position"), &DataGridManager::snap_global_postion_to_cell_center);
-	ClassDB::bind_method(D_METHOD("find_corner_from_center", "p_global_position", "p_datagrid_center"), &DataGridManager::find_corner_from_center);
+	ClassDB::bind_method(D_METHOD("snap_global_postion_to_cell_center", "p_global_position"), &IMapManager::snap_global_postion_to_cell_center);
+	ClassDB::bind_method(D_METHOD("find_corner_from_center", "p_global_position", "p_datagrid_center"), &IMapManager::find_corner_from_center);
 
-	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "world_size"), "set_world_size", "get_world_size");
-	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
-	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "datagrid_count"), "set_datagrid_count", "get_datagrid_count");
-	ClassDB::add_property("DataGridManager", PropertyInfo(Variant::VECTOR2I, "datagrid_size"), "set_datagrid_size", "get_datagrid_size");
+	ClassDB::add_property("IMapManager", PropertyInfo(Variant::VECTOR2I, "world_size"), "set_world_size", "get_world_size");
+	ClassDB::add_property("IMapManager", PropertyInfo(Variant::INT, "cell_size"), "set_cell_size", "get_cell_size");
+	ClassDB::add_property("IMapManager", PropertyInfo(Variant::VECTOR2I, "datagrid_count"), "set_datagrid_count", "get_datagrid_count");
+	ClassDB::add_property("IMapManager", PropertyInfo(Variant::VECTOR2I, "datagrid_size"), "set_datagrid_size", "get_datagrid_size");
 
 	ADD_SIGNAL(MethodInfo("updated", PropertyInfo(Variant::DICTIONARY, "datagrid_collection")));
 }
 
-DataGridManager::DataGridManager() {
+IMapManager::IMapManager() {
 	set_process_mode(PROCESS_MODE_DISABLED);
 	world_size = Size2i(1, 1);
 	datagrid_count = Size2i(1, 1);
@@ -350,5 +350,5 @@ DataGridManager::DataGridManager() {
 	datagrid_size = Size2i(1, 1);
 }
 
-DataGridManager::~DataGridManager() {
+IMapManager::~IMapManager() {
 }

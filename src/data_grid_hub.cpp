@@ -10,11 +10,11 @@ DataGridHub *DataGridHub::get_singleton() {
 	return singleton;
 }
 
-void DataGridHub::set_world_grid_manager(DataGridManager *p_world_grid_manager) {
+void DataGridHub::set_world_grid_manager(IMapManager *p_world_grid_manager) {
 	world_grid_manager = p_world_grid_manager;
 }
 
-DataGridManager *DataGridHub::get_world_grid_manager() const {
+IMapManager *DataGridHub::get_world_grid_manager() const {
 	return world_grid_manager;
 }
 

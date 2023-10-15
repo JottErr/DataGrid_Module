@@ -9,7 +9,7 @@ signal found_target (target_pos: Vector2)
 @onready var target_sprite: Sprite2D = $TargetSprite
 @onready var grid_visualizer: Node2D = $GridVisualizer
 
-var manager: DataGridManager
+var manager: IMapManager
 var interest_grid: InfluenceMap
 
 

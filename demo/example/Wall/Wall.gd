@@ -23,6 +23,6 @@ func _ready() -> void:
 		imap.radiate_value_at_position(imap.get_center(), imap.get_center().x, curve)
 
 
-func register_in_manager(manager: DataGridManager) -> void:
+func register_in_manager(manager: IMapManager) -> void:
 	manager.add_datagrid_centered_to_collection(imap, layer, global_position)
 

@@ -2,7 +2,7 @@
 extends Node2D
 
 
-@export var manager : DataGridManager : set = set_manager
+@export var manager: IMapManager : set = set_manager
 
 
 func _draw():
@@ -16,6 +16,6 @@ func _draw():
 			draw_rect(Rect2(start, datagrid_size * cell_size), Color.BLACK, false, 1.0)
 
 
-func set_manager(_manager: DataGridManager) -> void:
+func set_manager(_manager: IMapManager) -> void:
 	manager = _manager
 	queue_redraw()

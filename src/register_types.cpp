@@ -4,7 +4,7 @@
 #include "influence_map.h"
 #include "data_grid_component.h"
 #include "data_grid_comp_ref.h"
-#include "data_grid_manager.h"
+#include "imap_manager.h"
 #include "data_grid_hub.h"
 
 #include <gdextension_interface.h>
@@ -25,7 +25,7 @@ void initialize_data_grid_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<InfluenceMap>();
 	ClassDB::register_class<DataGridCompRef>();
 	ClassDB::register_class<DataGridComponent>();
-	ClassDB::register_class<DataGridManager>();
+	ClassDB::register_class<IMapManager>();
 	ClassDB::register_class<DataGridHub>();
 
 	_datagrid_hub = memnew(DataGridHub);

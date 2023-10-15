@@ -1,5 +1,5 @@
-#ifndef DATAGRIDMANAGER_H
-#define DATAGRIDMANAGER_H
+#ifndef IMAPMANAGER_H
+#define IMAPMANAGER_H
 
 #include <godot_cpp/classes/node.hpp>
 #include "math_curve.h"
@@ -10,8 +10,8 @@
 
 namespace godot {
 
-class DataGridManager : public Node {
-	GDCLASS(DataGridManager, Node)
+class IMapManager : public Node {
+	GDCLASS(IMapManager, Node)
 
 private:
 	Size2i world_size;
@@ -40,8 +40,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	DataGridManager();
-	~DataGridManager();
+	IMapManager();
+	~IMapManager();
 
 	void set_world_size(const Size2i &p_world_size);
 	const Size2i &get_world_size() const { return world_size; }
@@ -76,4 +76,4 @@ public:
 };
 }
 
-#endif // DATAGRIDMANAGER_H
+#endif // IMAPMANAGER_H
