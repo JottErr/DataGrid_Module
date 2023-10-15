@@ -2,7 +2,7 @@
 
 #include "math_curve.h"
 #include "influence_map.h"
-#include "data_grid_component.h"
+#include "influence_area.h"
 #include "data_grid_comp_ref.h"
 #include "imap_manager.h"
 #include "data_grid_hub.h"
@@ -24,7 +24,7 @@ void initialize_data_grid_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<MathCurve>();
 	ClassDB::register_class<InfluenceMap>();
 	ClassDB::register_class<DataGridCompRef>();
-	ClassDB::register_class<DataGridComponent>();
+	ClassDB::register_class<InfluenceArea>();
 	ClassDB::register_class<IMapManager>();
 	ClassDB::register_class<DataGridHub>();
 

@@ -1,17 +1,17 @@
 #ifndef DATAGRIDCOMPREF_H
 #define DATAGRIDCOMPREF_H
 
-#include "data_grid_component.h"
+#include "influence_area.h"
 
 namespace godot {
 
-class DataGridComponent;
+class InfluenceArea;
 
 class DataGridCompRef : public Resource {
 	GDCLASS(DataGridCompRef, Resource);
 
 private:
-	DataGridComponent *component;
+	InfluenceArea *component;
 	
 	int influence_type;
 	int layer;
@@ -29,8 +29,8 @@ public:
 	DataGridCompRef();
 	~DataGridCompRef();
 
-	void set_component(DataGridComponent *p_datagrid_component);
-	DataGridComponent *get_component() const;
+	void set_component(InfluenceArea *p_datagrid_component);
+	InfluenceArea *get_component() const;
 	bool component_is_valid() const;
 	Vector2 get_global_position() const;
 	void set_influence_type(int p_influence_type);

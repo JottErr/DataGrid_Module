@@ -1,7 +1,7 @@
 extends Sprite2D
 
 @export var c_offset : Vector2
-@onready var data_grid_component: DataGridComponent = $DataGridComponent
+@onready var data_grid_component: InfluenceArea = $InfluenceArea
 
 
 func _process(delta: float) -> void:

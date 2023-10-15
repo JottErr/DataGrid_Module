@@ -1,7 +1,7 @@
 #ifndef DATAGRIDHUB_H
 #define DATAGRIDHUB_H
 
-#include "data_grid_component.h"
+#include "influence_area.h"
 #include "imap_manager.h"
 #include <godot_cpp/classes/object.hpp>
 

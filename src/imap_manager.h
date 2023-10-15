@@ -4,7 +4,7 @@
 #include <godot_cpp/classes/node.hpp>
 #include "math_curve.h"
 #include "influence_map.h"
-#include "data_grid_component.h"
+#include "influence_area.h"
 #include "godot_cpp/templates/local_vector.hpp"
 #include "godot_cpp/templates/hash_map.hpp"
 

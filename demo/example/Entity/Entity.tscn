@@ -38,7 +38,7 @@ top_level = true
 position = Vector2(-10, -10)
 texture = ExtResource("1_l00h6")
 
-[node name="DataGridComponent" type="DataGridComponent" parent="."]
+[node name="InfluenceArea" type="InfluenceArea" parent="."]
 data_resource = SubResource("DataGridCompRef_yetls")
 registration_frequency = 0.25
 

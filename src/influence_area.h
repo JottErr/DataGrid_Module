@@ -1,5 +1,5 @@
-#ifndef DATAGRIDCOMPONENT_H
-#define DATAGRIDCOMPONENT_H
+#ifndef INFLUENCEAREA_H
+#define INFLUENCEAREA_H
 
 #include <godot_cpp/classes/node2d.hpp>
 #include "data_grid_comp_ref.h"
@@ -8,8 +8,8 @@ namespace godot {
 
 class DataGridCompRef;
 
-class DataGridComponent : public Node2D {
-	GDCLASS(DataGridComponent, Node2D)
+class InfluenceArea : public Node2D {
+	GDCLASS(InfluenceArea, Node2D)
 
 private:
 	Ref<DataGridCompRef> data_resource;
@@ -21,8 +21,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	DataGridComponent();
-	~DataGridComponent();
+	InfluenceArea();
+	~InfluenceArea();
 
 	void set_data_resource(Ref<DataGridCompRef> p_data_resource);
 	Ref<DataGridCompRef> get_data_resource();
@@ -38,4 +38,4 @@ public:
 };
 }
 
-#endif // DATAGRIDCOMPONENT_H
+#endif // INFLUENCEAREA_H

@@ -12,5 +12,5 @@ registered_layer = 0
 texture = ExtResource("1_em0dk")
 script = ExtResource("2_8xdh2")
 
-[node name="DataGridComponent" type="DataGridComponent" parent="."]
+[node name="DataGridComponent" type="InfluenceArea" parent="."]
 data_resource = SubResource("DataGridCompRef_yetfo")

@@ -22,7 +22,7 @@ self_modulate = Color(0.168627, 0.764706, 0.396078, 1)
 scale = Vector2(2, 2)
 texture = ExtResource("1_j8h2j")
 
-[node name="DataGridComponent" type="DataGridComponent" parent="."]
+[node name="InfluenceArea" type="InfluenceArea" parent="."]
 data_resource = SubResource("DataGridCompRef_nkx7s")
 registration_frequency = 0.25
 

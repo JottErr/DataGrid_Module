@@ -100,7 +100,7 @@ void IMapManager::_process(float p_delta) {
 			component_data->set_registered(false);
 		}
 		// Component still valid?
-		DataGridComponent *component = component_data->get_component();
+		InfluenceArea *component = component_data->get_component();
 		if (component == nullptr || !(component->is_inside_tree())) {
 			freed_components.append(i);
 			if (updates_so_far < updates_per_frame) {

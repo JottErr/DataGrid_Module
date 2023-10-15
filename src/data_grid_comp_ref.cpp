@@ -4,11 +4,11 @@
 
 using namespace godot;
 
-void DataGridCompRef::set_component(DataGridComponent *p_datagrid_component) {
+void DataGridCompRef::set_component(InfluenceArea *p_datagrid_component) {
 	component = p_datagrid_component;
 }
 
-DataGridComponent *DataGridCompRef::get_component() const {
+InfluenceArea *DataGridCompRef::get_component() const {
 	return component;
 }
 
