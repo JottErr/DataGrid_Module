@@ -15,20 +15,20 @@ class IMapManager : public Node {
 
 private:
 	Vector2i world_size;
-	Vector2i datagrid_count;
+	Vector2i imap_count;
 	float cell_size;
-	Vector2i datagrid_size;
+	Vector2i imap_size;
 
-	Dictionary datagrid_collection;
+	Dictionary imap_collection;
 
 	struct InfluenceMapTemplate {
 		int radius;
-		Ref<InfluenceMap> datagrid;
+		Ref<InfluenceMap> imap;
 		
 		InfluenceMapTemplate() {}
-		InfluenceMapTemplate(int p_radius, Ref<InfluenceMap> p_datagrid) {
+		InfluenceMapTemplate(int p_radius, Ref<InfluenceMap> p_imap) {
 			radius = p_radius;
-			datagrid = p_datagrid;
+			imap = p_imap;
 		}
 	};
 
@@ -45,34 +45,34 @@ public:
 
 	void set_world_size(const Vector2i &p_world_size);
 	const Vector2i &get_world_size() const { return world_size; }
-	void set_datagrid_count(const Vector2i &p_datagrid_count);
-	const Vector2i &get_datagrid_count() const { return datagrid_count; }
+	void set_imap_count(const Vector2i &p_imap_count);
+	const Vector2i &get_imap_count() const { return imap_count; }
 	void set_cell_size(float p_cell_size);
 	float get_cell_size() const { return cell_size; }
-	void set_datagrid_size(const Vector2i &p_datagrid_size = Vector2i(0, 0));
-	const Vector2i &get_datagrid_size() const { return datagrid_size; }
+	void set_imap_size(const Vector2i &p_imap_size = Vector2i(0, 0));
+	const Vector2i &get_imap_size() const { return imap_size; }
 	
 	void create_templates(int p_type, int min_radius, int max_radius, const Ref<MathCurve> &p_curve);
 	Ref<InfluenceMap> get_template(int p_type, int p_radius) const;
 
 	void _process(float p_delta);
-	void emit_updated(const Dictionary &datagrid_collection);
+	void emit_updated(const Dictionary &imap_collection);
 
-	void add_datagrid_layer_to_collection(const Vector2i &p_datagrid_position, int p_layer, const Ref<InfluenceMap> &p_datagrid);
-	bool has_datagrid_layer(const Vector2i &p_datagrid_position, int p_layer) const;
-	Ref<InfluenceMap> get_datagrid_layer(const Vector2i &p_datagrid_position, int p_layer) const;
-	Dictionary filter_datagrid_layers(const Vector2i &p_datagrid_position, const Array &filter_layers) const;
+	void add_imap_layer_to_collection(const Vector2i &p_imap_position, int p_layer, const Ref<InfluenceMap> &p_imap);
+	bool has_imap_layer(const Vector2i &p_imap_position, int p_layer) const;
+	Ref<InfluenceMap> get_imap_layer(const Vector2i &p_imap_position, int p_layer) const;
+	Dictionary filter_imap_layers(const Vector2i &p_imap_position, const Array &filter_layers) const;
 
-	Vector2i global_position_to_datagrid_index(const Vector2i &p_global_position) const;
-	bool grid_position_in_bounds(const Vector2i &p_data_grid_position) const;
-	Vector2i world_position_to_cell_in_data_grid(const Vector2 &p_world_position, const Vector2i &p_data_grid_position) const;
-	PackedVector2Array get_touched_datagrids(const Vector2i &p_center_cell, int p_radius) const;
-	void add_datagrid_centered_to_collection(const Ref<InfluenceMap> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f, bool registering = true);
-	void add_into_datagrid_from_collection(const Ref<InfluenceMap> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f);
+	Vector2i global_position_to_imap_id(const Vector2i &p_global_position) const;
+	bool imap_id_in_bounds(const Vector2i &p_imap_id) const;
+	Vector2i global_position_to_imap_cell_id(const Vector2 &p_world_position, const Vector2i &p_imap_id) const;
+	PackedVector2Array get_touched_imaps(const Vector2i &p_center_cell, int p_radius) const;
+	void add_imap_centered_to_collection(const Ref<InfluenceMap> &grid_to_add, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f, bool registering = true);
+	void add_into_imap_from_collection(const Ref<InfluenceMap> &grid_to_add_into, int p_layer, const Point2 &p_global_position, float p_magnitude = 1.0f);
 	void mark_cells_outside_boundaries(const Ref<InfluenceMap> &p_imap, Vector2i p_global_position, float p_magnitude = 1.0f);
 	
 	Vector2 snap_global_postion_to_cell_center(const Vector2 &p_global_position) const;
-	Vector2 find_corner_from_center(const Vector2 &p_global_position, Vector2i p_datagrid_center);
+	Vector2 find_imap_corner_from_center(const Vector2 &p_global_position, Vector2i p_imap_center);
 };
 }
 

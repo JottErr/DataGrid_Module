@@ -24,5 +24,5 @@ func _ready() -> void:
 
 
 func register_in_manager(manager: IMapManager) -> void:
-	manager.add_datagrid_centered_to_collection(imap, layer, global_position)
+	manager.add_imap_centered_to_collection(imap, layer, global_position)
 

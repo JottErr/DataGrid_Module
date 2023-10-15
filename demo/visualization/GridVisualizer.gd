@@ -26,6 +26,6 @@ func _draw():
 			draw_rect(Rect2(x_pos, y_pos, cell_size, cell_size), color)
 
 
-func _on_data_grid_updated(_datagrid: InfluenceMap) -> void:
-	imap = _datagrid
+func _on_data_grid_updated(_imap: InfluenceMap) -> void:
+	imap = _imap
 	queue_redraw()

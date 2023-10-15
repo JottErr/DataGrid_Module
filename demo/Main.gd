@@ -39,7 +39,7 @@ func register_tilemap_wall_layer() -> void:
 	
 	for wall_cell_id in tile_map.get_used_cells(0):
 		var global_pos := tile_map.to_global(tile_map.map_to_local(wall_cell_id))
-		data_grid_manager.add_datagrid_centered_to_collection(imap, 9, global_pos)
+		data_grid_manager.add_imap_centered_to_collection(imap, 9, global_pos)
 
 
 func test_performance() -> void:
@@ -61,7 +61,7 @@ func test_manager_performance() -> void:
 	var manager := IMapManager.new()
 	manager.set_world_size(Vector2(6000, 6000))
 	manager.set_cell_size(10)
-	manager.set_datagrid_count(Vector2i(6, 6))
+	manager.set_imap_count(Vector2i(6, 6))
 	
 	var testcurve := MathCurve.new()
 	var data1 := InfluenceMap.new()
@@ -72,5 +72,5 @@ func test_manager_performance() -> void:
 		var start = Time.get_ticks_usec()
 		for i in 600:
 			for j in 600:
-				manager.add_datagrid_centered_to_collection(data1, 1, Vector2i(i, j), 1.0)
+				manager.add_imap_centered_to_collection(data1, 1, Vector2i(i, j), 1.0)
 		print(Time.get_ticks_usec() - start)

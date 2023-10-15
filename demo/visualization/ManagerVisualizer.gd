@@ -3,7 +3,7 @@ extends Node2D
 
 
 @export var layer: int = 0
-@export var datagrids: Dictionary = {}
+@export var imaps: Dictionary = {}
 @export var base_color: Color = Color(1.0, 1.0, 1.0, 1.0)
 
 
@@ -13,15 +13,15 @@ func _ready() -> void:
 
 
 func _draw():
-	if datagrids.is_empty():
+	if imaps.is_empty():
 		return
-	for datagrid_index in datagrids:
-		var imap: InfluenceMap = datagrids[datagrid_index]
+	for imap_id in imaps:
+		var imap: InfluenceMap = imaps[imap_id]
 		if imap == null:
 			continue
 		var size := imap.get_size()
 		var cell_size := imap.get_cell_size()
-		var offset: Vector2 = datagrid_index * size * cell_size
+		var offset: Vector2 = imap_id * size * cell_size
 		for y in size.y:
 			var y_pos := y * cell_size
 			for x in size.x:
@@ -31,10 +31,10 @@ func _draw():
 				draw_rect(Rect2(x_pos + offset.x, y_pos + offset.y, cell_size, cell_size), color)
 
 
-func _on_data_grid_manager_updated(datagrid_collection: Dictionary) -> void:
-	datagrids.clear()
-	for datagrid_index in datagrid_collection:
-		var layerstack: Dictionary = datagrid_collection.get(datagrid_index)
+func _on_data_grid_manager_updated(imap_collection: Dictionary) -> void:
+	imaps.clear()
+	for imap_id in imap_collection:
+		var layerstack: Dictionary = imap_collection.get(imap_id)
 		var imap: InfluenceMap = layerstack.get(layer, null)
-		datagrids[datagrid_index] = imap 
+		imaps[imap_id] = imap 
 	queue_redraw()
