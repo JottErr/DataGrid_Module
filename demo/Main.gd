@@ -14,6 +14,8 @@ enum InfluenceType {PROX = 1, THREAT = 2, INTEREST = 3}
 
 
 func _ready() -> void:
+	test_manager_performance()
+	return
 	DataGridHub.set_world_grid_manager(data_grid_manager)
 	register_tilemap_wall_layer()
 	data_grid_manager.create_templates(InfluenceType.PROX, 1, 21, dec_lin)
@@ -63,14 +65,12 @@ func test_manager_performance() -> void:
 	manager.set_cell_size(10)
 	manager.set_imap_count(Vector2i(6, 6))
 	
-	var testcurve := MathCurve.new()
-	var data1 := InfluenceMap.new()
-	data1.set_size(Vector2i(9, 9))
-	data1.radiate_value_at_position(Vector2i(4, 4), 4, testcurve, 1.0)
+	manager.create_templates(InfluenceType.PROX, 1, 21, dec_lin)
 
 	for n in 10:
 		var start = Time.get_ticks_usec()
 		for i in 600:
 			for j in 600:
-				manager.add_imap_centered_to_collection(data1, 1, Vector2i(i, j), 1.0)
+				var imap_template := manager.get_template(InfluenceType.PROX, 4)
+				manager.add_imap_centered_to_collection(imap_template, 1, Vector2i(i, j), 1.0)
 		print(Time.get_ticks_usec() - start)
