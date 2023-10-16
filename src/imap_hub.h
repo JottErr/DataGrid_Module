@@ -7,11 +7,11 @@
 
 using namespace godot;
 
-class DataGridHub : public Object {
-	GDCLASS(DataGridHub, Object);
+class IMapHub : public Object {
+	GDCLASS(IMapHub, Object);
 
 private:
-	static DataGridHub *singleton;
+	static IMapHub *singleton;
 	IMapManager *world_grid_manager;
 	TypedArray<InfluenceAreaData> registered_components;
 
@@ -19,11 +19,11 @@ protected:
 	static void _bind_methods();
 
 public:
-	static DataGridHub *get_singleton();
+	static IMapHub *get_singleton();
 	const float cell_size = 10.0f;
 
-	DataGridHub();
-	~DataGridHub();
+	IMapHub();
+	~IMapHub();
 
 	float get_cell_size() const { return cell_size; };
 	void set_world_grid_manager(IMapManager *p_world_grid_manager);

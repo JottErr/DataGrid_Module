@@ -18,7 +18,7 @@ func _ready() -> void:
 
 
 func initialize() -> void:
-	manager = DataGridHub.get_world_grid_manager()
+	manager = IMapHub.get_world_grid_manager()
 	if manager == null:
 		print("no manager")
 		return

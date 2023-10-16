@@ -1,5 +1,5 @@
 #include "imap_manager.h"
-#include "data_grid_hub.h"
+#include "imap_hub.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -77,7 +77,7 @@ void IMapManager::_notification(int p_what) {
 }
 
 void IMapManager::_process(float p_delta) {
-	DataGridHub *hub = Object::cast_to<DataGridHub>(Engine::get_singleton()->get_singleton("DataGridHub"));
+	IMapHub *hub = Object::cast_to<IMapHub>(Engine::get_singleton()->get_singleton("IMapHub"));
 	TypedArray<InfluenceAreaData> nodes = hub->get_registered_components_data_res();
 	TypedArray<int> freed_components;
 	int amount_nodes = nodes.size();

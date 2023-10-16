@@ -13,7 +13,7 @@ enum InfluenceType {PROX = 1, THREAT = 2, INTEREST = 3}
 
 
 func _ready() -> void:
-	DataGridHub.set_world_grid_manager(imap_manager)
+	IMapHub.set_world_grid_manager(imap_manager)
 	register_tilemap_wall_layer()
 	imap_manager.create_templates(InfluenceType.PROX, 1, 21, dec_lin)
 	imap_manager.create_templates(InfluenceType.THREAT, 3, 21, dec_4_poly)

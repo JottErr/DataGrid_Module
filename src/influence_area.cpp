@@ -1,5 +1,5 @@
 #include "influence_area.h"
-#include "data_grid_hub.h"
+#include "imap_hub.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/engine.hpp>
 
@@ -55,8 +55,8 @@ void InfluenceArea::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_ENTER_TREE: {
 			Engine *engine = Engine::get_singleton();
-			if (!engine->is_editor_hint() && engine->has_singleton("DataGridHub")) {
-				DataGridHub *hub = Object::cast_to<DataGridHub>(Engine::get_singleton()->get_singleton("DataGridHub"));
+			if (!engine->is_editor_hint() && engine->has_singleton("IMapHub")) {
+				IMapHub *hub = Object::cast_to<IMapHub>(Engine::get_singleton()->get_singleton("IMapHub"));
 				hub->add_component_data_res(data_resource);
 				set_process_mode(PROCESS_MODE_INHERIT);
 			}

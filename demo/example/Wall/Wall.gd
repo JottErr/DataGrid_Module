@@ -10,7 +10,7 @@ var cell_size : float
 
 
 func _ready() -> void:
-	cell_size = DataGridHub.get_cell_size()
+	cell_size = IMapHub.get_cell_size()
 	var shape := collision_shape.get_shape()
 	var rect := shape.get_rect()
 	imap.set_cell_size(cell_size)

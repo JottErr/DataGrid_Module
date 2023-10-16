@@ -5,7 +5,7 @@
 #include "influence_area.h"
 #include "influence_area_data.h"
 #include "imap_manager.h"
-#include "data_grid_hub.h"
+#include "imap_hub.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -15,7 +15,7 @@
 
 using namespace godot;
 
-static DataGridHub *_datagrid_hub;
+static IMapHub *_imap_hub;
 
 void initialize_data_grid_module(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
@@ -26,18 +26,18 @@ void initialize_data_grid_module(ModuleInitializationLevel p_level) {
 	ClassDB::register_class<InfluenceAreaData>();
 	ClassDB::register_class<InfluenceArea>();
 	ClassDB::register_class<IMapManager>();
-	ClassDB::register_class<DataGridHub>();
+	ClassDB::register_class<IMapHub>();
 
-	_datagrid_hub = memnew(DataGridHub);
-	Engine::get_singleton()->register_singleton("DataGridHub", DataGridHub::get_singleton());
+	_imap_hub = memnew(IMapHub);
+	Engine::get_singleton()->register_singleton("IMapHub", IMapHub::get_singleton());
 }
 
 void uninitialize_data_grid_module(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
-	Engine::get_singleton()->unregister_singleton("DataGridHub");
-	//memdelete(_datagrid_hub);
+	Engine::get_singleton()->unregister_singleton("IMapHub");
+	//memdelete(_imap_hub);
 }
 
 extern "C" {
