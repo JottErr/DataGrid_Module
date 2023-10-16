@@ -2,7 +2,6 @@
 #define INFLUENCEMAP_H
 
 #include "math_curve.h"
-#include "godot_cpp/templates/local_vector.hpp"
 
 namespace godot {
 
