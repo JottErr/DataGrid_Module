@@ -18,7 +18,7 @@ IMapManager *DataGridHub::get_world_grid_manager() const {
 	return world_grid_manager;
 }
 
-void DataGridHub::add_component_data_res(Ref<DataGridCompRef> p_datagrid_component_data_res) {
+void DataGridHub::add_component_data_res(Ref<InfluenceAreaData> p_datagrid_component_data_res) {
 	registered_components.append(p_datagrid_component_data_res);
 }
 

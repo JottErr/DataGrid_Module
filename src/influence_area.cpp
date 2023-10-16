@@ -5,7 +5,7 @@
 
 using namespace godot;
 
-void InfluenceArea::set_data_resource(Ref<DataGridCompRef> p_data_resource) {
+void InfluenceArea::set_data_resource(Ref<InfluenceAreaData> p_data_resource) {
 	if (p_data_resource == data_resource) {
 		return;
 	}
@@ -15,7 +15,7 @@ void InfluenceArea::set_data_resource(Ref<DataGridCompRef> p_data_resource) {
 	}
 }
 
-Ref<DataGridCompRef> InfluenceArea::get_data_resource() {
+Ref<InfluenceAreaData> InfluenceArea::get_data_resource() {
 	return data_resource;
 }
 
@@ -90,7 +90,7 @@ void InfluenceArea::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_registration_frequency", "frequency"), &InfluenceArea::set_registration_frequency);
 	ClassDB::bind_method(D_METHOD("get_registration_frequency"), &InfluenceArea::get_registration_frequency);
 	
-	ClassDB::add_property("InfluenceArea", PropertyInfo(Variant::OBJECT, "data_resource", PROPERTY_HINT_RESOURCE_TYPE, "DataGridCompRef"), "set_data_resource", "get_data_resource");
+	ClassDB::add_property("InfluenceArea", PropertyInfo(Variant::OBJECT, "data_resource", PROPERTY_HINT_RESOURCE_TYPE, "InfluenceAreaData"), "set_data_resource", "get_data_resource");
 	ClassDB::add_property("InfluenceArea", PropertyInfo(Variant::FLOAT, "registration_frequency"), "set_registration_frequency", "get_registration_frequency");
 	ClassDB::add_property("InfluenceArea", PropertyInfo(Variant::INT, "time_since_registration"), "set_time_since_registration", "get_time_since_registration");
 }

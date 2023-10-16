@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://ciii8x3gl27fm" path="res://sprite_icon.svg" id="1_em0dk"]
 [ext_resource type="Script" path="res://example/FollowMouse.gd" id="2_8xdh2"]
 
-[sub_resource type="DataGridCompRef" id="DataGridCompRef_yetfo"]
+[sub_resource type="InfluenceAreaData" id="InfluenceAreaData_yetfo"]
 layer = 1
 radius = 200.0
 registered_layer = 0
@@ -13,4 +13,4 @@ texture = ExtResource("1_em0dk")
 script = ExtResource("2_8xdh2")
 
 [node name="DataGridComponent" type="InfluenceArea" parent="."]
-data_resource = SubResource("DataGridCompRef_yetfo")
+data_resource = SubResource("InfluenceAreaData_yetfo")

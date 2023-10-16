@@ -1,5 +1,5 @@
-#ifndef DATAGRIDCOMPREF_H
-#define DATAGRIDCOMPREF_H
+#ifndef INFLUENCEAREADATA_H
+#define INFLUENCEAREADATA_H
 
 #include "influence_area.h"
 
@@ -7,8 +7,8 @@ namespace godot {
 
 class InfluenceArea;
 
-class DataGridCompRef : public Resource {
-	GDCLASS(DataGridCompRef, Resource);
+class InfluenceAreaData : public Resource {
+	GDCLASS(InfluenceAreaData, Resource);
 
 private:
 	InfluenceArea *component;
@@ -26,8 +26,8 @@ protected:
 	static void _bind_methods();
 
 public:
-	DataGridCompRef();
-	~DataGridCompRef();
+	InfluenceAreaData();
+	~InfluenceAreaData();
 
 	void set_component(InfluenceArea *p_datagrid_component);
 	InfluenceArea *get_component() const;
@@ -53,4 +53,4 @@ public:
 };
 }
 
-#endif // DATAGRIDCOMPREF_H
+#endif // INFLUENCEAREADATA_H

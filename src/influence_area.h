@@ -2,17 +2,17 @@
 #define INFLUENCEAREA_H
 
 #include <godot_cpp/classes/node2d.hpp>
-#include "data_grid_comp_ref.h"
+#include "influence_area_data.h"
 
 namespace godot {
 
-class DataGridCompRef;
+class InfluenceAreaData;
 
 class InfluenceArea : public Node2D {
 	GDCLASS(InfluenceArea, Node2D)
 
 private:
-	Ref<DataGridCompRef> data_resource;
+	Ref<InfluenceAreaData> data_resource;
 	float time_since_registration;
 	float registration_frequency;
 	
@@ -24,8 +24,8 @@ public:
 	InfluenceArea();
 	~InfluenceArea();
 
-	void set_data_resource(Ref<DataGridCompRef> p_data_resource);
-	Ref<DataGridCompRef> get_data_resource();
+	void set_data_resource(Ref<InfluenceAreaData> p_data_resource);
+	Ref<InfluenceAreaData> get_data_resource();
 	void set_layer(int p_layer);
 	int get_layer() const;
 	void set_radius(float p_radius);

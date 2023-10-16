@@ -6,7 +6,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tdr82"]
 size = Vector2(30, 28)
 
-[sub_resource type="DataGridCompRef" id="DataGridCompRef_nkx7s"]
+[sub_resource type="InfluenceAreaData" id="InfluenceAreaData_nkx7s"]
 influence_type = 2
 layer = 1
 radius = 250.0
@@ -23,7 +23,7 @@ scale = Vector2(2, 2)
 texture = ExtResource("1_j8h2j")
 
 [node name="InfluenceArea" type="InfluenceArea" parent="."]
-data_resource = SubResource("DataGridCompRef_nkx7s")
+data_resource = SubResource("InfluenceAreaData_nkx7s")
 registration_frequency = 0.25
 
 [node name="Camera2D" type="Camera2D" parent="."]

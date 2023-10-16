@@ -78,15 +78,13 @@ void IMapManager::_notification(int p_what) {
 
 void IMapManager::_process(float p_delta) {
 	DataGridHub *hub = Object::cast_to<DataGridHub>(Engine::get_singleton()->get_singleton("DataGridHub"));
-	TypedArray<DataGridCompRef> nodes = hub->get_registered_components_data_res();
+	TypedArray<InfluenceAreaData> nodes = hub->get_registered_components_data_res();
 	TypedArray<int> freed_components;
-	//TypedArray<Vector3> deregistered_grids; add maps on deregister, remove on register, leftover is only deregister this frame, ask if all 0 to remove
-	//missing refs to grids or their relative index offsets from touched_grids
 	int amount_nodes = nodes.size();
 	int updates_per_frame = 1; // move to .h, create set, get, export
 	int updates_so_far = 0;
 	for (int i = 0; i < amount_nodes; i++) {
-		Ref<DataGridCompRef> component_data = nodes[i];
+		Ref<InfluenceAreaData> component_data = nodes[i];
 		if (!component_data->is_registerable()) {
 			continue;
 		}

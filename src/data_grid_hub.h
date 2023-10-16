@@ -1,7 +1,7 @@
 #ifndef DATAGRIDHUB_H
 #define DATAGRIDHUB_H
 
-#include "influence_area.h"
+#include "influence_area_data.h"
 #include "imap_manager.h"
 #include <godot_cpp/classes/object.hpp>
 
@@ -13,7 +13,7 @@ class DataGridHub : public Object {
 private:
 	static DataGridHub *singleton;
 	IMapManager *world_grid_manager;
-	TypedArray<DataGridCompRef> registered_components;
+	TypedArray<InfluenceAreaData> registered_components;
 
 protected:
 	static void _bind_methods();
@@ -28,8 +28,8 @@ public:
 	float get_cell_size() const { return cell_size; };
 	void set_world_grid_manager(IMapManager *p_world_grid_manager);
 	IMapManager *get_world_grid_manager() const;
-	void add_component_data_res(Ref<DataGridCompRef> p_datagrid_component_data_res);
-	TypedArray<DataGridCompRef> get_registered_components_data_res() { return registered_components; }
+	void add_component_data_res(Ref<InfluenceAreaData> p_datagrid_component_data_res);
+	TypedArray<InfluenceAreaData> get_registered_components_data_res() { return registered_components; }
 	void remove_components(const TypedArray<int> &p_indices);
 };
 
