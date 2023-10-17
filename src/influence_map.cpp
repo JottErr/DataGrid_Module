@@ -76,8 +76,8 @@ void InfluenceMap::radiate_value_at_position(const Vector2i &p_position, int rad
 	}
 }
 
-// Adds the given grid to the current InfluenceMap. The other grid is centered at the specified position in this grid. 
-// The other grid is scaled with the specified magnitude. Used to add a smaller grid into a large grid.
+// Adds the given imap to the this imap. The other imap is centered at the specified position in this imap. 
+// The other imap is scaled with the specified magnitude. Used to add a smaller imap into a large imap.
 void InfluenceMap::add_map(const Ref<InfluenceMap> &other_map, const Vector2i &p_position, float magnitude, const Vector2i &p_offset) {
 	Vector2i other_topleft = p_position - other_map->get_center() + p_offset;
 	Vector2i other_botright = other_topleft + other_map->get_size();
@@ -96,8 +96,8 @@ void InfluenceMap::add_map(const Ref<InfluenceMap> &other_map, const Vector2i &p
 		}
 	}
 }
-// Adds from the given grid to the current InfluenceMap. A region with the size of the this grid is defined around the specified position in the other grid.
-// Values added from the other grid are scaled with the specified magnitude. Used to add part of a large grid into a smaller grid.
+// Adds from the given imap to the this imap. A region with the size of the this imap is defined around the specified position in the other imap.
+// Values added from the other imap are scaled with the specified magnitude. Used to add part of a large imap into a smaller imap.
 void InfluenceMap::add_from_map(const Ref<InfluenceMap> &other_map, const Vector2i &p_position, float magnitude, const Vector2i &p_offset) {
 	Vector2i topleft_in_other = p_position - center + p_offset;
 	Vector2i botright_in_other = topleft_in_other + size;
@@ -219,7 +219,7 @@ void InfluenceMap::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_lowest_cell"), &InfluenceMap::get_lowest_cell);
 	ClassDB::bind_method(D_METHOD("normalize_data"), &InfluenceMap::normalize_data);
 
-	ClassDB::bind_method(D_METHOD("show_grid"), &InfluenceMap::show_map);
+	ClassDB::bind_method(D_METHOD("show_map"), &InfluenceMap::show_map);
 	
 	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::FLOAT, "cell_size"), "set_cell_size", "get_cell_size");
 	ClassDB::add_property("InfluenceMap", PropertyInfo(Variant::VECTOR2I, "size"), "set_size", "get_size");
