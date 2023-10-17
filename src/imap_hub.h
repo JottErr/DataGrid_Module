@@ -20,12 +20,10 @@ protected:
 
 public:
 	static IMapHub *get_singleton();
-	const float cell_size = 10.0f;
 
 	IMapHub();
 	~IMapHub();
 
-	float get_cell_size() const { return cell_size; };
 	void set_world_grid_manager(IMapManager *p_world_grid_manager);
 	IMapManager *get_world_grid_manager() const;
 	void add_component_data_res(Ref<InfluenceAreaData> p_datagrid_component_data_res);

@@ -30,7 +30,6 @@ void IMapHub::remove_components(const TypedArray<int> &p_indices) {
 }
 
 void IMapHub::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("get_cell_size"), &IMapHub::get_cell_size);
 	ClassDB::bind_method(D_METHOD("set_world_grid_manager", "p_world_grid_manager"), &IMapHub::set_world_grid_manager);
 	ClassDB::bind_method(D_METHOD("get_world_grid_manager"), &IMapHub::get_world_grid_manager);
 	ClassDB::bind_method(D_METHOD("add_component", "p_datagrid_component"), &IMapHub::add_component_data_res);
