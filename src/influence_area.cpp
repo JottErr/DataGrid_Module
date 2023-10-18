@@ -11,7 +11,7 @@ void InfluenceArea::set_data_resource(Ref<InfluenceAreaData> p_data_resource) {
 	}
 	data_resource = p_data_resource;
 	if (data_resource.is_valid()) {
-		data_resource->set_component(this);
+		data_resource->set_area_node(this);
 	}
 }
 
@@ -57,13 +57,13 @@ void InfluenceArea::_notification(int p_what) {
 			Engine *engine = Engine::get_singleton();
 			if (!engine->is_editor_hint() && engine->has_singleton("IMapHub")) {
 				IMapHub *hub = Object::cast_to<IMapHub>(Engine::get_singleton()->get_singleton("IMapHub"));
-				hub->add_component_data_res(data_resource);
+				hub->add_influence_area_data(data_resource);
 				set_process_mode(PROCESS_MODE_INHERIT);
 			}
 		} break;
 		case NOTIFICATION_EXIT_TREE: {
 			data_resource->set_registerable(true);
-			data_resource->set_component(nullptr);
+			data_resource->set_area_node(nullptr);
 		} break;
 	}
 }

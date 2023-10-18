@@ -4,23 +4,23 @@
 
 using namespace godot;
 
-void InfluenceAreaData::set_component(InfluenceArea *p_datagrid_component) {
-	component = p_datagrid_component;
+void InfluenceAreaData::set_area_node(InfluenceArea *p_area_node) {
+	area_node = p_area_node;
 }
 
-InfluenceArea *InfluenceAreaData::get_component() const {
-	return component;
+InfluenceArea *InfluenceAreaData::get_area_node() const {
+	return area_node;
 }
 
-bool InfluenceAreaData::component_is_valid() const {
-	return (component != nullptr && component->is_inside_tree());
+bool InfluenceAreaData::area_node_is_valid() const {
+	return (area_node != nullptr && area_node->is_inside_tree());
 }
 
 Vector2 InfluenceAreaData::get_global_position() const {
-	if (!component_is_valid()) {
+	if (!area_node_is_valid()) {
 		return Vector2();
 	}
-	return component->get_global_position();
+	return area_node->get_global_position();
 }
 
 void InfluenceAreaData::set_influence_type(int p_influence_type) {
@@ -96,9 +96,9 @@ bool InfluenceAreaData::is_registerable() const {
 }
 
 void InfluenceAreaData::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("set_component", "component"), &InfluenceAreaData::set_component);
-	ClassDB::bind_method(D_METHOD("get_component"), &InfluenceAreaData::get_component);
-	ClassDB::bind_method(D_METHOD("component_is_valid"), &InfluenceAreaData::component_is_valid);
+	ClassDB::bind_method(D_METHOD("set_area_node", "area_node"), &InfluenceAreaData::set_area_node);
+	ClassDB::bind_method(D_METHOD("get_area_node"), &InfluenceAreaData::get_area_node);
+	ClassDB::bind_method(D_METHOD("area_node_is_valid"), &InfluenceAreaData::area_node_is_valid);
 	ClassDB::bind_method(D_METHOD("set_influence_type", "influence_type"), &InfluenceAreaData::set_influence_type);
 	ClassDB::bind_method(D_METHOD("get_influence_type"), &InfluenceAreaData::get_influence_type);
 	ClassDB::bind_method(D_METHOD("set_layer", "layer"), &InfluenceAreaData::set_layer);

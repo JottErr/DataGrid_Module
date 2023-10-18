@@ -79,45 +79,45 @@ void IMapManager::_notification(int p_what) {
 void IMapManager::_process(float p_delta) {
 	IMapHub *hub = Object::cast_to<IMapHub>(Engine::get_singleton()->get_singleton("IMapHub"));
 	TypedArray<InfluenceAreaData> nodes = hub->get_registered_components_data_res();
-	TypedArray<int> freed_components;
+	TypedArray<int> freed_areas;
 	int amount_nodes = nodes.size();
 	int updates_per_frame = 1; // move to .h, create set, get, export
 	int updates_so_far = 0;
 	for (int i = 0; i < amount_nodes; i++) {
-		Ref<InfluenceAreaData> component_data = nodes[i];
-		if (!component_data->is_registerable()) {
+		Ref<InfluenceAreaData> area_data = nodes[i];
+		if (!area_data->is_registerable()) {
 			continue;
 		}
 		updates_so_far++;
 		// Deregister
-		if (component_data->is_registered()) {
-			Vector2 global_position = component_data->get_registered_position();
-			float radius = component_data->get_registered_radius() / cell_size;
-			Ref<InfluenceMap> template_grid = get_template(component_data->get_influence_type(), radius);
-			add_imap_centered_to_collection(template_grid, component_data->get_registered_layer(), global_position, -1.0, false);
-			component_data->set_registered(false);
+		if (area_data->is_registered()) {
+			Vector2 global_position = area_data->get_registered_position();
+			float radius = area_data->get_registered_radius() / cell_size;
+			Ref<InfluenceMap> template_grid = get_template(area_data->get_influence_type(), radius);
+			add_imap_centered_to_collection(template_grid, area_data->get_registered_layer(), global_position, -1.0, false);
+			area_data->set_registered(false);
 		}
 		// Component still valid?
-		InfluenceArea *component = component_data->get_component();
-		if (component == nullptr || !(component->is_inside_tree())) {
-			freed_components.append(i);
+		InfluenceArea *area_node = area_data->get_area_node();
+		if (area_node == nullptr || !(area_node->is_inside_tree())) {
+			freed_areas.append(i);
 			if (updates_so_far < updates_per_frame) {
 				continue;
 			} 
 			break;
 		}
 		// Register
-		Vector2 global_position = component_data->get_global_position();
-		float radius = component_data->get_radius() / cell_size;
-		Ref<InfluenceMap> template_grid = get_template(component_data->get_influence_type(), radius);
-		add_imap_centered_to_collection(template_grid, component_data->get_layer(), global_position, 1.0);
-		component_data->on_registered(global_position, component_data->get_layer(), component_data->get_radius());
+		Vector2 global_position = area_data->get_global_position();
+		float radius = area_data->get_radius() / cell_size;
+		Ref<InfluenceMap> template_grid = get_template(area_data->get_influence_type(), radius);
+		add_imap_centered_to_collection(template_grid, area_data->get_layer(), global_position, 1.0);
+		area_data->on_registered(global_position, area_data->get_layer(), area_data->get_radius());
 		if (updates_so_far < updates_per_frame) {
 			continue;
 		} 
 		break;
 	}
-	hub->remove_components(freed_components);
+	hub->remove_components(freed_areas);
 	emit_updated(imap_collection);
 }
 
@@ -290,7 +290,7 @@ Vector2 IMapManager::snap_global_postion_to_cell_center(const Vector2 &p_global_
 }
 
 Vector2 IMapManager::find_imap_corner_from_center(const Vector2 &p_global_position, Vector2i p_imap_center) {
-	Vector2 center_world_id = Vector2(p_global_position / cell_size).floor();
+	Vector2 center_world_id = Vector2(p_global_position / cell_size).floor(); //global_position_to_world_grid
 	Vector2 corner_pos = (center_world_id - p_imap_center) * cell_size;
 	return corner_pos;
 }

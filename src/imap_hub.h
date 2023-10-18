@@ -26,7 +26,7 @@ public:
 
 	void set_world_grid_manager(IMapManager *p_world_grid_manager);
 	IMapManager *get_world_grid_manager() const;
-	void add_component_data_res(Ref<InfluenceAreaData> p_datagrid_component_data_res);
+	void add_influence_area_data(Ref<InfluenceAreaData> p_datagrid_component_data_res);
 	TypedArray<InfluenceAreaData> get_registered_components_data_res() { return registered_components; }
 	void remove_components(const TypedArray<int> &p_indices);
 };

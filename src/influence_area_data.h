@@ -11,7 +11,7 @@ class InfluenceAreaData : public Resource {
 	GDCLASS(InfluenceAreaData, Resource);
 
 private:
-	InfluenceArea *component;
+	InfluenceArea *area_node;
 	
 	int influence_type;
 	int layer;
@@ -29,9 +29,9 @@ public:
 	InfluenceAreaData();
 	~InfluenceAreaData();
 
-	void set_component(InfluenceArea *p_datagrid_component);
-	InfluenceArea *get_component() const;
-	bool component_is_valid() const;
+	void set_area_node(InfluenceArea *p_area_node);
+	InfluenceArea *get_area_node() const;
+	bool area_node_is_valid() const;
 	Vector2 get_global_position() const;
 	void set_influence_type(int p_influence_type);
 	int get_influence_type() const;
